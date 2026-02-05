@@ -55,6 +55,13 @@ export async function GET(
             role: true,
           },
         },
+        reactions: {
+          include: {
+            user: {
+              select: { id: true, name: true },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -101,11 +108,18 @@ export async function POST(
     const user = session.user as SessionUser;
     const { id } = await params;
     const body = await request.json();
-    const { content, type = "TEXT", fileUrl, fileName } = body;
+    const { content, type = "TEXT", fileUrl, fileName, fileSize, mimeType } = body;
 
     if (!content?.trim() && type === "TEXT") {
       return NextResponse.json(
         { error: "El mensaje no puede estar vacío" },
+        { status: 400 }
+      );
+    }
+
+    if ((type === "FILE" || type === "IMAGE") && !fileUrl) {
+      return NextResponse.json(
+        { error: "URL de archivo requerida" },
         { status: 400 }
       );
     }
@@ -135,6 +149,8 @@ export async function POST(
           content: content?.trim() || "",
           fileUrl,
           fileName,
+          fileSize,
+          mimeType,
         },
         include: {
           sender: {
@@ -142,6 +158,13 @@ export async function POST(
               id: true,
               name: true,
               role: true,
+            },
+          },
+          reactions: {
+            include: {
+              user: {
+                select: { id: true, name: true },
+              },
             },
           },
         },

@@ -79,6 +79,7 @@ model User {
   // Comunicación
   participations     ConversationParticipant[]
   messages           Message[]
+  reactions          MessageReaction[]
   
   // Relación padres-hijos
   children           Student[] @relation("ParentChildren")
@@ -190,13 +191,33 @@ model Message {
   content        String
   fileUrl        String?
   fileName       String?
+  fileSize       Int?
+  mimeType       String?
   isPinned       Boolean      @default(false)
+  pinnedAt       DateTime?
+  pinnedById     String?
   isEdited       Boolean      @default(false)
   createdAt      DateTime     @default(now())
   editedAt       DateTime?
+  reactions      MessageReaction[]
 
   @@index([conversationId, createdAt])
   @@index([senderId])
+  @@index([conversationId, isPinned])
+}
+
+// Reacciones a mensajes
+model MessageReaction {
+  id        String   @id @default(cuid())
+  messageId String
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  emoji     String   // 👍, ❤️, 😂, 😮, 😢, 🙏
+  createdAt DateTime @default(now())
+
+  @@unique([messageId, userId, emoji])
+  @@index([messageId])
 }
 
 model Announcement {
