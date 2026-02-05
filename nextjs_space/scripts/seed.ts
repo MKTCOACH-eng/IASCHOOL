@@ -7,6 +7,8 @@ async function main() {
   console.log("Seeding database...");
 
   // Clear existing data in correct order
+  await prisma.eventAttendee.deleteMany();
+  await prisma.event.deleteMany();
   await prisma.submissionAttachment.deleteMany();
   await prisma.submission.deleteMany();
   await prisma.taskAttachment.deleteMany();
@@ -445,6 +447,123 @@ async function main() {
   });
 
   console.log("Created sample conversations and messages");
+
+  // Create sample events
+  const nextMonth = new Date();
+  nextMonth.setMonth(nextMonth.getMonth() + 1);
+  
+  // Event 1: Reunion de padres
+  await prisma.event.create({
+    data: {
+      title: "Reunión de padres de familia - 3ro A",
+      description: "Reunión informativa sobre el avance académico del primer trimestre. Se discutirán temas como calificaciones, proyectos y actividades extracurriculares.",
+      startDate: new Date(now.getFullYear(), now.getMonth(), 15, 16, 0),
+      endDate: new Date(now.getFullYear(), now.getMonth(), 15, 18, 0),
+      allDay: false,
+      type: "REUNION",
+      color: "#7C3AED",
+      location: "Sala de juntas - Edificio A",
+      isPublic: false,
+      schoolId: school.id,
+      createdById: admin.id,
+      groupId: group3A.id,
+      attendees: {
+        create: [
+          { userId: maria.id },
+          { userId: juan.id },
+        ],
+      },
+    },
+  });
+
+  // Event 2: Festival cultural
+  await prisma.event.create({
+    data: {
+      title: "Festival Cultural 2026",
+      description: "Festival anual con presentaciones de música, danza, teatro y exposición de arte de todos los grados.",
+      startDate: new Date(now.getFullYear(), now.getMonth(), 25, 9, 0),
+      endDate: new Date(now.getFullYear(), now.getMonth(), 25, 14, 0),
+      allDay: false,
+      type: "EXTRACURRICULAR",
+      color: "#0891B2",
+      location: "Auditorio principal",
+      isPublic: true,
+      schoolId: school.id,
+      createdById: admin.id,
+    },
+  });
+
+  // Event 3: Día festivo
+  await prisma.event.create({
+    data: {
+      title: "Día del Maestro - Sin clases",
+      description: "Suspensión de clases por celebración del Día del Maestro",
+      startDate: new Date(now.getFullYear(), now.getMonth() + 1, 15),
+      allDay: true,
+      type: "FESTIVO",
+      color: "#DC2626",
+      isPublic: true,
+      schoolId: school.id,
+      createdById: admin.id,
+    },
+  });
+
+  // Event 4: Exámenes
+  await prisma.event.create({
+    data: {
+      title: "Inicio de exámenes trimestrales",
+      description: "Comienzan los exámenes del primer trimestre para todos los grados.",
+      startDate: new Date(now.getFullYear(), now.getMonth() + 1, 5),
+      endDate: new Date(now.getFullYear(), now.getMonth() + 1, 12),
+      allDay: true,
+      type: "ACADEMICO",
+      color: "#EA580C",
+      isPublic: true,
+      schoolId: school.id,
+      createdById: admin.id,
+    },
+  });
+
+  // Event 5: Cita individual
+  await prisma.event.create({
+    data: {
+      title: "Cita: Revisión de calificaciones",
+      description: "Cita individual para revisar el desempeño académico.",
+      startDate: new Date(now.getFullYear(), now.getMonth(), 20, 10, 0),
+      endDate: new Date(now.getFullYear(), now.getMonth(), 20, 10, 30),
+      allDay: false,
+      type: "CITA",
+      color: "#059669",
+      location: "Dirección académica",
+      isPublic: false,
+      schoolId: school.id,
+      createdById: profesorMath.id,
+      attendees: {
+        create: [
+          { userId: maria.id },
+        ],
+      },
+    },
+  });
+
+  // Event 6: Evento escolar general
+  await prisma.event.create({
+    data: {
+      title: "Ceremonia de inicio de ciclo",
+      description: "Ceremonia oficial de bienvenida al nuevo ciclo escolar con presentación del cuerpo docente.",
+      startDate: new Date(now.getFullYear(), now.getMonth(), 8, 8, 0),
+      endDate: new Date(now.getFullYear(), now.getMonth(), 8, 10, 0),
+      allDay: false,
+      type: "ESCOLAR",
+      color: "#1B4079",
+      location: "Patio central",
+      isPublic: true,
+      schoolId: school.id,
+      createdById: admin.id,
+    },
+  });
+
+  console.log("Created sample events");
 
   console.log("\n=== CREDENCIALES DE PRUEBA ===");
   console.log("Admin: john@doe.com / johndoe123");

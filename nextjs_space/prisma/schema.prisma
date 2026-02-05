@@ -58,6 +58,7 @@ model School {
   students     Student[]
   conversations Conversation[]
   subjects     Subject[]
+  events       Event[]
 }
 
 model User {
@@ -94,6 +95,10 @@ model User {
   // Tareas
   tasksCreated       Task[]    @relation("TaskTeacher")
   submissionsReviewed Submission[] @relation("SubmissionReviewer")
+  
+  // Calendario
+  eventsCreated      Event[]   @relation("EventCreator")
+  eventAttendances   EventAttendee[]
 }
 
 model Invitation {
@@ -128,6 +133,7 @@ model Group {
   students     Student[]
   conversations Conversation[]
   tasks        Task[]
+  events       Event[]
   createdAt    DateTime  @default(now())
   isActive     Boolean   @default(true)
 
@@ -259,6 +265,23 @@ enum TaskStatus {
   CLOSED      // Cerrada, no acepta más entregas
 }
 
+// ==================== MÓDULO DE CALENDARIO ====================
+
+enum EventType {
+  ESCOLAR       // Evento escolar general
+  REUNION       // Reunión de padres/junta
+  CITA          // Cita individual
+  FESTIVO       // Día festivo/vacaciones
+  ACADEMICO     // Exámenes, entrega de boletas
+  EXTRACURRICULAR // Deportes, cultura, etc.
+}
+
+enum EventAttendeeStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
+}
+
 enum SubmissionStatus {
   PENDING     // Entregada, pendiente de revisión
   REVIEWED    // Revisada con calificación
@@ -310,6 +333,9 @@ model Task {
   teacher        User       @relation("TaskTeacher", fields: [teacherId], references: [id])
   
   submissions    Submission[]
+  
+  // Evento de calendario para fecha límite
+  calendarEvent  Event?
   
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
@@ -382,4 +408,62 @@ model SubmissionAttachment {
   createdAt       DateTime   @default(now())
 
   @@index([submissionId])
+}
+
+// ==================== EVENTOS DE CALENDARIO ====================
+
+model Event {
+  id             String      @id @default(cuid())
+  title          String
+  description    String?     @db.Text
+  
+  // Fechas y horario
+  startDate      DateTime
+  endDate        DateTime?
+  allDay         Boolean     @default(false)
+  
+  // Tipo y visualización
+  type           EventType   @default(ESCOLAR)
+  color          String      @default("#1B4079")
+  location       String?     // Ubicación (aula, auditorio, etc.)
+  
+  // Visibilidad
+  isPublic       Boolean     @default(true)  // Visible para toda la escuela
+  
+  // Relaciones
+  schoolId       String
+  school         School      @relation(fields: [schoolId], references: [id])
+  createdById    String
+  createdBy      User        @relation("EventCreator", fields: [createdById], references: [id])
+  groupId        String?     // Para eventos específicos de un grupo
+  group          Group?      @relation(fields: [groupId], references: [id])
+  taskId         String?     @unique // Enlace a tarea (para fechas límite)
+  task           Task?       @relation(fields: [taskId], references: [id])
+  
+  // Asistentes
+  attendees      EventAttendee[]
+  
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([schoolId])
+  @@index([startDate])
+  @@index([groupId])
+  @@index([type])
+}
+
+// Asistentes a eventos
+model EventAttendee {
+  id           String              @id @default(cuid())
+  eventId      String
+  event        Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User                @relation(fields: [userId], references: [id])
+  status       EventAttendeeStatus @default(PENDING)
+  responseAt   DateTime?
+  createdAt    DateTime            @default(now())
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
 }
