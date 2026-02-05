@@ -7,9 +7,9 @@ export default function LandingPage() {
     <main className="min-h-screen bg-white">
       {/* Navigation - White Header */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center h-full py-2">
-            <div className="relative h-full w-48">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-24">
+          <Link href="/" className="flex items-center">
+            <div className="relative h-20 w-52">
               <Image
                 src="/iaschool-logo.png"
                 alt="IA School"
@@ -571,15 +571,7 @@ export default function LandingPage() {
       <footer className="bg-gray-900">
         {/* Pleca superior */}
         <div className="bg-[#1B4079] py-4">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="relative h-10 w-32 bg-white rounded-lg p-1">
-              <Image
-                src="/iaschool-logo.png"
-                alt="IA School Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-end">
             <div className="flex items-center gap-3">
               <a href="#" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                 <Instagram className="w-4 h-4 text-white" />
