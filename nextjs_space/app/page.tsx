@@ -7,9 +7,9 @@ export default function LandingPage() {
     <main className="min-h-screen bg-white">
       {/* Navigation - White Header */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-24">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-28">
           <Link href="/" className="flex items-center">
-            <div className="relative h-20 w-52">
+            <div className="relative h-24 w-64">
               <Image
                 src="/iaschool-logo.png"
                 alt="IA School"
