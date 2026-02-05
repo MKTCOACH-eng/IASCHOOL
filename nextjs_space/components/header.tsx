@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -26,12 +26,14 @@ export function Header({ user }: HeaderProps) {
   const navItems = isAdmin
     ? [
         { href: "/dashboard", label: "Inicio", icon: Home },
+        { href: "/messages", label: "Mensajes", icon: MessageSquare },
         { href: "/announcements", label: "Anuncios", icon: Bell },
         { href: "/announcements/new", label: "Nuevo Anuncio", icon: Plus },
         { href: "/invitations", label: "Invitaciones", icon: UserPlus },
       ]
     : [
         { href: "/dashboard", label: "Inicio", icon: Home },
+        { href: "/messages", label: "Mensajes", icon: MessageSquare },
         { href: "/announcements", label: "Anuncios", icon: Bell },
       ];
 

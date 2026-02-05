@@ -13,6 +13,8 @@ enum Role {
   ADMIN
   PROFESOR
   PADRE
+  ALUMNO
+  VOCAL
 }
 
 enum InvitationStatus {
@@ -26,6 +28,21 @@ enum Priority {
   URGENT
 }
 
+enum ConversationType {
+  DIRECT           // Chat 1:1 (padre-profesor, padre-admin)
+  GROUP_PARENTS    // Chat de padres de un grupo escolar
+  GROUP_STUDENTS   // Chat de alumnos de un grupo escolar
+  TEAM             // Chat de equipo de trabajo (alumnos)
+  ADMIN_CHANNEL    // Canal oficial del colegio
+}
+
+enum MessageType {
+  TEXT
+  FILE
+  IMAGE
+  SYSTEM
+}
+
 model School {
   id           String         @id @default(cuid())
   name         String
@@ -37,6 +54,9 @@ model School {
   users        User[]
   announcements Announcement[]
   invitations  Invitation[]
+  groups       Group[]
+  students     Student[]
+  conversations Conversation[]
 }
 
 model User {
@@ -55,6 +75,19 @@ model User {
   reads              AnnouncementRead[]
   invitationId       String?  @unique
   invitation         Invitation? @relation(fields: [invitationId], references: [id])
+  
+  // Comunicación
+  participations     ConversationParticipant[]
+  messages           Message[]
+  
+  // Relación padres-hijos
+  children           Student[] @relation("ParentChildren")
+  
+  // Profesor asignado a grupos
+  teacherGroups      Group[]   @relation("GroupTeacher")
+  
+  // Vocal de grupo (solo padres con rol VOCAL)
+  vocalGroup         Group?    @relation("GroupVocal")
 }
 
 model Invitation {
@@ -72,6 +105,98 @@ model Invitation {
   user          User?
 
   @@unique([email, schoolId])
+}
+
+// Grupos escolares (ej: "3ro Primaria A", "2do Secundaria B")
+model Group {
+  id           String    @id @default(cuid())
+  name         String    // "3ro Primaria A"
+  grade        String?   // "3ro Primaria"
+  section      String?   // "A"
+  schoolId     String
+  school       School    @relation(fields: [schoolId], references: [id])
+  teacherId    String?   // Profesor titular
+  teacher      User?     @relation("GroupTeacher", fields: [teacherId], references: [id])
+  vocalId      String?   @unique // Vocal de grupo (un padre)
+  vocal        User?     @relation("GroupVocal", fields: [vocalId], references: [id])
+  students     Student[]
+  conversations Conversation[]
+  createdAt    DateTime  @default(now())
+  isActive     Boolean   @default(true)
+
+  @@unique([name, schoolId])
+}
+
+// Estudiantes (alumnos)
+model Student {
+  id           String   @id @default(cuid())
+  firstName    String
+  lastName     String
+  schoolId     String
+  school       School   @relation(fields: [schoolId], references: [id])
+  groupId      String?
+  group        Group?   @relation(fields: [groupId], references: [id])
+  parents      User[]   @relation("ParentChildren")
+  createdAt    DateTime @default(now())
+  isActive     Boolean  @default(true)
+
+  @@index([schoolId])
+  @@index([groupId])
+}
+
+// Conversaciones (chats)
+model Conversation {
+  id           String           @id @default(cuid())
+  type         ConversationType
+  name         String?          // Para chats grupales
+  schoolId     String
+  school       School           @relation(fields: [schoolId], references: [id])
+  groupId      String?          // Para chats de grupo escolar
+  group        Group?           @relation(fields: [groupId], references: [id])
+  participants ConversationParticipant[]
+  messages     Message[]
+  lastMessageAt DateTime?
+  createdAt    DateTime         @default(now())
+  isActive     Boolean          @default(true)
+
+  @@index([schoolId])
+  @@index([groupId])
+  @@index([lastMessageAt])
+}
+
+// Participantes en conversaciones
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  isMuted        Boolean      @default(false)
+  lastReadAt     DateTime?
+  joinedAt       DateTime     @default(now())
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+}
+
+// Mensajes
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  type           MessageType  @default(TEXT)
+  content        String
+  fileUrl        String?
+  fileName       String?
+  isPinned       Boolean      @default(false)
+  isEdited       Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  editedAt       DateTime?
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
 }
 
 model Announcement {

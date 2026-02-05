@@ -6,7 +6,12 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Seeding database...");
 
-  // Clear existing data
+  // Clear existing data in correct order
+  await prisma.message.deleteMany();
+  await prisma.conversationParticipant.deleteMany();
+  await prisma.conversation.deleteMany();
+  await prisma.student.deleteMany();
+  await prisma.group.deleteMany();
   await prisma.announcementRead.deleteMany();
   await prisma.announcement.deleteMany();
   await prisma.user.deleteMany();
@@ -193,6 +198,177 @@ async function main() {
     ],
   });
   console.log("Created read statuses");
+
+  // Create profesores
+  const profesorPassword = await bcrypt.hash("profesor123", 10);
+
+  const profesorMath = await prisma.user.create({
+    data: {
+      email: "prof.sanchez@vermontschool.edu",
+      password: profesorPassword,
+      name: "Laura Sánchez",
+      role: Role.PROFESOR,
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+
+  const profesorSpanish = await prisma.user.create({
+    data: {
+      email: "prof.ramirez@vermontschool.edu",
+      password: profesorPassword,
+      name: "Carlos Ramírez",
+      role: Role.PROFESOR,
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+  console.log("Created 2 profesores");
+
+  // Create groups
+  const group3A = await prisma.group.create({
+    data: {
+      name: "3ro Primaria A",
+      grade: "3ro Primaria",
+      section: "A",
+      schoolId: school.id,
+      teacherId: profesorMath.id,
+    },
+  });
+
+  const group3B = await prisma.group.create({
+    data: {
+      name: "3ro Primaria B",
+      grade: "3ro Primaria",
+      section: "B",
+      schoolId: school.id,
+      teacherId: profesorSpanish.id,
+    },
+  });
+  console.log("Created 2 groups");
+
+  // Create students
+  await prisma.student.create({
+    data: {
+      firstName: "Sofía",
+      lastName: "López",
+      schoolId: school.id,
+      groupId: group3A.id,
+      parents: { connect: [{ id: maria.id }] },
+    },
+  });
+
+  await prisma.student.create({
+    data: {
+      firstName: "Diego",
+      lastName: "Martínez",
+      schoolId: school.id,
+      groupId: group3A.id,
+      parents: { connect: [{ id: juan.id }] },
+    },
+  });
+
+  await prisma.student.create({
+    data: {
+      firstName: "Valentina",
+      lastName: "Rodríguez",
+      schoolId: school.id,
+      groupId: group3B.id,
+      parents: { connect: [{ id: ana.id }] },
+    },
+  });
+  console.log("Created 3 students");
+
+  // Create sample conversations
+  // Conversation: María with Profesora Laura
+  const conv1 = await prisma.conversation.create({
+    data: {
+      type: "DIRECT",
+      schoolId: school.id,
+      participants: {
+        create: [
+          { userId: maria.id },
+          { userId: profesorMath.id },
+        ],
+      },
+      lastMessageAt: now,
+    },
+  });
+
+  // Add sample messages
+  await prisma.message.create({
+    data: {
+      conversationId: conv1.id,
+      senderId: maria.id,
+      content: "Buenos días profesora, ¿cómo está Sofía en la clase de matemáticas?",
+      createdAt: new Date(now.getTime() - 60 * 60 * 1000),
+    },
+  });
+
+  await prisma.message.create({
+    data: {
+      conversationId: conv1.id,
+      senderId: profesorMath.id,
+      content: "¡Buenos días! Sofía está muy bien, participa mucho en clase y ha mejorado en las operaciones básicas. 👍",
+      createdAt: new Date(now.getTime() - 30 * 60 * 1000),
+    },
+  });
+
+  await prisma.message.create({
+    data: {
+      conversationId: conv1.id,
+      senderId: maria.id,
+      content: "¡Qué bueno escuchar eso! Gracias por la información.",
+      createdAt: now,
+    },
+  });
+
+  // Conversation: Juan with Admin
+  const conv2 = await prisma.conversation.create({
+    data: {
+      type: "DIRECT",
+      schoolId: school.id,
+      participants: {
+        create: [
+          { userId: juan.id },
+          { userId: admin.id },
+        ],
+      },
+      lastMessageAt: new Date(now.getTime() - 2 * 60 * 60 * 1000),
+    },
+  });
+
+  await prisma.message.create({
+    data: {
+      conversationId: conv2.id,
+      senderId: juan.id,
+      content: "Buenas tardes, tengo una duda sobre el pago de la colegiatura.",
+      createdAt: new Date(now.getTime() - 3 * 60 * 60 * 1000),
+    },
+  });
+
+  await prisma.message.create({
+    data: {
+      conversationId: conv2.id,
+      senderId: admin.id,
+      content: "Con gusto le ayudo. ¿Cuál es su duda?",
+      createdAt: new Date(now.getTime() - 2 * 60 * 60 * 1000),
+    },
+  });
+
+  console.log("Created sample conversations and messages");
+
+  console.log("\n=== CREDENCIALES DE PRUEBA ===");
+  console.log("Admin: john@doe.com / johndoe123");
+  console.log("Admin: admin@vermontschool.edu / admin123");
+  console.log("Profesor: prof.sanchez@vermontschool.edu / profesor123");
+  console.log("Profesor: prof.ramirez@vermontschool.edu / profesor123");
+  console.log("Padre: maria.lopez@email.com / padre123");
+  console.log("Padre: juan.martinez@email.com / padre123");
+  console.log("Padre: ana.rodriguez@email.com / padre123");
+  console.log("==============================\n");
 
   console.log("Seed completed successfully!");
 }
