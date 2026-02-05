@@ -9,7 +9,7 @@ export default function LandingPage() {
       <nav className="absolute top-0 left-0 right-0 z-20 py-4">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="relative w-12 h-12">
+            <div className="relative w-12 h-12 bg-white rounded-lg p-1">
               <Image
                 src="/iaschool-logo.svg"
                 alt="IA School Logo"
@@ -18,7 +18,7 @@ export default function LandingPage() {
                 priority
               />
             </div>
-            <span className="text-white font-bold text-xl">IA School</span>
+            <span className="text-white font-bold text-xl drop-shadow-md">IA School</span>
           </div>
           <Link
             href="/login"
@@ -113,7 +113,7 @@ export default function LandingPage() {
               <p className="text-gray-500 text-sm">50+ grupos de WhatsApp, información perdida, padres confundidos, carga administrativa excesiva</p>
             </div>
             <div className="flex items-center justify-center">
-              <div className="text-4xl">→</div>
+              <div className="text-4xl text-[#1B4079]">→</div>
             </div>
             <div className="text-center p-6">
               <div className="w-16 h-16 rounded-full bg-[#CBDF90]/30 flex items-center justify-center mx-auto mb-4">
