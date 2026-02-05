@@ -1,46 +1,48 @@
 import Link from "next/link";
 import Image from "next/image";
-import { MessageSquare, Bell, Shield, Zap, Users, BookOpen, CreditCard, PlayCircle, FileText, Calendar, Brain, ChevronRight } from "lucide-react";
+import { MessageSquare, Shield, BookOpen, CreditCard, PlayCircle, FileText, Calendar, Brain, ChevronRight, Bell, Users } from "lucide-react";
 
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="absolute top-0 left-0 right-0 z-20 py-4">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative w-12 h-12 bg-white rounded-lg p-1">
+      {/* Navigation - White Header */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-20">
+          <Link href="/" className="flex items-center">
+            <div className="relative h-14 w-44">
               <Image
-                src="/iaschool-logo.svg"
-                alt="IA School Logo"
+                src="/iaschool-logo.png"
+                alt="IA School"
                 fill
-                className="object-contain"
+                className="object-contain object-left"
                 priority
               />
             </div>
-            <span className="text-white font-bold text-xl drop-shadow-md">IA School</span>
-          </div>
+          </Link>
           <Link
             href="/login"
-            className="px-6 py-2.5 bg-white/10 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-white/20 transition-all border border-white/30"
+            className="px-6 py-2.5 bg-[#1B4079] text-white font-medium rounded-lg hover:bg-[#4D7C8A] transition-all"
           >
             Iniciar Sesión
           </Link>
         </div>
       </nav>
 
-      {/* Hero Section with Full Image Background */}
-      <div className="relative min-h-[95vh] flex items-center">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <Image
-            src="/students_hero.jpg"
-            alt="Estudiantes latinoamericanos en aula moderna"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1B4079]/95 via-[#1B4079]/80 to-[#1B4079]/40" />
+      {/* Hero Section with Video Background */}
+      <div className="relative min-h-[95vh] flex items-center pt-20">
+        {/* Background Video */}
+        <div className="absolute inset-0 overflow-hidden">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+            poster="/students_hero.jpg"
+          >
+            <source src="https://videos.pexels.com/video-files/8196810/8196810-hd_1920_1080_25fps.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B4079]/95 via-[#1B4079]/85 to-[#1B4079]/60" />
         </div>
 
         {/* Hero Content */}
@@ -55,10 +57,9 @@ export default function LandingPage() {
               El sistema operativo para{" "}
               <span className="text-[#CBDF90]">colegios del futuro</span>
             </h1>
-            <p className="text-lg sm:text-xl text-white/85 mb-10 leading-relaxed">
-              Centraliza toda la operación escolar en una sola plataforma: comunicación, gestión académica, 
-              pagos, y análisis con IA. Diseñado para que directivos, profesores y familias 
-              trabajen en perfecta sincronía.
+            <p className="text-lg sm:text-xl text-white/90 mb-10 leading-relaxed">
+              Una plataforma integral que conecta a directivos, profesores y familias 
+              para crear comunidades educativas más organizadas y eficientes.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -306,7 +307,7 @@ export default function LandingPage() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100">
-              <div className="w-14 h-14 rounded-xl bg-[#1B4079]/10 flex items-center justify-center mb-5">
+              <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
                 <MessageSquare className="w-7 h-7 text-[#1B4079]" />
               </div>
               <h3 className="font-bold text-gray-900 text-lg mb-3">Comunicación Inteligente</h3>
@@ -317,8 +318,8 @@ export default function LandingPage() {
             </div>
 
             <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100">
-              <div className="w-14 h-14 rounded-xl bg-[#4D7C8A]/10 flex items-center justify-center mb-5">
-                <BookOpen className="w-7 h-7 text-[#4D7C8A]" />
+              <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
+                <BookOpen className="w-7 h-7 text-[#1B4079]" />
               </div>
               <h3 className="font-bold text-gray-900 text-lg mb-3">Gestión Académica</h3>
               <p className="text-gray-600">
@@ -328,8 +329,8 @@ export default function LandingPage() {
             </div>
 
             <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100">
-              <div className="w-14 h-14 rounded-xl bg-[#8FAD88]/10 flex items-center justify-center mb-5">
-                <CreditCard className="w-7 h-7 text-[#8FAD88]" />
+              <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
+                <CreditCard className="w-7 h-7 text-[#1B4079]" />
               </div>
               <h3 className="font-bold text-gray-900 text-lg mb-3">Control de Pagos</h3>
               <p className="text-gray-600">
@@ -339,7 +340,7 @@ export default function LandingPage() {
             </div>
 
             <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100">
-              <div className="w-14 h-14 rounded-xl bg-[#CBDF90]/30 flex items-center justify-center mb-5">
+              <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
                 <Brain className="w-7 h-7 text-[#1B4079]" />
               </div>
               <h3 className="font-bold text-gray-900 text-lg mb-3">Inteligencia Artificial</h3>
@@ -350,8 +351,8 @@ export default function LandingPage() {
             </div>
 
             <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100">
-              <div className="w-14 h-14 rounded-xl bg-[#7F9C96]/20 flex items-center justify-center mb-5">
-                <Calendar className="w-7 h-7 text-[#4D7C8A]" />
+              <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
+                <Calendar className="w-7 h-7 text-[#1B4079]" />
               </div>
               <h3 className="font-bold text-gray-900 text-lg mb-3">Calendario Unificado</h3>
               <p className="text-gray-600">
@@ -361,7 +362,7 @@ export default function LandingPage() {
             </div>
 
             <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100">
-              <div className="w-14 h-14 rounded-xl bg-[#1B4079]/10 flex items-center justify-center mb-5">
+              <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
                 <Shield className="w-7 h-7 text-[#1B4079]" />
               </div>
               <h3 className="font-bold text-gray-900 text-lg mb-3">Seguridad y Privacidad</h3>
@@ -461,7 +462,7 @@ export default function LandingPage() {
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#CBDF90]/20 rounded-full blur-3xl"></div>
             
             <div className="relative z-10 max-w-3xl mx-auto text-center">
-              <div className="text-5xl mb-6">"</div>
+              <div className="text-5xl mb-6 text-white/80">"</div>
               <p className="text-xl md:text-2xl text-white leading-relaxed mb-8">
                 IA School transformó completamente la forma en que nos comunicamos con las familias. 
                 Pasamos de tener 47 grupos de WhatsApp a <strong className="text-[#CBDF90]">una sola plataforma 
@@ -514,16 +515,15 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="md:col-span-2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="relative w-10 h-10">
+              <div className="flex items-center mb-4">
+                <div className="relative h-12 w-36 bg-white rounded-lg p-1">
                   <Image
-                    src="/iaschool-logo.svg"
+                    src="/iaschool-logo.png"
                     alt="IA School Logo"
                     fill
                     className="object-contain"
                   />
                 </div>
-                <span className="text-white font-bold text-xl">IA School</span>
               </div>
               <p className="text-gray-400 text-sm max-w-md">
                 El sistema operativo para colegios del futuro. Centraliza comunicación, 
