@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -18,24 +18,39 @@ interface HeaderProps {
 export function Header({ user }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isAdmin = user?.role === "ADMIN";
+  const isTeacher = user?.role === "PROFESOR";
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/login" });
   };
 
-  const navItems = isAdmin
-    ? [
-        { href: "/dashboard", label: "Inicio", icon: Home },
-        { href: "/messages", label: "Mensajes", icon: MessageSquare },
-        { href: "/announcements", label: "Anuncios", icon: Bell },
+  const getNavItems = () => {
+    const baseItems = [
+      { href: "/dashboard", label: "Inicio", icon: Home },
+      { href: "/messages", label: "Mensajes", icon: MessageSquare },
+      { href: "/tasks", label: "Tareas", icon: ClipboardList },
+      { href: "/announcements", label: "Anuncios", icon: Bell },
+    ];
+
+    if (isAdmin) {
+      return [
+        ...baseItems,
         { href: "/announcements/new", label: "Nuevo Anuncio", icon: Plus },
         { href: "/invitations", label: "Invitaciones", icon: UserPlus },
-      ]
-    : [
-        { href: "/dashboard", label: "Inicio", icon: Home },
-        { href: "/messages", label: "Mensajes", icon: MessageSquare },
-        { href: "/announcements", label: "Anuncios", icon: Bell },
       ];
+    }
+
+    if (isTeacher) {
+      return [
+        ...baseItems,
+        { href: "/tasks/new", label: "Nueva Tarea", icon: Plus },
+      ];
+    }
+
+    return baseItems;
+  };
+
+  const navItems = getNavItems();
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
@@ -81,7 +96,7 @@ export function Header({ user }: HeaderProps) {
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-900">{user?.name ?? "Usuario"}</p>
                 <p className="text-xs text-[#4D7C8A]">
-                  {isAdmin ? "Administrador" : "Padre de familia"}
+                  {isAdmin ? "Administrador" : isTeacher ? "Profesor" : "Padre de familia"}
                 </p>
               </div>
             </div>

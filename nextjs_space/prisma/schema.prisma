@@ -57,6 +57,7 @@ model School {
   groups       Group[]
   students     Student[]
   conversations Conversation[]
+  subjects     Subject[]
 }
 
 model User {
@@ -89,6 +90,10 @@ model User {
   
   // Vocal de grupo (solo padres con rol VOCAL)
   vocalGroup         Group?    @relation("GroupVocal")
+  
+  // Tareas
+  tasksCreated       Task[]    @relation("TaskTeacher")
+  submissionsReviewed Submission[] @relation("SubmissionReviewer")
 }
 
 model Invitation {
@@ -122,6 +127,7 @@ model Group {
   vocal        User?     @relation("GroupVocal", fields: [vocalId], references: [id])
   students     Student[]
   conversations Conversation[]
+  tasks        Task[]
   createdAt    DateTime  @default(now())
   isActive     Boolean   @default(true)
 
@@ -138,6 +144,7 @@ model Student {
   groupId      String?
   group        Group?   @relation(fields: [groupId], references: [id])
   parents      User[]   @relation("ParentChildren")
+  submissions  Submission[]
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -242,4 +249,137 @@ model AnnouncementRead {
   readAt         DateTime     @default(now())
 
   @@unique([announcementId, userId])
+}
+
+// ==================== MÓDULO DE TAREAS ====================
+
+enum TaskStatus {
+  DRAFT       // Borrador
+  PUBLISHED   // Publicada y visible
+  CLOSED      // Cerrada, no acepta más entregas
+}
+
+enum SubmissionStatus {
+  PENDING     // Entregada, pendiente de revisión
+  REVIEWED    // Revisada con calificación
+  LATE        // Entregada tarde
+  RETURNED    // Devuelta para correcciones
+}
+
+// Materias/Asignaturas
+model Subject {
+  id          String   @id @default(cuid())
+  name        String   // "Matemáticas", "Español", "Ciencias"
+  color       String   @default("#1B4079") // Color para UI
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
+  tasks       Task[]
+  createdAt   DateTime @default(now())
+  isActive    Boolean  @default(true)
+
+  @@unique([name, schoolId])
+  @@index([schoolId])
+}
+
+// Tareas
+model Task {
+  id             String     @id @default(cuid())
+  title          String
+  description    String?    @db.Text
+  instructions   String?    @db.Text
+  status         TaskStatus @default(DRAFT)
+  
+  // Fechas
+  dueDate        DateTime?  // Fecha límite de entrega
+  publishedAt    DateTime?  // Cuándo se publicó
+  closedAt       DateTime?  // Cuándo se cerró
+  
+  // Archivos adjuntos (material de apoyo)
+  attachments    TaskAttachment[]
+  
+  // Puntuación
+  maxScore       Int        @default(100)  // Puntuación máxima
+  weight         Float      @default(1.0)  // Peso para promedio
+  
+  // Relaciones
+  subjectId      String?
+  subject        Subject?   @relation(fields: [subjectId], references: [id])
+  groupId        String     // Grupo al que se asigna
+  group          Group      @relation(fields: [groupId], references: [id])
+  teacherId      String     // Profesor que creó la tarea
+  teacher        User       @relation("TaskTeacher", fields: [teacherId], references: [id])
+  
+  submissions    Submission[]
+  
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([groupId])
+  @@index([teacherId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+// Archivos adjuntos de tareas
+model TaskAttachment {
+  id              String   @id @default(cuid())
+  taskId          String
+  task            Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  fileName        String
+  fileUrl         String
+  fileSize        Int?
+  mimeType        String?
+  cloudStoragePath String?
+  isPublic        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  @@index([taskId])
+}
+
+// Entregas de tareas
+model Submission {
+  id              String           @id @default(cuid())
+  taskId          String
+  task            Task             @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  studentId       String
+  student         Student          @relation(fields: [studentId], references: [id])
+  
+  // Contenido de la entrega
+  content         String?          @db.Text  // Texto/comentarios del alumno
+  attachments     SubmissionAttachment[]
+  
+  // Estado y calificación
+  status          SubmissionStatus @default(PENDING)
+  score           Float?           // Calificación obtenida
+  feedback        String?          @db.Text  // Retroalimentación del profesor
+  
+  // Fechas
+  submittedAt     DateTime         @default(now())
+  reviewedAt      DateTime?
+  reviewedById    String?
+  reviewedBy      User?            @relation("SubmissionReviewer", fields: [reviewedById], references: [id])
+  isLate          Boolean          @default(false)
+  
+  updatedAt       DateTime         @updatedAt
+
+  @@unique([taskId, studentId])
+  @@index([taskId])
+  @@index([studentId])
+  @@index([status])
+}
+
+// Archivos adjuntos de entregas
+model SubmissionAttachment {
+  id              String     @id @default(cuid())
+  submissionId    String
+  submission      Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  fileName        String
+  fileUrl         String
+  fileSize        Int?
+  mimeType        String?
+  cloudStoragePath String?
+  isPublic        Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+
+  @@index([submissionId])
 }

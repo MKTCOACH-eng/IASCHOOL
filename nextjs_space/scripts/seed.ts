@@ -7,6 +7,12 @@ async function main() {
   console.log("Seeding database...");
 
   // Clear existing data in correct order
+  await prisma.submissionAttachment.deleteMany();
+  await prisma.submission.deleteMany();
+  await prisma.taskAttachment.deleteMany();
+  await prisma.task.deleteMany();
+  await prisma.subject.deleteMany();
+  await prisma.messageReaction.deleteMany();
   await prisma.message.deleteMany();
   await prisma.conversationParticipant.deleteMany();
   await prisma.conversation.deleteMany();
@@ -280,6 +286,86 @@ async function main() {
     },
   });
   console.log("Created 3 students");
+
+  // Create subjects
+  const mathSubject = await prisma.subject.create({
+    data: {
+      name: "Matemáticas",
+      color: "#3B82F6",
+      schoolId: school.id,
+    },
+  });
+
+  const spanishSubject = await prisma.subject.create({
+    data: {
+      name: "Español",
+      color: "#EF4444",
+      schoolId: school.id,
+    },
+  });
+
+  const scienceSubject = await prisma.subject.create({
+    data: {
+      name: "Ciencias Naturales",
+      color: "#22C55E",
+      schoolId: school.id,
+    },
+  });
+
+  const historySubject = await prisma.subject.create({
+    data: {
+      name: "Historia",
+      color: "#F59E0B",
+      schoolId: school.id,
+    },
+  });
+  console.log("Created 4 subjects");
+
+  // Create sample tasks
+  const task1 = await prisma.task.create({
+    data: {
+      title: "Ejercicios de multiplicación - Capítulo 3",
+      description: "Resolver los ejercicios del capítulo 3 del libro de matemáticas.",
+      instructions: "1. Resolver los ejercicios 1 al 15 de la página 45.\n2. Mostrar todos los procedimientos.\n3. Verificar las respuestas con la calculadora.",
+      status: "PUBLISHED",
+      dueDate: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000), // 7 días
+      publishedAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000),
+      maxScore: 100,
+      groupId: group3A.id,
+      teacherId: profesorMath.id,
+      subjectId: mathSubject.id,
+    },
+  });
+
+  const task2 = await prisma.task.create({
+    data: {
+      title: "Lectura comprensiva - Cuento 'El principito'",
+      description: "Leer el capítulo 5 de El Principito y responder las preguntas.",
+      instructions: "1. Leer el capítulo 5 completo.\n2. Responder las 10 preguntas del anexo.\n3. Escribir un pequeño resumen de 5 líneas.",
+      status: "PUBLISHED",
+      dueDate: new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000), // 5 días
+      publishedAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
+      maxScore: 100,
+      groupId: group3B.id,
+      teacherId: profesorSpanish.id,
+      subjectId: spanishSubject.id,
+    },
+  });
+
+  const task3 = await prisma.task.create({
+    data: {
+      title: "Proyecto: El sistema solar",
+      description: "Elaborar una maqueta o dibujo del sistema solar.",
+      instructions: "Pueden usar materiales reciclados para la maqueta o dibujar en una cartulina.\nDeben incluir todos los planetas con sus nombres.",
+      status: "DRAFT",
+      dueDate: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000), // 14 días
+      maxScore: 100,
+      groupId: group3A.id,
+      teacherId: profesorMath.id,
+      subjectId: scienceSubject.id,
+    },
+  });
+  console.log("Created 3 tasks");
 
   // Create sample conversations
   // Conversation: María with Profesora Laura
