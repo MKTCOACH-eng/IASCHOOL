@@ -7,9 +7,9 @@ export default function LandingPage() {
     <main className="min-h-screen bg-white">
       {/* Navigation - White Header */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-24">
-          <Link href="/" className="flex items-center">
-            <div className="relative h-20 w-56">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-20">
+          <Link href="/" className="flex items-center h-full py-2">
+            <div className="relative h-full w-48">
               <Image
                 src="/iaschool-logo.png"
                 alt="IA School"
@@ -110,7 +110,7 @@ export default function LandingPage() {
               <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
                 <XCircle className="w-8 h-8 text-[#1B4079]" />
               </div>
-              <h3 className="font-bold text-gray-900 mb-2">Sin IA School</h3>
+              <h3 className="font-bold text-[#1B4079] mb-2">Sin IA School</h3>
               <p className="text-gray-500 text-sm">50+ grupos de WhatsApp, información perdida, padres confundidos, carga administrativa excesiva</p>
             </div>
             <div className="flex items-center justify-center">
@@ -568,39 +568,68 @@ export default function LandingPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#1B4079]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            {/* Logo a la izquierda */}
-            <div className="flex items-center gap-4">
-              <div className="relative h-14 w-40 bg-white rounded-lg p-2">
-                <Image
-                  src="/iaschool-logo.png"
-                  alt="IA School Logo"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <p className="text-white/70 text-sm hidden md:block">
-                © 2026 IA School
+      <footer className="bg-gray-900">
+        {/* Pleca superior */}
+        <div className="bg-[#1B4079] py-4">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="relative h-10 w-32 bg-white rounded-lg p-1">
+              <Image
+                src="/iaschool-logo.png"
+                alt="IA School Logo"
+                fill
+                className="object-contain"
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <a href="#" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                <Instagram className="w-4 h-4 text-white" />
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                <Facebook className="w-4 h-4 text-white" />
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                <Linkedin className="w-4 h-4 text-white" />
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                <Twitter className="w-4 h-4 text-white" />
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        {/* Contenido del footer */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div className="md:col-span-2">
+              <p className="text-gray-400 text-sm max-w-md">
+                El sistema operativo para colegios del futuro. Centraliza comunicación, 
+                gestión académica, pagos y análisis con IA en una sola plataforma.
               </p>
             </div>
-
-            {/* Redes sociales a la derecha */}
-            <div className="flex items-center gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                <Instagram className="w-5 h-5 text-white" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                <Facebook className="w-5 h-5 text-white" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                <Linkedin className="w-5 h-5 text-white" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                <Twitter className="w-5 h-5 text-white" />
-              </a>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Producto</h4>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li><a href="#funcionalidades" className="hover:text-white transition-colors">Funcionalidades</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Precios</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Casos de éxito</a></li>
+              </ul>
             </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Recursos</h4>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Videos</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Soporte</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-gray-500 text-sm">
+              © 2026 IA School. Todos los derechos reservados.
+            </p>
+            <p className="text-gray-500 text-sm">
+              La tecnología que conecta familias y escuelas
+            </p>
           </div>
         </div>
       </footer>
