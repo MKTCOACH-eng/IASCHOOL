@@ -145,7 +145,7 @@ export default function LandingPage() {
                   <tr className="bg-[#1B4079] text-white">
                     <th className="py-4 px-4 text-left font-semibold">Característica</th>
                     <th className="py-4 px-3 text-center font-semibold bg-[#CBDF90] text-[#1B4079]">IA School</th>
-                    <th className="py-4 px-3 text-center font-semibold text-white/80">Servo Digital</th>
+                    <th className="py-4 px-3 text-center font-semibold text-white/80">Servo Escolar</th>
                     <th className="py-4 px-3 text-center font-semibold text-white/80">Google Classroom</th>
                     <th className="py-4 px-4 text-left font-semibold text-white/90">Por qué importa</th>
                   </tr>
