@@ -1,0 +1,67 @@
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+    output = "/home/ubuntu/iaschool_app/nextjs_space/node_modules/.prisma/client"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PADRE
+}
+
+enum Priority {
+  NORMAL
+  URGENT
+}
+
+model School {
+  id           String         @id @default(cuid())
+  name         String
+  logoUrl      String?
+  primaryColor String         @default("#1B4079")
+  createdAt    DateTime       @default(now())
+  users        User[]
+  announcements Announcement[]
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String
+  name          String
+  role          Role     @default(PADRE)
+  schoolId      String?
+  school        School?  @relation(fields: [schoolId], references: [id])
+  createdAt     DateTime @default(now())
+  announcements Announcement[] @relation("CreatedBy")
+  reads         AnnouncementRead[]
+}
+
+model Announcement {
+  id          String   @id @default(cuid())
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
+  title       String
+  content     String
+  priority    Priority @default(NORMAL)
+  createdById String
+  createdBy   User     @relation("CreatedBy", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  reads       AnnouncementRead[]
+}
+
+model AnnouncementRead {
+  id             String       @id @default(cuid())
+  announcementId String
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  readAt         DateTime     @default(now())
+
+  @@unique([announcementId, userId])
+}
