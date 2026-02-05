@@ -9,7 +9,7 @@ export default function LandingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-20">
           <Link href="/" className="flex items-center">
-            <div className="relative h-[72px] w-[200px]">
+            <div className="relative h-[86px] w-[240px]">
               <Image
                 src="/iaschool-logo.png"
                 alt="IA School"
