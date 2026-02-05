@@ -129,7 +129,7 @@ export default function LandingPage() {
 
       {/* Comparison Table */}
       <div className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               IA School vs. Otras Plataformas
@@ -139,47 +139,91 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-[#1B4079] text-white">
-                  <th className="py-4 px-6 text-left font-semibold">Característica</th>
-                  <th className="py-4 px-6 text-center font-semibold">IA School</th>
-                  <th className="py-4 px-6 text-center font-semibold text-white/70">Otros</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                <tr>
-                  <td className="py-4 px-6 text-gray-700">Comunicación centralizada</td>
-                  <td className="py-4 px-6 text-center"><CheckCircle className="w-5 h-5 text-[#1B4079] mx-auto" /></td>
-                  <td className="py-4 px-6 text-center"><XCircle className="w-5 h-5 text-gray-300 mx-auto" /></td>
-                </tr>
-                <tr className="bg-gray-50/50">
-                  <td className="py-4 px-6 text-gray-700">Inteligencia Artificial integrada</td>
-                  <td className="py-4 px-6 text-center"><CheckCircle className="w-5 h-5 text-[#1B4079] mx-auto" /></td>
-                  <td className="py-4 px-6 text-center"><XCircle className="w-5 h-5 text-gray-300 mx-auto" /></td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 text-gray-700">Control de pagos y cobranza</td>
-                  <td className="py-4 px-6 text-center"><CheckCircle className="w-5 h-5 text-[#1B4079] mx-auto" /></td>
-                  <td className="py-4 px-6 text-center"><XCircle className="w-5 h-5 text-gray-300 mx-auto" /></td>
-                </tr>
-                <tr className="bg-gray-50/50">
-                  <td className="py-4 px-6 text-gray-700">White-label personalizable</td>
-                  <td className="py-4 px-6 text-center"><CheckCircle className="w-5 h-5 text-[#1B4079] mx-auto" /></td>
-                  <td className="py-4 px-6 text-center"><XCircle className="w-5 h-5 text-gray-300 mx-auto" /></td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 text-gray-700">Soporte en español 24/7</td>
-                  <td className="py-4 px-6 text-center"><CheckCircle className="w-5 h-5 text-[#1B4079] mx-auto" /></td>
-                  <td className="py-4 px-6 text-center"><XCircle className="w-5 h-5 text-gray-300 mx-auto" /></td>
-                </tr>
-                <tr className="bg-gray-50/50">
-                  <td className="py-4 px-6 text-gray-700">Diseñado para LATAM</td>
-                  <td className="py-4 px-6 text-center"><CheckCircle className="w-5 h-5 text-[#1B4079] mx-auto" /></td>
-                  <td className="py-4 px-6 text-center"><XCircle className="w-5 h-5 text-gray-300 mx-auto" /></td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[800px]">
+                <thead>
+                  <tr className="bg-[#1B4079] text-white">
+                    <th className="py-4 px-4 text-left font-semibold">Característica</th>
+                    <th className="py-4 px-3 text-center font-semibold bg-[#CBDF90] text-[#1B4079]">IA School</th>
+                    <th className="py-4 px-3 text-center font-semibold text-white/80">Servo Digital</th>
+                    <th className="py-4 px-3 text-center font-semibold text-white/80">Google Classroom</th>
+                    <th className="py-4 px-4 text-left font-semibold text-white/90">Por qué importa</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 text-sm">
+                  <tr>
+                    <td className="py-3 px-4 text-gray-700 font-medium">Control operativo total</td>
+                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Alto</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Medio</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /> Nulo</span></td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">Dirección necesita ver <em>todo</em>, no solo enviar avisos</td>
+                  </tr>
+                  <tr className="bg-gray-50/50">
+                    <td className="py-3 px-4 text-gray-700 font-medium">Reducción del caos (WhatsApp/mails)</td>
+                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Sustituye</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Reduce</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /> No</span></td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">Menos fricción = menos quejas</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 text-gray-700 font-medium">Visibilidad sin pedir reportes</td>
+                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Dashboards</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">Directores no quieren &quot;perseguir info&quot;</td>
+                  </tr>
+                  <tr className="bg-gray-50/50">
+                    <td className="py-3 px-4 text-gray-700 font-medium">Gestión de padres difíciles</td>
+                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> IA + métricas</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">Prevención &gt; crisis</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 text-gray-700 font-medium">Escalabilidad administrativa</td>
+                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Alta</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">A 300 alumnos el caos explota</td>
+                  </tr>
+                  <tr className="bg-gray-50/50">
+                    <td className="py-3 px-4 text-gray-700 font-medium">Métricas de clima escolar</td>
+                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> IA</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">Nadie más lo mide</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 text-gray-700 font-medium">Integración academia + finanzas</td>
+                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">Hoy está fragmentado</td>
+                  </tr>
+                  <tr className="bg-gray-50/50">
+                    <td className="py-3 px-4 text-gray-700 font-medium">Dependencia de herramientas externas</td>
+                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><XCircle className="w-4 h-4" /> Ninguna</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Alta</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Alta</span></td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">Menos proveedores = menos problemas</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 text-gray-700 font-medium">Retención del sistema</td>
+                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Alta</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Media</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /> Baja</span></td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">Cambio de plataforma cuesta</td>
+                  </tr>
+                  <tr className="bg-gray-50/50">
+                    <td className="py-3 px-4 text-gray-700 font-medium">Valor percibido vs costo</td>
+                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Alto</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Medio</span></td>
+                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Bajo</span></td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">Classroom es gratis, pero no resuelve</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
