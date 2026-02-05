@@ -10,17 +10,20 @@ async function main() {
   await prisma.announcementRead.deleteMany();
   await prisma.announcement.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.invitation.deleteMany();
   await prisma.school.deleteMany();
 
   // Create Vermont School
   const school = await prisma.school.create({
     data: {
       name: "Vermont School",
+      code: "VERMONT2026",
       logoUrl: "/vermont-logo.svg",
       primaryColor: "#1B4079",
+      isActive: true,
     },
   });
-  console.log("Created school:", school.name);
+  console.log("Created school:", school.name, "Code:", school.code);
 
   // Hash passwords
   const adminPassword = await bcrypt.hash("admin123", 10);
@@ -35,6 +38,8 @@ async function main() {
       name: "John Doe",
       role: Role.ADMIN,
       schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
     },
   });
 
@@ -46,6 +51,8 @@ async function main() {
       name: "Director García",
       role: Role.ADMIN,
       schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
     },
   });
   console.log("Created admin:", admin.name);
@@ -58,6 +65,8 @@ async function main() {
       name: "María López",
       role: Role.PADRE,
       schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
     },
   });
 
@@ -68,6 +77,8 @@ async function main() {
       name: "Juan Martínez",
       role: Role.PADRE,
       schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
     },
   });
 
@@ -78,6 +89,8 @@ async function main() {
       name: "Ana Rodríguez",
       role: Role.PADRE,
       schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
     },
   });
   console.log("Created 3 padres");
