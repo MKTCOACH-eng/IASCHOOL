@@ -1,14 +1,31 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 import { MessageSquare, Shield, BookOpen, CreditCard, PlayCircle, FileText, Calendar, Brain, ChevronRight, Bell, Users, XCircle, CheckCircle, ArrowRight, Instagram, Facebook, Linkedin, Twitter } from "lucide-react";
 
 export default function LandingPage() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <main className="min-h-screen bg-white">
-      {/* Navigation - White Header */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+      {/* Navigation - Transparent on scroll */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? "bg-transparent shadow-none" 
+          : "bg-white shadow-sm"
+      }`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[132px] py-[6px]">
-          <Link href="/" className="flex items-center h-full">
+          <Link href="/" className={`flex items-center h-full transition-opacity duration-300 ${isScrolled ? "opacity-0" : "opacity-100"}`}>
             <div className="relative h-[120px] w-[120px]">
               <Image
                 src="/iaschool-logo.png"
@@ -21,7 +38,11 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/login"
-            className="px-6 py-3 bg-[#1B4079] text-white text-base font-medium rounded-lg hover:bg-[#4D7C8A] transition-all"
+            className={`px-6 py-3 text-base font-medium rounded-lg transition-all duration-300 ${
+              isScrolled 
+                ? "bg-white/90 text-[#1B4079] hover:bg-white" 
+                : "bg-[#1B4079] text-white hover:bg-[#4D7C8A]"
+            }`}
           >
             Iniciar Sesión
           </Link>
