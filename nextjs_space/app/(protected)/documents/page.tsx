@@ -236,8 +236,8 @@ export default function DocumentsPage() {
   const filteredDocuments = documents.filter(doc => {
     const matchesSearch = doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (doc.description && doc.description.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesStatus = !filterStatus || doc.status === filterStatus;
-    const matchesType = !filterType || doc.type === filterType;
+    const matchesStatus = !filterStatus || filterStatus === "all_status" || doc.status === filterStatus;
+    const matchesType = !filterType || filterType === "all_types" || doc.type === filterType;
     return matchesSearch && matchesStatus && matchesType;
   });
 
@@ -346,7 +346,7 @@ export default function DocumentsPage() {
                         <SelectValue placeholder="Todos los grupos" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Todos los grupos</SelectItem>
+                        <SelectItem value="all">Todos los grupos</SelectItem>
                         {groups.map(group => (
                           <SelectItem key={group.id} value={group.id}>
                             {group.name}
@@ -444,7 +444,7 @@ export default function DocumentsPage() {
                 <SelectValue placeholder="Estado" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos los estados</SelectItem>
+                <SelectItem value="all_status">Todos los estados</SelectItem>
                 {Object.entries(STATUS_CONFIG).map(([key, config]) => (
                   <SelectItem key={key} value={key}>{config.label}</SelectItem>
                 ))}
@@ -456,7 +456,7 @@ export default function DocumentsPage() {
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos los tipos</SelectItem>
+                <SelectItem value="all_types">Todos los tipos</SelectItem>
                 {DOCUMENT_TYPES.map(type => (
                   <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
                 ))}

@@ -166,6 +166,11 @@ model User {
   
   // Chatbot IA
   chatbotConversations ChatbotConversation[]
+  
+  // Sistema de citas
+  teacherAvailability  TeacherAvailability[] @relation("TeacherAvailability")
+  appointmentsAsTeacher Appointment[]        @relation("TeacherAppointments")
+  appointmentsAsParent  Appointment[]        @relation("ParentAppointments")
 }
 
 model Invitation {
@@ -229,6 +234,7 @@ model Student {
   charges      Charge[]
   gradeDocuments GradeDocument[]
   attendances  Attendance[]
+  appointments Appointment[] @relation("StudentAppointments")
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -892,6 +898,85 @@ model SchoolSettings {
   
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+// ==================== SISTEMA DE CITAS ====================
+
+enum AppointmentStatus {
+  PENDING      // Pendiente de confirmación
+  CONFIRMED    // Confirmada
+  CANCELLED    // Cancelada
+  COMPLETED    // Completada
+  NO_SHOW      // No se presentó
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+// Disponibilidad semanal del profesor
+model TeacherAvailability {
+  id          String    @id @default(cuid())
+  teacherId   String
+  teacher     User      @relation("TeacherAvailability", fields: [teacherId], references: [id], onDelete: Cascade)
+  dayOfWeek   DayOfWeek
+  startTime   String    // "09:00" formato HH:mm
+  endTime     String    // "10:00" formato HH:mm
+  slotDuration Int      @default(30) // minutos por cita
+  isActive    Boolean   @default(true)
+  location    String?   // "Sala de maestros", "Aula 5", etc.
+  notes       String?   // Notas adicionales
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([teacherId, dayOfWeek, startTime])
+  @@index([teacherId])
+  @@index([dayOfWeek])
+}
+
+// Citas agendadas
+model Appointment {
+  id              String            @id @default(cuid())
+  teacherId       String
+  teacher         User              @relation("TeacherAppointments", fields: [teacherId], references: [id])
+  parentId        String
+  parent          User              @relation("ParentAppointments", fields: [parentId], references: [id])
+  studentId       String?
+  student         Student?          @relation("StudentAppointments", fields: [studentId], references: [id])
+  
+  scheduledDate   DateTime          // Fecha de la cita
+  startTime       String            // "09:00"
+  endTime         String            // "09:30"
+  status          AppointmentStatus @default(PENDING)
+  
+  subject         String            // Motivo de la cita
+  notes           String?           @db.Text // Notas adicionales del padre
+  teacherNotes    String?           @db.Text // Notas del profesor (después de la cita)
+  location        String?           // Lugar de la cita
+  
+  // Notificaciones
+  parentNotified  Boolean           @default(false)
+  teacherNotified Boolean           @default(false)
+  reminderSent    Boolean           @default(false)
+  
+  cancelledBy     String?           // userId de quien canceló
+  cancelReason    String?           // Razón de cancelación
+  cancelledAt     DateTime?
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([teacherId])
+  @@index([parentId])
+  @@index([studentId])
+  @@index([scheduledDate])
+  @@index([status])
 }
 
 // Registro de actividad del sistema (Auditoría)
