@@ -11,8 +11,8 @@ interface SessionUser {
   schoolId: string;
 }
 
-// GET - Listar grupos del colegio
-export async function GET() {
+// GET - Listar grupos del colegio o detalle de un grupo
+export async function GET(request: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user) {
@@ -20,7 +20,40 @@ export async function GET() {
     }
 
     const user = session.user as SessionUser;
+    const { searchParams } = new URL(request.url);
+    const groupId = searchParams.get("id");
 
+    // Si se pasa un ID, devolver detalles del grupo incluyendo estudiantes
+    if (groupId) {
+      const group = await db.group.findFirst({
+        where: {
+          id: groupId,
+          schoolId: user.schoolId,
+        },
+        include: {
+          teacher: {
+            select: { id: true, name: true, email: true },
+          },
+          students: {
+            where: { isActive: true },
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+            },
+            orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+          },
+        },
+      });
+
+      if (!group) {
+        return NextResponse.json({ error: "Grupo no encontrado" }, { status: 404 });
+      }
+
+      return NextResponse.json(group);
+    }
+
+    // Listar todos los grupos
     const groups = await db.group.findMany({
       where: {
         schoolId: user.schoolId,

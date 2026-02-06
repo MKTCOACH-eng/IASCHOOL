@@ -181,12 +181,20 @@ export default function AcademicProgressPage() {
           </p>
         </div>
         
-        <Link href="/academic/grades">
-          <Button variant="outline" className="gap-2">
-            <FileText className="w-4 h-4" />
-            Ver Reporte de Calificaciones
-          </Button>
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/academic/grades">
+            <Button variant="outline" className="gap-2">
+              <FileText className="w-4 h-4" />
+              Reporte de Calificaciones
+            </Button>
+          </Link>
+          <Link href="/academic/documents">
+            <Button variant="outline" className="gap-2">
+              <FileText className="w-4 h-4" />
+              Boletas y Documentos
+            </Button>
+          </Link>
+        </div>
 
         {stats.students.length > 1 && (
           <Select value={selectedStudent} onValueChange={setSelectedStudent}>

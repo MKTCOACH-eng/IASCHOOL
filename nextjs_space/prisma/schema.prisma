@@ -104,6 +104,9 @@ model User {
   // Pagos
   chargesCreated     Charge[]  @relation("ChargeCreatedBy")
   paymentsRecorded   Payment[] @relation("PaymentRecordedBy")
+  
+  // Documentos de calificaciones
+  gradeDocumentsUploaded GradeDocument[] @relation("GradeDocumentUploader")
 }
 
 model Invitation {
@@ -157,6 +160,7 @@ model Student {
   parents      User[]   @relation("ParentChildren")
   submissions  Submission[]
   charges      Charge[]
+  gradeDocuments GradeDocument[]
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -443,6 +447,36 @@ model SubmissionAttachment {
   createdAt       DateTime   @default(now())
 
   @@index([submissionId])
+}
+
+// Documentos de calificaciones (boletas, reportes)
+model GradeDocument {
+  id              String   @id @default(cuid())
+  title           String   // "Boleta Primer Trimestre", "Reporte Anual"
+  description     String?
+  
+  // Relaciones
+  studentId       String
+  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  uploadedById    String
+  uploadedBy      User     @relation("GradeDocumentUploader", fields: [uploadedById], references: [id])
+  
+  // Archivo
+  fileName        String
+  fileUrl         String
+  fileSize        Int?
+  mimeType        String?
+  cloudStoragePath String?
+  isPublic        Boolean  @default(false)
+  
+  // Período académico
+  period          String?  // "2025-T1", "2025-2026"
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([uploadedById])
 }
 
 // ==================== EVENTOS DE CALENDARIO ====================
