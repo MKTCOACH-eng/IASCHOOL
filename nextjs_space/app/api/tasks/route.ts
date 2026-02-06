@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { prisma as db } from "@/lib/db";
+import { sendNewTaskNotification } from "@/lib/send-notification";
 
 interface SessionUser {
   id: string;
@@ -103,12 +104,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verificar que el grupo pertenece a la escuela
+    // Verificar que el grupo pertenece a la escuela e incluir estudiantes con padres
     const group = await db.group.findFirst({
       where: { id: groupId, schoolId: user.schoolId },
+      include: {
+        school: true,
+        students: {
+          where: { isActive: true },
+          include: {
+            parents: {
+              select: { id: true, name: true, email: true }
+            }
+          }
+        }
+      }
     });
     if (!group) {
       return NextResponse.json({ error: "Grupo no encontrado" }, { status: 404 });
+    }
+
+    // Obtener nombre de la materia si existe
+    let subjectName: string | undefined;
+    if (subjectId) {
+      const subject = await db.subject.findUnique({ where: { id: subjectId } });
+      subjectName = subject?.name;
     }
 
     const task = await db.task.create({
@@ -130,6 +149,38 @@ export async function POST(request: NextRequest) {
         teacher: { select: { id: true, name: true } },
       },
     });
+
+    // Enviar notificaciones por email si la tarea se publica
+    if (status === "PUBLISHED") {
+      const teacherName = (session.user as { name?: string }).name || "Profesor";
+      const schoolName = group.school.name;
+      
+      // Crear un set para evitar enviar múltiples emails al mismo padre
+      const notifiedParents = new Set<string>();
+      
+      // Enviar email a cada padre de cada estudiante del grupo
+      for (const student of group.students) {
+        for (const parent of student.parents) {
+          // Evitar duplicados (un padre puede tener varios hijos en el mismo grupo)
+          if (notifiedParents.has(parent.id)) continue;
+          notifiedParents.add(parent.id);
+          
+          // Enviar notificación de forma asíncrona (no bloquea la respuesta)
+          sendNewTaskNotification({
+            parentEmail: parent.email,
+            parentName: parent.name,
+            studentName: `${student.firstName} ${student.lastName}`,
+            taskTitle: task.title,
+            teacherName,
+            subjectName,
+            dueDate: task.dueDate,
+            schoolName,
+          }).catch((err) => {
+            console.error(`Error sending task notification to ${parent.email}:`, err);
+          });
+        }
+      }
+    }
 
     return NextResponse.json(task, { status: 201 });
   } catch (error) {
