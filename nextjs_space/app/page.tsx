@@ -38,11 +38,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/login"
-            className={`px-6 py-3 text-base font-medium rounded-lg transition-all duration-300 ${
-              isScrolled 
-                ? "bg-white/90 text-[#1B4079] hover:bg-white" 
-                : "bg-[#1B4079] text-white hover:bg-[#4D7C8A]"
-            }`}
+            className={`px-6 py-3 text-base font-medium rounded-lg transition-all duration-300 bg-[#1B4079] text-white hover:bg-[#4D7C8A] ${isScrolled ? "opacity-0" : "opacity-100"}`}
           >
             Iniciar Sesión
           </Link>
