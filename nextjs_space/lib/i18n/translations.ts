@@ -1,1191 +1,1326 @@
-export type Language = 'ES' | 'EN' | 'PT' | 'DE' | 'FR' | 'JA';
+// Multi-language translations for IA School
+// Supported languages: Spanish (ES), English (EN), Portuguese (PT), German (DE), French (FR), Japanese (JA)
+
+export type Language = 'es' | 'en' | 'pt' | 'de' | 'fr' | 'ja';
 
 export const languageNames: Record<Language, string> = {
-  ES: 'Español',
-  EN: 'English',
-  PT: 'Português',
-  DE: 'Deutsch',
-  FR: 'Français',
-  JA: '日本語'
+  es: 'Español',
+  en: 'English',
+  pt: 'Português',
+  de: 'Deutsch',
+  fr: 'Français',
+  ja: '日本語'
 };
 
 export const languageFlags: Record<Language, string> = {
-  ES: '🇲🇽',
-  EN: '🇺🇸',
-  PT: '🇧🇷',
-  DE: '🇩🇪',
-  FR: '🇫🇷',
-  JA: '🇯🇵'
+  es: '🇲🇽',
+  en: '🇺🇸',
+  pt: '🇧🇷',
+  de: '🇩🇪',
+  fr: '🇫🇷',
+  ja: '🇯🇵'
 };
 
-export type TranslationKey = keyof typeof translations.ES;
+type TranslationKeys = {
+  // Navigation
+  nav: {
+    home: string;
+    dashboard: string;
+    messages: string;
+    announcements: string;
+    calendar: string;
+    tasks: string;
+    payments: string;
+    documents: string;
+    chatbot: string;
+    directory: string;
+    appointments: string;
+    attendance: string;
+    academic: string;
+    polls: string;
+    invitations: string;
+    crm: string;
+    superAdmin: string;
+    logout: string;
+    login: string;
+  };
+  // Landing page
+  landing: {
+    hero: {
+      title: string;
+      subtitle: string;
+      cta: string;
+    };
+    features: {
+      title: string;
+      communication: { title: string; desc: string };
+      payments: { title: string; desc: string };
+      academic: { title: string; desc: string };
+      security: { title: string; desc: string };
+    };
+    forFamilies: {
+      title: string;
+      desc: string;
+    };
+    forTeachers: {
+      title: string;
+      desc: string;
+    };
+  };
+  // Common
+  common: {
+    loading: string;
+    save: string;
+    cancel: string;
+    delete: string;
+    edit: string;
+    create: string;
+    search: string;
+    filter: string;
+    export: string;
+    import: string;
+    download: string;
+    upload: string;
+    back: string;
+    next: string;
+    previous: string;
+    confirm: string;
+    yes: string;
+    no: string;
+    all: string;
+    none: string;
+    select: string;
+    noResults: string;
+    error: string;
+    success: string;
+    warning: string;
+    info: string;
+  };
+  // Dashboard
+  dashboard: {
+    welcome: string;
+    overview: string;
+    recentActivity: string;
+    pendingTasks: string;
+    unreadMessages: string;
+    upcomingEvents: string;
+    announcements: string;
+  };
+  // Messages
+  messages: {
+    title: string;
+    newMessage: string;
+    direct: string;
+    groups: string;
+    typeMessage: string;
+    send: string;
+    noMessages: string;
+    searchContacts: string;
+  };
+  // Payments
+  payments: {
+    title: string;
+    pending: string;
+    paid: string;
+    overdue: string;
+    amount: string;
+    dueDate: string;
+    payNow: string;
+    history: string;
+    speiInstructions: string;
+  };
+  // Tasks
+  tasks: {
+    title: string;
+    newTask: string;
+    dueDate: string;
+    priority: string;
+    status: string;
+    completed: string;
+    pending: string;
+    inProgress: string;
+    submit: string;
+  };
+  // Calendar
+  calendar: {
+    title: string;
+    today: string;
+    month: string;
+    week: string;
+    day: string;
+    newEvent: string;
+    noEvents: string;
+  };
+  // Documents
+  documents: {
+    title: string;
+    sign: string;
+    signed: string;
+    pending: string;
+    verify: string;
+    download: string;
+  };
+  // Chatbot
+  chatbot: {
+    title: string;
+    askQuestion: string;
+    thinking: string;
+    helpful: string;
+    notHelpful: string;
+  };
+  // Appointments
+  appointments: {
+    title: string;
+    schedule: string;
+    availableSlots: string;
+    selectTeacher: string;
+    selectDate: string;
+    selectTime: string;
+    confirm: string;
+    cancel: string;
+    reason: string;
+  };
+  // Attendance
+  attendance: {
+    title: string;
+    present: string;
+    absent: string;
+    late: string;
+    excused: string;
+    date: string;
+    student: string;
+  };
+  // CRM
+  crm: {
+    title: string;
+    contacts: string;
+    campaigns: string;
+    templates: string;
+    newCampaign: string;
+    sendEmail: string;
+    emailsSent: string;
+    openRate: string;
+  };
+  // Roles
+  roles: {
+    admin: string;
+    teacher: string;
+    parent: string;
+    student: string;
+    superAdmin: string;
+  };
+  // Time
+  time: {
+    today: string;
+    yesterday: string;
+    daysAgo: string;
+    hoursAgo: string;
+    minutesAgo: string;
+    justNow: string;
+  };
+};
 
-export const translations = {
-  ES: {
-    // General
-    'app.name': 'IA School',
-    'app.loading': 'Cargando...',
-    'app.error': 'Error',
-    'app.success': 'Éxito',
-    'app.save': 'Guardar',
-    'app.cancel': 'Cancelar',
-    'app.delete': 'Eliminar',
-    'app.edit': 'Editar',
-    'app.create': 'Crear',
-    'app.search': 'Buscar',
-    'app.filter': 'Filtrar',
-    'app.export': 'Exportar',
-    'app.import': 'Importar',
-    'app.back': 'Volver',
-    'app.next': 'Siguiente',
-    'app.previous': 'Anterior',
-    'app.confirm': 'Confirmar',
-    'app.close': 'Cerrar',
-    'app.yes': 'Sí',
-    'app.no': 'No',
-    'app.all': 'Todos',
-    'app.none': 'Ninguno',
-    'app.view': 'Ver',
-    'app.download': 'Descargar',
-    'app.upload': 'Subir',
-    'app.send': 'Enviar',
-    'app.copy': 'Copiar',
-    'app.copied': 'Copiado',
-    
-    // Auth
-    'auth.login': 'Iniciar Sesión',
-    'auth.logout': 'Cerrar Sesión',
-    'auth.email': 'Correo electrónico',
-    'auth.password': 'Contraseña',
-    'auth.forgot_password': '¿Olvidaste tu contraseña?',
-    'auth.login_error': 'Credenciales incorrectas',
-    'auth.welcome_back': 'Bienvenido de nuevo',
-    
-    // Navigation
-    'nav.dashboard': 'Inicio',
-    'nav.announcements': 'Anuncios',
-    'nav.messages': 'Mensajes',
-    'nav.calendar': 'Calendario',
-    'nav.tasks': 'Tareas',
-    'nav.attendance': 'Asistencia',
-    'nav.grades': 'Calificaciones',
-    'nav.payments': 'Pagos',
-    'nav.documents': 'Documentos',
-    'nav.polls': 'Encuestas',
-    'nav.appointments': 'Citas',
-    'nav.chatbot': 'Asistente IA',
-    'nav.directory': 'Directorio',
-    'nav.settings': 'Configuración',
-    'nav.invitations': 'Invitaciones',
-    'nav.crm': 'CRM',
-    
-    // Dashboard
-    'dashboard.welcome': 'Bienvenido',
-    'dashboard.pending_tasks': 'Tareas pendientes',
-    'dashboard.upcoming_events': 'Próximos eventos',
-    'dashboard.recent_announcements': 'Anuncios recientes',
-    'dashboard.unread_messages': 'Mensajes sin leer',
-    'dashboard.pending_payments': 'Pagos pendientes',
-    'dashboard.today_attendance': 'Asistencia de hoy',
-    
-    // Announcements
-    'announcements.title': 'Anuncios',
-    'announcements.new': 'Nuevo anuncio',
-    'announcements.no_announcements': 'No hay anuncios',
-    'announcements.mark_read': 'Marcar como leído',
-    'announcements.urgent': 'Urgente',
-    'announcements.normal': 'Normal',
-    
-    // Messages
-    'messages.title': 'Mensajes',
-    'messages.new_conversation': 'Nueva conversación',
-    'messages.no_messages': 'No hay mensajes',
-    'messages.type_message': 'Escribe un mensaje...',
-    'messages.send': 'Enviar',
-    'messages.direct': 'Directos',
-    'messages.groups': 'Grupos',
-    
-    // Tasks
-    'tasks.title': 'Tareas',
-    'tasks.new_task': 'Nueva tarea',
-    'tasks.no_tasks': 'No hay tareas',
-    'tasks.due_date': 'Fecha de entrega',
-    'tasks.submit': 'Entregar',
-    'tasks.submitted': 'Entregada',
-    'tasks.pending': 'Pendiente',
-    'tasks.graded': 'Calificada',
-    
-    // Attendance
-    'attendance.title': 'Asistencia',
-    'attendance.present': 'Presente',
-    'attendance.absent': 'Ausente',
-    'attendance.late': 'Tardanza',
-    'attendance.justified': 'Justificado',
-    'attendance.take_attendance': 'Tomar asistencia',
-    
-    // Grades
-    'grades.title': 'Calificaciones',
-    'grades.average': 'Promedio',
-    'grades.subject': 'Materia',
-    'grades.grade': 'Calificación',
-    'grades.date': 'Fecha',
-    
-    // Payments
-    'payments.title': 'Pagos',
-    'payments.pending': 'Pendientes',
-    'payments.paid': 'Pagados',
-    'payments.amount': 'Monto',
-    'payments.due_date': 'Fecha de vencimiento',
-    'payments.pay_now': 'Pagar ahora',
-    'payments.receipt': 'Recibo',
-    
-    // Documents
-    'documents.title': 'Documentos',
-    'documents.sign': 'Firmar',
-    'documents.signed': 'Firmado',
-    'documents.pending_signature': 'Pendiente de firma',
-    'documents.download': 'Descargar',
-    
-    // Appointments
-    'appointments.title': 'Citas',
-    'appointments.new': 'Nueva cita',
-    'appointments.schedule': 'Agendar',
-    'appointments.cancel': 'Cancelar cita',
-    'appointments.confirm': 'Confirmar cita',
-    'appointments.date': 'Fecha',
-    'appointments.time': 'Hora',
-    'appointments.teacher': 'Profesor',
-    'appointments.parent': 'Padre/Madre',
-    
-    // Chatbot
-    'chatbot.title': 'Asistente IA',
-    'chatbot.placeholder': 'Escribe tu pregunta...',
-    'chatbot.thinking': 'Pensando...',
-    'chatbot.error': 'Error al procesar tu consulta',
-    
-    // Directory
-    'directory.title': 'Directorio',
-    'directory.students': 'Estudiantes',
-    'directory.parents': 'Padres',
-    'directory.staff': 'Personal',
-    'directory.search_placeholder': 'Buscar por nombre o email...',
-    
-    // CRM
-    'crm.title': 'CRM y Comunicación',
-    'crm.segments': 'Segmentos',
-    'crm.campaigns': 'Campañas',
-    'crm.templates': 'Plantillas',
-    'crm.new_segment': 'Nuevo segmento',
-    'crm.new_campaign': 'Nueva campaña',
-    'crm.recipients': 'Destinatarios',
-    'crm.send_now': 'Enviar ahora',
-    'crm.schedule': 'Programar',
-    'crm.draft': 'Borrador',
-    'crm.sent': 'Enviado',
-    'crm.open_rate': 'Tasa de apertura',
-    'crm.click_rate': 'Tasa de clicks',
-    
-    // Settings
-    'settings.title': 'Configuración',
-    'settings.language': 'Idioma',
-    'settings.notifications': 'Notificaciones',
-    'settings.profile': 'Perfil',
-    'settings.change_password': 'Cambiar contraseña',
-    
-    // Roles
-    'role.admin': 'Administrador',
-    'role.teacher': 'Profesor',
-    'role.parent': 'Padre/Madre',
-    'role.student': 'Estudiante',
-    'role.vocal': 'Vocal',
-    'role.super_admin': 'Super Admin',
-    
-    // Time
-    'time.today': 'Hoy',
-    'time.yesterday': 'Ayer',
-    'time.tomorrow': 'Mañana',
-    'time.this_week': 'Esta semana',
-    'time.this_month': 'Este mes',
-    
-    // Status
-    'status.active': 'Activo',
-    'status.inactive': 'Inactivo',
-    'status.pending': 'Pendiente',
-    'status.completed': 'Completado',
-    'status.cancelled': 'Cancelado',
+export const translations: Record<Language, TranslationKeys> = {
+  es: {
+    nav: {
+      home: 'Inicio',
+      dashboard: 'Panel',
+      messages: 'Mensajes',
+      announcements: 'Comunicados',
+      calendar: 'Calendario',
+      tasks: 'Tareas',
+      payments: 'Pagos',
+      documents: 'Documentos',
+      chatbot: 'Asistente IA',
+      directory: 'Directorio',
+      appointments: 'Citas',
+      attendance: 'Asistencia',
+      academic: 'Académico',
+      polls: 'Encuestas',
+      invitations: 'Invitaciones',
+      crm: 'CRM',
+      superAdmin: 'Super Admin',
+      logout: 'Cerrar Sesión',
+      login: 'Iniciar Sesión'
+    },
+    landing: {
+      hero: {
+        title: 'La Plataforma Educativa del Futuro',
+        subtitle: 'Conectamos familias, profesores y estudiantes en un ecosistema digital seguro e inteligente.',
+        cta: 'Comenzar Ahora'
+      },
+      features: {
+        title: 'Todo lo que necesitas',
+        communication: { title: 'Comunicación Instantánea', desc: 'Mensajes directos y grupales con profesores y familias.' },
+        payments: { title: 'Pagos Simplificados', desc: 'Gestión de colegiaturas y pagos sin comisiones.' },
+        academic: { title: 'Seguimiento Académico', desc: 'Calificaciones, tareas y asistencia en tiempo real.' },
+        security: { title: 'Seguridad Total', desc: 'Firma digital y verificación de documentos.' }
+      },
+      forFamilies: {
+        title: 'Para Familias',
+        desc: 'Mantente conectado con la educación de tus hijos.'
+      },
+      forTeachers: {
+        title: 'Para Profesores',
+        desc: 'Herramientas digitales para potenciar tu enseñanza.'
+      }
+    },
+    common: {
+      loading: 'Cargando...',
+      save: 'Guardar',
+      cancel: 'Cancelar',
+      delete: 'Eliminar',
+      edit: 'Editar',
+      create: 'Crear',
+      search: 'Buscar',
+      filter: 'Filtrar',
+      export: 'Exportar',
+      import: 'Importar',
+      download: 'Descargar',
+      upload: 'Subir',
+      back: 'Volver',
+      next: 'Siguiente',
+      previous: 'Anterior',
+      confirm: 'Confirmar',
+      yes: 'Sí',
+      no: 'No',
+      all: 'Todos',
+      none: 'Ninguno',
+      select: 'Seleccionar',
+      noResults: 'Sin resultados',
+      error: 'Error',
+      success: 'Éxito',
+      warning: 'Advertencia',
+      info: 'Información'
+    },
+    dashboard: {
+      welcome: 'Bienvenido',
+      overview: 'Resumen',
+      recentActivity: 'Actividad Reciente',
+      pendingTasks: 'Tareas Pendientes',
+      unreadMessages: 'Mensajes sin leer',
+      upcomingEvents: 'Próximos Eventos',
+      announcements: 'Comunicados'
+    },
+    messages: {
+      title: 'Mensajes',
+      newMessage: 'Nuevo Mensaje',
+      direct: 'Directos',
+      groups: 'Grupos',
+      typeMessage: 'Escribe un mensaje...',
+      send: 'Enviar',
+      noMessages: 'No hay mensajes',
+      searchContacts: 'Buscar contactos'
+    },
+    payments: {
+      title: 'Pagos',
+      pending: 'Pendiente',
+      paid: 'Pagado',
+      overdue: 'Vencido',
+      amount: 'Monto',
+      dueDate: 'Fecha límite',
+      payNow: 'Pagar Ahora',
+      history: 'Historial',
+      speiInstructions: 'Instrucciones SPEI'
+    },
+    tasks: {
+      title: 'Tareas',
+      newTask: 'Nueva Tarea',
+      dueDate: 'Fecha de entrega',
+      priority: 'Prioridad',
+      status: 'Estado',
+      completed: 'Completada',
+      pending: 'Pendiente',
+      inProgress: 'En progreso',
+      submit: 'Entregar'
+    },
+    calendar: {
+      title: 'Calendario',
+      today: 'Hoy',
+      month: 'Mes',
+      week: 'Semana',
+      day: 'Día',
+      newEvent: 'Nuevo Evento',
+      noEvents: 'Sin eventos'
+    },
+    documents: {
+      title: 'Documentos',
+      sign: 'Firmar',
+      signed: 'Firmado',
+      pending: 'Pendiente',
+      verify: 'Verificar',
+      download: 'Descargar'
+    },
+    chatbot: {
+      title: 'Asistente IA',
+      askQuestion: '¿En qué puedo ayudarte?',
+      thinking: 'Pensando...',
+      helpful: '¿Fue útil?',
+      notHelpful: 'No fue útil'
+    },
+    appointments: {
+      title: 'Citas',
+      schedule: 'Agendar',
+      availableSlots: 'Horarios disponibles',
+      selectTeacher: 'Seleccionar profesor',
+      selectDate: 'Seleccionar fecha',
+      selectTime: 'Seleccionar hora',
+      confirm: 'Confirmar cita',
+      cancel: 'Cancelar cita',
+      reason: 'Motivo'
+    },
+    attendance: {
+      title: 'Asistencia',
+      present: 'Presente',
+      absent: 'Ausente',
+      late: 'Tarde',
+      excused: 'Justificado',
+      date: 'Fecha',
+      student: 'Estudiante'
+    },
+    crm: {
+      title: 'CRM y Comunicación',
+      contacts: 'Contactos',
+      campaigns: 'Campañas',
+      templates: 'Plantillas',
+      newCampaign: 'Nueva Campaña',
+      sendEmail: 'Enviar Email',
+      emailsSent: 'Emails enviados',
+      openRate: 'Tasa de apertura'
+    },
+    roles: {
+      admin: 'Administrador',
+      teacher: 'Profesor',
+      parent: 'Padre/Madre',
+      student: 'Alumno',
+      superAdmin: 'Super Admin'
+    },
+    time: {
+      today: 'Hoy',
+      yesterday: 'Ayer',
+      daysAgo: 'hace {n} días',
+      hoursAgo: 'hace {n} horas',
+      minutesAgo: 'hace {n} minutos',
+      justNow: 'Justo ahora'
+    }
   },
-  
-  EN: {
-    // General
-    'app.name': 'IA School',
-    'app.loading': 'Loading...',
-    'app.error': 'Error',
-    'app.success': 'Success',
-    'app.save': 'Save',
-    'app.cancel': 'Cancel',
-    'app.delete': 'Delete',
-    'app.edit': 'Edit',
-    'app.create': 'Create',
-    'app.search': 'Search',
-    'app.filter': 'Filter',
-    'app.export': 'Export',
-    'app.import': 'Import',
-    'app.back': 'Back',
-    'app.next': 'Next',
-    'app.previous': 'Previous',
-    'app.confirm': 'Confirm',
-    'app.close': 'Close',
-    'app.yes': 'Yes',
-    'app.no': 'No',
-    'app.all': 'All',
-    'app.none': 'None',
-    'app.view': 'View',
-    'app.download': 'Download',
-    'app.upload': 'Upload',
-    'app.send': 'Send',
-    'app.copy': 'Copy',
-    'app.copied': 'Copied',
-    
-    // Auth
-    'auth.login': 'Log In',
-    'auth.logout': 'Log Out',
-    'auth.email': 'Email',
-    'auth.password': 'Password',
-    'auth.forgot_password': 'Forgot your password?',
-    'auth.login_error': 'Invalid credentials',
-    'auth.welcome_back': 'Welcome back',
-    
-    // Navigation
-    'nav.dashboard': 'Home',
-    'nav.announcements': 'Announcements',
-    'nav.messages': 'Messages',
-    'nav.calendar': 'Calendar',
-    'nav.tasks': 'Tasks',
-    'nav.attendance': 'Attendance',
-    'nav.grades': 'Grades',
-    'nav.payments': 'Payments',
-    'nav.documents': 'Documents',
-    'nav.polls': 'Polls',
-    'nav.appointments': 'Appointments',
-    'nav.chatbot': 'AI Assistant',
-    'nav.directory': 'Directory',
-    'nav.settings': 'Settings',
-    'nav.invitations': 'Invitations',
-    'nav.crm': 'CRM',
-    
-    // Dashboard
-    'dashboard.welcome': 'Welcome',
-    'dashboard.pending_tasks': 'Pending tasks',
-    'dashboard.upcoming_events': 'Upcoming events',
-    'dashboard.recent_announcements': 'Recent announcements',
-    'dashboard.unread_messages': 'Unread messages',
-    'dashboard.pending_payments': 'Pending payments',
-    'dashboard.today_attendance': "Today's attendance",
-    
-    // Announcements
-    'announcements.title': 'Announcements',
-    'announcements.new': 'New announcement',
-    'announcements.no_announcements': 'No announcements',
-    'announcements.mark_read': 'Mark as read',
-    'announcements.urgent': 'Urgent',
-    'announcements.normal': 'Normal',
-    
-    // Messages
-    'messages.title': 'Messages',
-    'messages.new_conversation': 'New conversation',
-    'messages.no_messages': 'No messages',
-    'messages.type_message': 'Type a message...',
-    'messages.send': 'Send',
-    'messages.direct': 'Direct',
-    'messages.groups': 'Groups',
-    
-    // Tasks
-    'tasks.title': 'Tasks',
-    'tasks.new_task': 'New task',
-    'tasks.no_tasks': 'No tasks',
-    'tasks.due_date': 'Due date',
-    'tasks.submit': 'Submit',
-    'tasks.submitted': 'Submitted',
-    'tasks.pending': 'Pending',
-    'tasks.graded': 'Graded',
-    
-    // Attendance
-    'attendance.title': 'Attendance',
-    'attendance.present': 'Present',
-    'attendance.absent': 'Absent',
-    'attendance.late': 'Late',
-    'attendance.justified': 'Justified',
-    'attendance.take_attendance': 'Take attendance',
-    
-    // Grades
-    'grades.title': 'Grades',
-    'grades.average': 'Average',
-    'grades.subject': 'Subject',
-    'grades.grade': 'Grade',
-    'grades.date': 'Date',
-    
-    // Payments
-    'payments.title': 'Payments',
-    'payments.pending': 'Pending',
-    'payments.paid': 'Paid',
-    'payments.amount': 'Amount',
-    'payments.due_date': 'Due date',
-    'payments.pay_now': 'Pay now',
-    'payments.receipt': 'Receipt',
-    
-    // Documents
-    'documents.title': 'Documents',
-    'documents.sign': 'Sign',
-    'documents.signed': 'Signed',
-    'documents.pending_signature': 'Pending signature',
-    'documents.download': 'Download',
-    
-    // Appointments
-    'appointments.title': 'Appointments',
-    'appointments.new': 'New appointment',
-    'appointments.schedule': 'Schedule',
-    'appointments.cancel': 'Cancel appointment',
-    'appointments.confirm': 'Confirm appointment',
-    'appointments.date': 'Date',
-    'appointments.time': 'Time',
-    'appointments.teacher': 'Teacher',
-    'appointments.parent': 'Parent',
-    
-    // Chatbot
-    'chatbot.title': 'AI Assistant',
-    'chatbot.placeholder': 'Type your question...',
-    'chatbot.thinking': 'Thinking...',
-    'chatbot.error': 'Error processing your query',
-    
-    // Directory
-    'directory.title': 'Directory',
-    'directory.students': 'Students',
-    'directory.parents': 'Parents',
-    'directory.staff': 'Staff',
-    'directory.search_placeholder': 'Search by name or email...',
-    
-    // CRM
-    'crm.title': 'CRM & Communication',
-    'crm.segments': 'Segments',
-    'crm.campaigns': 'Campaigns',
-    'crm.templates': 'Templates',
-    'crm.new_segment': 'New segment',
-    'crm.new_campaign': 'New campaign',
-    'crm.recipients': 'Recipients',
-    'crm.send_now': 'Send now',
-    'crm.schedule': 'Schedule',
-    'crm.draft': 'Draft',
-    'crm.sent': 'Sent',
-    'crm.open_rate': 'Open rate',
-    'crm.click_rate': 'Click rate',
-    
-    // Settings
-    'settings.title': 'Settings',
-    'settings.language': 'Language',
-    'settings.notifications': 'Notifications',
-    'settings.profile': 'Profile',
-    'settings.change_password': 'Change password',
-    
-    // Roles
-    'role.admin': 'Administrator',
-    'role.teacher': 'Teacher',
-    'role.parent': 'Parent',
-    'role.student': 'Student',
-    'role.vocal': 'Class Rep',
-    'role.super_admin': 'Super Admin',
-    
-    // Time
-    'time.today': 'Today',
-    'time.yesterday': 'Yesterday',
-    'time.tomorrow': 'Tomorrow',
-    'time.this_week': 'This week',
-    'time.this_month': 'This month',
-    
-    // Status
-    'status.active': 'Active',
-    'status.inactive': 'Inactive',
-    'status.pending': 'Pending',
-    'status.completed': 'Completed',
-    'status.cancelled': 'Cancelled',
+  en: {
+    nav: {
+      home: 'Home',
+      dashboard: 'Dashboard',
+      messages: 'Messages',
+      announcements: 'Announcements',
+      calendar: 'Calendar',
+      tasks: 'Tasks',
+      payments: 'Payments',
+      documents: 'Documents',
+      chatbot: 'AI Assistant',
+      directory: 'Directory',
+      appointments: 'Appointments',
+      attendance: 'Attendance',
+      academic: 'Academic',
+      polls: 'Polls',
+      invitations: 'Invitations',
+      crm: 'CRM',
+      superAdmin: 'Super Admin',
+      logout: 'Logout',
+      login: 'Login'
+    },
+    landing: {
+      hero: {
+        title: 'The Educational Platform of the Future',
+        subtitle: 'Connecting families, teachers, and students in a secure and intelligent digital ecosystem.',
+        cta: 'Get Started'
+      },
+      features: {
+        title: 'Everything You Need',
+        communication: { title: 'Instant Communication', desc: 'Direct and group messages with teachers and families.' },
+        payments: { title: 'Simplified Payments', desc: 'Tuition and payment management without fees.' },
+        academic: { title: 'Academic Tracking', desc: 'Grades, assignments, and attendance in real-time.' },
+        security: { title: 'Total Security', desc: 'Digital signatures and document verification.' }
+      },
+      forFamilies: {
+        title: 'For Families',
+        desc: 'Stay connected with your children\'s education.'
+      },
+      forTeachers: {
+        title: 'For Teachers',
+        desc: 'Digital tools to enhance your teaching.'
+      }
+    },
+    common: {
+      loading: 'Loading...',
+      save: 'Save',
+      cancel: 'Cancel',
+      delete: 'Delete',
+      edit: 'Edit',
+      create: 'Create',
+      search: 'Search',
+      filter: 'Filter',
+      export: 'Export',
+      import: 'Import',
+      download: 'Download',
+      upload: 'Upload',
+      back: 'Back',
+      next: 'Next',
+      previous: 'Previous',
+      confirm: 'Confirm',
+      yes: 'Yes',
+      no: 'No',
+      all: 'All',
+      none: 'None',
+      select: 'Select',
+      noResults: 'No results',
+      error: 'Error',
+      success: 'Success',
+      warning: 'Warning',
+      info: 'Information'
+    },
+    dashboard: {
+      welcome: 'Welcome',
+      overview: 'Overview',
+      recentActivity: 'Recent Activity',
+      pendingTasks: 'Pending Tasks',
+      unreadMessages: 'Unread Messages',
+      upcomingEvents: 'Upcoming Events',
+      announcements: 'Announcements'
+    },
+    messages: {
+      title: 'Messages',
+      newMessage: 'New Message',
+      direct: 'Direct',
+      groups: 'Groups',
+      typeMessage: 'Type a message...',
+      send: 'Send',
+      noMessages: 'No messages',
+      searchContacts: 'Search contacts'
+    },
+    payments: {
+      title: 'Payments',
+      pending: 'Pending',
+      paid: 'Paid',
+      overdue: 'Overdue',
+      amount: 'Amount',
+      dueDate: 'Due date',
+      payNow: 'Pay Now',
+      history: 'History',
+      speiInstructions: 'SPEI Instructions'
+    },
+    tasks: {
+      title: 'Tasks',
+      newTask: 'New Task',
+      dueDate: 'Due date',
+      priority: 'Priority',
+      status: 'Status',
+      completed: 'Completed',
+      pending: 'Pending',
+      inProgress: 'In Progress',
+      submit: 'Submit'
+    },
+    calendar: {
+      title: 'Calendar',
+      today: 'Today',
+      month: 'Month',
+      week: 'Week',
+      day: 'Day',
+      newEvent: 'New Event',
+      noEvents: 'No events'
+    },
+    documents: {
+      title: 'Documents',
+      sign: 'Sign',
+      signed: 'Signed',
+      pending: 'Pending',
+      verify: 'Verify',
+      download: 'Download'
+    },
+    chatbot: {
+      title: 'AI Assistant',
+      askQuestion: 'How can I help you?',
+      thinking: 'Thinking...',
+      helpful: 'Was this helpful?',
+      notHelpful: 'Not helpful'
+    },
+    appointments: {
+      title: 'Appointments',
+      schedule: 'Schedule',
+      availableSlots: 'Available slots',
+      selectTeacher: 'Select teacher',
+      selectDate: 'Select date',
+      selectTime: 'Select time',
+      confirm: 'Confirm appointment',
+      cancel: 'Cancel appointment',
+      reason: 'Reason'
+    },
+    attendance: {
+      title: 'Attendance',
+      present: 'Present',
+      absent: 'Absent',
+      late: 'Late',
+      excused: 'Excused',
+      date: 'Date',
+      student: 'Student'
+    },
+    crm: {
+      title: 'CRM & Communication',
+      contacts: 'Contacts',
+      campaigns: 'Campaigns',
+      templates: 'Templates',
+      newCampaign: 'New Campaign',
+      sendEmail: 'Send Email',
+      emailsSent: 'Emails sent',
+      openRate: 'Open rate'
+    },
+    roles: {
+      admin: 'Administrator',
+      teacher: 'Teacher',
+      parent: 'Parent',
+      student: 'Student',
+      superAdmin: 'Super Admin'
+    },
+    time: {
+      today: 'Today',
+      yesterday: 'Yesterday',
+      daysAgo: '{n} days ago',
+      hoursAgo: '{n} hours ago',
+      minutesAgo: '{n} minutes ago',
+      justNow: 'Just now'
+    }
   },
-  
-  PT: {
-    // General
-    'app.name': 'IA School',
-    'app.loading': 'Carregando...',
-    'app.error': 'Erro',
-    'app.success': 'Sucesso',
-    'app.save': 'Salvar',
-    'app.cancel': 'Cancelar',
-    'app.delete': 'Excluir',
-    'app.edit': 'Editar',
-    'app.create': 'Criar',
-    'app.search': 'Buscar',
-    'app.filter': 'Filtrar',
-    'app.export': 'Exportar',
-    'app.import': 'Importar',
-    'app.back': 'Voltar',
-    'app.next': 'Próximo',
-    'app.previous': 'Anterior',
-    'app.confirm': 'Confirmar',
-    'app.close': 'Fechar',
-    'app.yes': 'Sim',
-    'app.no': 'Não',
-    'app.all': 'Todos',
-    'app.none': 'Nenhum',
-    'app.view': 'Ver',
-    'app.download': 'Baixar',
-    'app.upload': 'Enviar',
-    'app.send': 'Enviar',
-    'app.copy': 'Copiar',
-    'app.copied': 'Copiado',
-    
-    // Auth
-    'auth.login': 'Entrar',
-    'auth.logout': 'Sair',
-    'auth.email': 'E-mail',
-    'auth.password': 'Senha',
-    'auth.forgot_password': 'Esqueceu sua senha?',
-    'auth.login_error': 'Credenciais inválidas',
-    'auth.welcome_back': 'Bem-vindo de volta',
-    
-    // Navigation
-    'nav.dashboard': 'Início',
-    'nav.announcements': 'Avisos',
-    'nav.messages': 'Mensagens',
-    'nav.calendar': 'Calendário',
-    'nav.tasks': 'Tarefas',
-    'nav.attendance': 'Frequência',
-    'nav.grades': 'Notas',
-    'nav.payments': 'Pagamentos',
-    'nav.documents': 'Documentos',
-    'nav.polls': 'Enquetes',
-    'nav.appointments': 'Agendamentos',
-    'nav.chatbot': 'Assistente IA',
-    'nav.directory': 'Diretório',
-    'nav.settings': 'Configurações',
-    'nav.invitations': 'Convites',
-    'nav.crm': 'CRM',
-    
-    // Dashboard
-    'dashboard.welcome': 'Bem-vindo',
-    'dashboard.pending_tasks': 'Tarefas pendentes',
-    'dashboard.upcoming_events': 'Próximos eventos',
-    'dashboard.recent_announcements': 'Avisos recentes',
-    'dashboard.unread_messages': 'Mensagens não lidas',
-    'dashboard.pending_payments': 'Pagamentos pendentes',
-    'dashboard.today_attendance': 'Frequência de hoje',
-    
-    // Announcements
-    'announcements.title': 'Avisos',
-    'announcements.new': 'Novo aviso',
-    'announcements.no_announcements': 'Sem avisos',
-    'announcements.mark_read': 'Marcar como lido',
-    'announcements.urgent': 'Urgente',
-    'announcements.normal': 'Normal',
-    
-    // Messages
-    'messages.title': 'Mensagens',
-    'messages.new_conversation': 'Nova conversa',
-    'messages.no_messages': 'Sem mensagens',
-    'messages.type_message': 'Digite uma mensagem...',
-    'messages.send': 'Enviar',
-    'messages.direct': 'Diretas',
-    'messages.groups': 'Grupos',
-    
-    // Tasks
-    'tasks.title': 'Tarefas',
-    'tasks.new_task': 'Nova tarefa',
-    'tasks.no_tasks': 'Sem tarefas',
-    'tasks.due_date': 'Data de entrega',
-    'tasks.submit': 'Entregar',
-    'tasks.submitted': 'Entregue',
-    'tasks.pending': 'Pendente',
-    'tasks.graded': 'Avaliada',
-    
-    // Attendance
-    'attendance.title': 'Frequência',
-    'attendance.present': 'Presente',
-    'attendance.absent': 'Ausente',
-    'attendance.late': 'Atrasado',
-    'attendance.justified': 'Justificado',
-    'attendance.take_attendance': 'Fazer chamada',
-    
-    // Grades
-    'grades.title': 'Notas',
-    'grades.average': 'Média',
-    'grades.subject': 'Matéria',
-    'grades.grade': 'Nota',
-    'grades.date': 'Data',
-    
-    // Payments
-    'payments.title': 'Pagamentos',
-    'payments.pending': 'Pendentes',
-    'payments.paid': 'Pagos',
-    'payments.amount': 'Valor',
-    'payments.due_date': 'Data de vencimento',
-    'payments.pay_now': 'Pagar agora',
-    'payments.receipt': 'Recibo',
-    
-    // Documents
-    'documents.title': 'Documentos',
-    'documents.sign': 'Assinar',
-    'documents.signed': 'Assinado',
-    'documents.pending_signature': 'Aguardando assinatura',
-    'documents.download': 'Baixar',
-    
-    // Appointments
-    'appointments.title': 'Agendamentos',
-    'appointments.new': 'Novo agendamento',
-    'appointments.schedule': 'Agendar',
-    'appointments.cancel': 'Cancelar agendamento',
-    'appointments.confirm': 'Confirmar agendamento',
-    'appointments.date': 'Data',
-    'appointments.time': 'Hora',
-    'appointments.teacher': 'Professor',
-    'appointments.parent': 'Responsável',
-    
-    // Chatbot
-    'chatbot.title': 'Assistente IA',
-    'chatbot.placeholder': 'Digite sua pergunta...',
-    'chatbot.thinking': 'Pensando...',
-    'chatbot.error': 'Erro ao processar sua consulta',
-    
-    // Directory
-    'directory.title': 'Diretório',
-    'directory.students': 'Alunos',
-    'directory.parents': 'Responsáveis',
-    'directory.staff': 'Equipe',
-    'directory.search_placeholder': 'Buscar por nome ou e-mail...',
-    
-    // CRM
-    'crm.title': 'CRM e Comunicação',
-    'crm.segments': 'Segmentos',
-    'crm.campaigns': 'Campanhas',
-    'crm.templates': 'Modelos',
-    'crm.new_segment': 'Novo segmento',
-    'crm.new_campaign': 'Nova campanha',
-    'crm.recipients': 'Destinatários',
-    'crm.send_now': 'Enviar agora',
-    'crm.schedule': 'Programar',
-    'crm.draft': 'Rascunho',
-    'crm.sent': 'Enviado',
-    'crm.open_rate': 'Taxa de abertura',
-    'crm.click_rate': 'Taxa de cliques',
-    
-    // Settings
-    'settings.title': 'Configurações',
-    'settings.language': 'Idioma',
-    'settings.notifications': 'Notificações',
-    'settings.profile': 'Perfil',
-    'settings.change_password': 'Alterar senha',
-    
-    // Roles
-    'role.admin': 'Administrador',
-    'role.teacher': 'Professor',
-    'role.parent': 'Responsável',
-    'role.student': 'Aluno',
-    'role.vocal': 'Representante',
-    'role.super_admin': 'Super Admin',
-    
-    // Time
-    'time.today': 'Hoje',
-    'time.yesterday': 'Ontem',
-    'time.tomorrow': 'Amanhã',
-    'time.this_week': 'Esta semana',
-    'time.this_month': 'Este mês',
-    
-    // Status
-    'status.active': 'Ativo',
-    'status.inactive': 'Inativo',
-    'status.pending': 'Pendente',
-    'status.completed': 'Concluído',
-    'status.cancelled': 'Cancelado',
+  pt: {
+    nav: {
+      home: 'Início',
+      dashboard: 'Painel',
+      messages: 'Mensagens',
+      announcements: 'Comunicados',
+      calendar: 'Calendário',
+      tasks: 'Tarefas',
+      payments: 'Pagamentos',
+      documents: 'Documentos',
+      chatbot: 'Assistente IA',
+      directory: 'Diretório',
+      appointments: 'Consultas',
+      attendance: 'Frequência',
+      academic: 'Acadêmico',
+      polls: 'Enquetes',
+      invitations: 'Convites',
+      crm: 'CRM',
+      superAdmin: 'Super Admin',
+      logout: 'Sair',
+      login: 'Entrar'
+    },
+    landing: {
+      hero: {
+        title: 'A Plataforma Educacional do Futuro',
+        subtitle: 'Conectando famílias, professores e alunos em um ecossistema digital seguro e inteligente.',
+        cta: 'Começar Agora'
+      },
+      features: {
+        title: 'Tudo que Você Precisa',
+        communication: { title: 'Comunicação Instantânea', desc: 'Mensagens diretas e em grupo com professores e famílias.' },
+        payments: { title: 'Pagamentos Simplificados', desc: 'Gestão de mensalidades e pagamentos sem taxas.' },
+        academic: { title: 'Acompanhamento Acadêmico', desc: 'Notas, tarefas e frequência em tempo real.' },
+        security: { title: 'Segurança Total', desc: 'Assinatura digital e verificação de documentos.' }
+      },
+      forFamilies: {
+        title: 'Para Famílias',
+        desc: 'Mantenha-se conectado com a educação dos seus filhos.'
+      },
+      forTeachers: {
+        title: 'Para Professores',
+        desc: 'Ferramentas digitais para potencializar seu ensino.'
+      }
+    },
+    common: {
+      loading: 'Carregando...',
+      save: 'Salvar',
+      cancel: 'Cancelar',
+      delete: 'Excluir',
+      edit: 'Editar',
+      create: 'Criar',
+      search: 'Buscar',
+      filter: 'Filtrar',
+      export: 'Exportar',
+      import: 'Importar',
+      download: 'Baixar',
+      upload: 'Enviar',
+      back: 'Voltar',
+      next: 'Próximo',
+      previous: 'Anterior',
+      confirm: 'Confirmar',
+      yes: 'Sim',
+      no: 'Não',
+      all: 'Todos',
+      none: 'Nenhum',
+      select: 'Selecionar',
+      noResults: 'Sem resultados',
+      error: 'Erro',
+      success: 'Sucesso',
+      warning: 'Aviso',
+      info: 'Informação'
+    },
+    dashboard: {
+      welcome: 'Bem-vindo',
+      overview: 'Visão Geral',
+      recentActivity: 'Atividade Recente',
+      pendingTasks: 'Tarefas Pendentes',
+      unreadMessages: 'Mensagens não lidas',
+      upcomingEvents: 'Próximos Eventos',
+      announcements: 'Comunicados'
+    },
+    messages: {
+      title: 'Mensagens',
+      newMessage: 'Nova Mensagem',
+      direct: 'Diretas',
+      groups: 'Grupos',
+      typeMessage: 'Digite uma mensagem...',
+      send: 'Enviar',
+      noMessages: 'Sem mensagens',
+      searchContacts: 'Buscar contatos'
+    },
+    payments: {
+      title: 'Pagamentos',
+      pending: 'Pendente',
+      paid: 'Pago',
+      overdue: 'Vencido',
+      amount: 'Valor',
+      dueDate: 'Data de vencimento',
+      payNow: 'Pagar Agora',
+      history: 'Histórico',
+      speiInstructions: 'Instruções de Transferência'
+    },
+    tasks: {
+      title: 'Tarefas',
+      newTask: 'Nova Tarefa',
+      dueDate: 'Data de entrega',
+      priority: 'Prioridade',
+      status: 'Status',
+      completed: 'Concluída',
+      pending: 'Pendente',
+      inProgress: 'Em andamento',
+      submit: 'Entregar'
+    },
+    calendar: {
+      title: 'Calendário',
+      today: 'Hoje',
+      month: 'Mês',
+      week: 'Semana',
+      day: 'Dia',
+      newEvent: 'Novo Evento',
+      noEvents: 'Sem eventos'
+    },
+    documents: {
+      title: 'Documentos',
+      sign: 'Assinar',
+      signed: 'Assinado',
+      pending: 'Pendente',
+      verify: 'Verificar',
+      download: 'Baixar'
+    },
+    chatbot: {
+      title: 'Assistente IA',
+      askQuestion: 'Como posso ajudar?',
+      thinking: 'Pensando...',
+      helpful: 'Foi útil?',
+      notHelpful: 'Não foi útil'
+    },
+    appointments: {
+      title: 'Consultas',
+      schedule: 'Agendar',
+      availableSlots: 'Horários disponíveis',
+      selectTeacher: 'Selecionar professor',
+      selectDate: 'Selecionar data',
+      selectTime: 'Selecionar horário',
+      confirm: 'Confirmar consulta',
+      cancel: 'Cancelar consulta',
+      reason: 'Motivo'
+    },
+    attendance: {
+      title: 'Frequência',
+      present: 'Presente',
+      absent: 'Ausente',
+      late: 'Atrasado',
+      excused: 'Justificado',
+      date: 'Data',
+      student: 'Aluno'
+    },
+    crm: {
+      title: 'CRM e Comunicação',
+      contacts: 'Contatos',
+      campaigns: 'Campanhas',
+      templates: 'Modelos',
+      newCampaign: 'Nova Campanha',
+      sendEmail: 'Enviar Email',
+      emailsSent: 'Emails enviados',
+      openRate: 'Taxa de abertura'
+    },
+    roles: {
+      admin: 'Administrador',
+      teacher: 'Professor',
+      parent: 'Pai/Mãe',
+      student: 'Aluno',
+      superAdmin: 'Super Admin'
+    },
+    time: {
+      today: 'Hoje',
+      yesterday: 'Ontem',
+      daysAgo: 'há {n} dias',
+      hoursAgo: 'há {n} horas',
+      minutesAgo: 'há {n} minutos',
+      justNow: 'Agora mesmo'
+    }
   },
-  
-  DE: {
-    // General
-    'app.name': 'IA School',
-    'app.loading': 'Laden...',
-    'app.error': 'Fehler',
-    'app.success': 'Erfolg',
-    'app.save': 'Speichern',
-    'app.cancel': 'Abbrechen',
-    'app.delete': 'Löschen',
-    'app.edit': 'Bearbeiten',
-    'app.create': 'Erstellen',
-    'app.search': 'Suchen',
-    'app.filter': 'Filtern',
-    'app.export': 'Exportieren',
-    'app.import': 'Importieren',
-    'app.back': 'Zurück',
-    'app.next': 'Weiter',
-    'app.previous': 'Zurück',
-    'app.confirm': 'Bestätigen',
-    'app.close': 'Schließen',
-    'app.yes': 'Ja',
-    'app.no': 'Nein',
-    'app.all': 'Alle',
-    'app.none': 'Keine',
-    'app.view': 'Ansehen',
-    'app.download': 'Herunterladen',
-    'app.upload': 'Hochladen',
-    'app.send': 'Senden',
-    'app.copy': 'Kopieren',
-    'app.copied': 'Kopiert',
-    
-    // Auth
-    'auth.login': 'Anmelden',
-    'auth.logout': 'Abmelden',
-    'auth.email': 'E-Mail',
-    'auth.password': 'Passwort',
-    'auth.forgot_password': 'Passwort vergessen?',
-    'auth.login_error': 'Ungültige Anmeldedaten',
-    'auth.welcome_back': 'Willkommen zurück',
-    
-    // Navigation
-    'nav.dashboard': 'Startseite',
-    'nav.announcements': 'Ankündigungen',
-    'nav.messages': 'Nachrichten',
-    'nav.calendar': 'Kalender',
-    'nav.tasks': 'Aufgaben',
-    'nav.attendance': 'Anwesenheit',
-    'nav.grades': 'Noten',
-    'nav.payments': 'Zahlungen',
-    'nav.documents': 'Dokumente',
-    'nav.polls': 'Umfragen',
-    'nav.appointments': 'Termine',
-    'nav.chatbot': 'KI-Assistent',
-    'nav.directory': 'Verzeichnis',
-    'nav.settings': 'Einstellungen',
-    'nav.invitations': 'Einladungen',
-    'nav.crm': 'CRM',
-    
-    // Dashboard
-    'dashboard.welcome': 'Willkommen',
-    'dashboard.pending_tasks': 'Ausstehende Aufgaben',
-    'dashboard.upcoming_events': 'Kommende Ereignisse',
-    'dashboard.recent_announcements': 'Aktuelle Ankündigungen',
-    'dashboard.unread_messages': 'Ungelesene Nachrichten',
-    'dashboard.pending_payments': 'Ausstehende Zahlungen',
-    'dashboard.today_attendance': 'Heutige Anwesenheit',
-    
-    // Announcements
-    'announcements.title': 'Ankündigungen',
-    'announcements.new': 'Neue Ankündigung',
-    'announcements.no_announcements': 'Keine Ankündigungen',
-    'announcements.mark_read': 'Als gelesen markieren',
-    'announcements.urgent': 'Dringend',
-    'announcements.normal': 'Normal',
-    
-    // Messages
-    'messages.title': 'Nachrichten',
-    'messages.new_conversation': 'Neue Unterhaltung',
-    'messages.no_messages': 'Keine Nachrichten',
-    'messages.type_message': 'Nachricht eingeben...',
-    'messages.send': 'Senden',
-    'messages.direct': 'Direkt',
-    'messages.groups': 'Gruppen',
-    
-    // Tasks
-    'tasks.title': 'Aufgaben',
-    'tasks.new_task': 'Neue Aufgabe',
-    'tasks.no_tasks': 'Keine Aufgaben',
-    'tasks.due_date': 'Fälligkeitsdatum',
-    'tasks.submit': 'Einreichen',
-    'tasks.submitted': 'Eingereicht',
-    'tasks.pending': 'Ausstehend',
-    'tasks.graded': 'Bewertet',
-    
-    // Attendance
-    'attendance.title': 'Anwesenheit',
-    'attendance.present': 'Anwesend',
-    'attendance.absent': 'Abwesend',
-    'attendance.late': 'Verspätet',
-    'attendance.justified': 'Entschuldigt',
-    'attendance.take_attendance': 'Anwesenheit erfassen',
-    
-    // Grades
-    'grades.title': 'Noten',
-    'grades.average': 'Durchschnitt',
-    'grades.subject': 'Fach',
-    'grades.grade': 'Note',
-    'grades.date': 'Datum',
-    
-    // Payments
-    'payments.title': 'Zahlungen',
-    'payments.pending': 'Ausstehend',
-    'payments.paid': 'Bezahlt',
-    'payments.amount': 'Betrag',
-    'payments.due_date': 'Fälligkeitsdatum',
-    'payments.pay_now': 'Jetzt bezahlen',
-    'payments.receipt': 'Quittung',
-    
-    // Documents
-    'documents.title': 'Dokumente',
-    'documents.sign': 'Unterschreiben',
-    'documents.signed': 'Unterschrieben',
-    'documents.pending_signature': 'Warten auf Unterschrift',
-    'documents.download': 'Herunterladen',
-    
-    // Appointments
-    'appointments.title': 'Termine',
-    'appointments.new': 'Neuer Termin',
-    'appointments.schedule': 'Planen',
-    'appointments.cancel': 'Termin absagen',
-    'appointments.confirm': 'Termin bestätigen',
-    'appointments.date': 'Datum',
-    'appointments.time': 'Uhrzeit',
-    'appointments.teacher': 'Lehrer',
-    'appointments.parent': 'Elternteil',
-    
-    // Chatbot
-    'chatbot.title': 'KI-Assistent',
-    'chatbot.placeholder': 'Frage eingeben...',
-    'chatbot.thinking': 'Denke nach...',
-    'chatbot.error': 'Fehler bei der Verarbeitung',
-    
-    // Directory
-    'directory.title': 'Verzeichnis',
-    'directory.students': 'Schüler',
-    'directory.parents': 'Eltern',
-    'directory.staff': 'Personal',
-    'directory.search_placeholder': 'Nach Name oder E-Mail suchen...',
-    
-    // CRM
-    'crm.title': 'CRM & Kommunikation',
-    'crm.segments': 'Segmente',
-    'crm.campaigns': 'Kampagnen',
-    'crm.templates': 'Vorlagen',
-    'crm.new_segment': 'Neues Segment',
-    'crm.new_campaign': 'Neue Kampagne',
-    'crm.recipients': 'Empfänger',
-    'crm.send_now': 'Jetzt senden',
-    'crm.schedule': 'Planen',
-    'crm.draft': 'Entwurf',
-    'crm.sent': 'Gesendet',
-    'crm.open_rate': 'Öffnungsrate',
-    'crm.click_rate': 'Klickrate',
-    
-    // Settings
-    'settings.title': 'Einstellungen',
-    'settings.language': 'Sprache',
-    'settings.notifications': 'Benachrichtigungen',
-    'settings.profile': 'Profil',
-    'settings.change_password': 'Passwort ändern',
-    
-    // Roles
-    'role.admin': 'Administrator',
-    'role.teacher': 'Lehrer',
-    'role.parent': 'Elternteil',
-    'role.student': 'Schüler',
-    'role.vocal': 'Klassensprecher',
-    'role.super_admin': 'Super Admin',
-    
-    // Time
-    'time.today': 'Heute',
-    'time.yesterday': 'Gestern',
-    'time.tomorrow': 'Morgen',
-    'time.this_week': 'Diese Woche',
-    'time.this_month': 'Diesen Monat',
-    
-    // Status
-    'status.active': 'Aktiv',
-    'status.inactive': 'Inaktiv',
-    'status.pending': 'Ausstehend',
-    'status.completed': 'Abgeschlossen',
-    'status.cancelled': 'Abgesagt',
+  de: {
+    nav: {
+      home: 'Startseite',
+      dashboard: 'Dashboard',
+      messages: 'Nachrichten',
+      announcements: 'Mitteilungen',
+      calendar: 'Kalender',
+      tasks: 'Aufgaben',
+      payments: 'Zahlungen',
+      documents: 'Dokumente',
+      chatbot: 'KI-Assistent',
+      directory: 'Verzeichnis',
+      appointments: 'Termine',
+      attendance: 'Anwesenheit',
+      academic: 'Akademisch',
+      polls: 'Umfragen',
+      invitations: 'Einladungen',
+      crm: 'CRM',
+      superAdmin: 'Super Admin',
+      logout: 'Abmelden',
+      login: 'Anmelden'
+    },
+    landing: {
+      hero: {
+        title: 'Die Bildungsplattform der Zukunft',
+        subtitle: 'Wir verbinden Familien, Lehrer und Schüler in einem sicheren und intelligenten digitalen Ökosystem.',
+        cta: 'Jetzt Starten'
+      },
+      features: {
+        title: 'Alles was Sie brauchen',
+        communication: { title: 'Sofortige Kommunikation', desc: 'Direkte und Gruppennachrichten mit Lehrern und Familien.' },
+        payments: { title: 'Vereinfachte Zahlungen', desc: 'Gebühren- und Zahlungsverwaltung ohne Provisionen.' },
+        academic: { title: 'Akademische Verfolgung', desc: 'Noten, Aufgaben und Anwesenheit in Echtzeit.' },
+        security: { title: 'Vollständige Sicherheit', desc: 'Digitale Signaturen und Dokumentenverifizierung.' }
+      },
+      forFamilies: {
+        title: 'Für Familien',
+        desc: 'Bleiben Sie mit der Bildung Ihrer Kinder verbunden.'
+      },
+      forTeachers: {
+        title: 'Für Lehrer',
+        desc: 'Digitale Werkzeuge zur Verbesserung Ihres Unterrichts.'
+      }
+    },
+    common: {
+      loading: 'Laden...',
+      save: 'Speichern',
+      cancel: 'Abbrechen',
+      delete: 'Löschen',
+      edit: 'Bearbeiten',
+      create: 'Erstellen',
+      search: 'Suchen',
+      filter: 'Filtern',
+      export: 'Exportieren',
+      import: 'Importieren',
+      download: 'Herunterladen',
+      upload: 'Hochladen',
+      back: 'Zurück',
+      next: 'Weiter',
+      previous: 'Zurück',
+      confirm: 'Bestätigen',
+      yes: 'Ja',
+      no: 'Nein',
+      all: 'Alle',
+      none: 'Keine',
+      select: 'Auswählen',
+      noResults: 'Keine Ergebnisse',
+      error: 'Fehler',
+      success: 'Erfolg',
+      warning: 'Warnung',
+      info: 'Information'
+    },
+    dashboard: {
+      welcome: 'Willkommen',
+      overview: 'Übersicht',
+      recentActivity: 'Letzte Aktivität',
+      pendingTasks: 'Ausstehende Aufgaben',
+      unreadMessages: 'Ungelesene Nachrichten',
+      upcomingEvents: 'Kommende Ereignisse',
+      announcements: 'Mitteilungen'
+    },
+    messages: {
+      title: 'Nachrichten',
+      newMessage: 'Neue Nachricht',
+      direct: 'Direkt',
+      groups: 'Gruppen',
+      typeMessage: 'Nachricht eingeben...',
+      send: 'Senden',
+      noMessages: 'Keine Nachrichten',
+      searchContacts: 'Kontakte suchen'
+    },
+    payments: {
+      title: 'Zahlungen',
+      pending: 'Ausstehend',
+      paid: 'Bezahlt',
+      overdue: 'Überfällig',
+      amount: 'Betrag',
+      dueDate: 'Fälligkeitsdatum',
+      payNow: 'Jetzt Bezahlen',
+      history: 'Verlauf',
+      speiInstructions: 'Überweisungsanleitung'
+    },
+    tasks: {
+      title: 'Aufgaben',
+      newTask: 'Neue Aufgabe',
+      dueDate: 'Fälligkeitsdatum',
+      priority: 'Priorität',
+      status: 'Status',
+      completed: 'Abgeschlossen',
+      pending: 'Ausstehend',
+      inProgress: 'In Bearbeitung',
+      submit: 'Einreichen'
+    },
+    calendar: {
+      title: 'Kalender',
+      today: 'Heute',
+      month: 'Monat',
+      week: 'Woche',
+      day: 'Tag',
+      newEvent: 'Neues Ereignis',
+      noEvents: 'Keine Ereignisse'
+    },
+    documents: {
+      title: 'Dokumente',
+      sign: 'Unterschreiben',
+      signed: 'Unterschrieben',
+      pending: 'Ausstehend',
+      verify: 'Verifizieren',
+      download: 'Herunterladen'
+    },
+    chatbot: {
+      title: 'KI-Assistent',
+      askQuestion: 'Wie kann ich helfen?',
+      thinking: 'Denke nach...',
+      helpful: 'War das hilfreich?',
+      notHelpful: 'Nicht hilfreich'
+    },
+    appointments: {
+      title: 'Termine',
+      schedule: 'Planen',
+      availableSlots: 'Verfügbare Zeiten',
+      selectTeacher: 'Lehrer auswählen',
+      selectDate: 'Datum auswählen',
+      selectTime: 'Zeit auswählen',
+      confirm: 'Termin bestätigen',
+      cancel: 'Termin absagen',
+      reason: 'Grund'
+    },
+    attendance: {
+      title: 'Anwesenheit',
+      present: 'Anwesend',
+      absent: 'Abwesend',
+      late: 'Verspätet',
+      excused: 'Entschuldigt',
+      date: 'Datum',
+      student: 'Schüler'
+    },
+    crm: {
+      title: 'CRM & Kommunikation',
+      contacts: 'Kontakte',
+      campaigns: 'Kampagnen',
+      templates: 'Vorlagen',
+      newCampaign: 'Neue Kampagne',
+      sendEmail: 'E-Mail senden',
+      emailsSent: 'E-Mails gesendet',
+      openRate: 'Öffnungsrate'
+    },
+    roles: {
+      admin: 'Administrator',
+      teacher: 'Lehrer',
+      parent: 'Elternteil',
+      student: 'Schüler',
+      superAdmin: 'Super Admin'
+    },
+    time: {
+      today: 'Heute',
+      yesterday: 'Gestern',
+      daysAgo: 'vor {n} Tagen',
+      hoursAgo: 'vor {n} Stunden',
+      minutesAgo: 'vor {n} Minuten',
+      justNow: 'Gerade eben'
+    }
   },
-  
-  FR: {
-    // General
-    'app.name': 'IA School',
-    'app.loading': 'Chargement...',
-    'app.error': 'Erreur',
-    'app.success': 'Succès',
-    'app.save': 'Enregistrer',
-    'app.cancel': 'Annuler',
-    'app.delete': 'Supprimer',
-    'app.edit': 'Modifier',
-    'app.create': 'Créer',
-    'app.search': 'Rechercher',
-    'app.filter': 'Filtrer',
-    'app.export': 'Exporter',
-    'app.import': 'Importer',
-    'app.back': 'Retour',
-    'app.next': 'Suivant',
-    'app.previous': 'Précédent',
-    'app.confirm': 'Confirmer',
-    'app.close': 'Fermer',
-    'app.yes': 'Oui',
-    'app.no': 'Non',
-    'app.all': 'Tous',
-    'app.none': 'Aucun',
-    'app.view': 'Voir',
-    'app.download': 'Télécharger',
-    'app.upload': 'Téléverser',
-    'app.send': 'Envoyer',
-    'app.copy': 'Copier',
-    'app.copied': 'Copié',
-    
-    // Auth
-    'auth.login': 'Se connecter',
-    'auth.logout': 'Se déconnecter',
-    'auth.email': 'E-mail',
-    'auth.password': 'Mot de passe',
-    'auth.forgot_password': 'Mot de passe oublié?',
-    'auth.login_error': 'Identifiants invalides',
-    'auth.welcome_back': 'Bienvenue',
-    
-    // Navigation
-    'nav.dashboard': 'Accueil',
-    'nav.announcements': 'Annonces',
-    'nav.messages': 'Messages',
-    'nav.calendar': 'Calendrier',
-    'nav.tasks': 'Devoirs',
-    'nav.attendance': 'Présence',
-    'nav.grades': 'Notes',
-    'nav.payments': 'Paiements',
-    'nav.documents': 'Documents',
-    'nav.polls': 'Sondages',
-    'nav.appointments': 'Rendez-vous',
-    'nav.chatbot': 'Assistant IA',
-    'nav.directory': 'Annuaire',
-    'nav.settings': 'Paramètres',
-    'nav.invitations': 'Invitations',
-    'nav.crm': 'CRM',
-    
-    // Dashboard
-    'dashboard.welcome': 'Bienvenue',
-    'dashboard.pending_tasks': 'Devoirs en attente',
-    'dashboard.upcoming_events': 'Événements à venir',
-    'dashboard.recent_announcements': 'Annonces récentes',
-    'dashboard.unread_messages': 'Messages non lus',
-    'dashboard.pending_payments': 'Paiements en attente',
-    'dashboard.today_attendance': "Présence du jour",
-    
-    // Announcements
-    'announcements.title': 'Annonces',
-    'announcements.new': 'Nouvelle annonce',
-    'announcements.no_announcements': 'Aucune annonce',
-    'announcements.mark_read': 'Marquer comme lu',
-    'announcements.urgent': 'Urgent',
-    'announcements.normal': 'Normal',
-    
-    // Messages
-    'messages.title': 'Messages',
-    'messages.new_conversation': 'Nouvelle conversation',
-    'messages.no_messages': 'Aucun message',
-    'messages.type_message': 'Écrire un message...',
-    'messages.send': 'Envoyer',
-    'messages.direct': 'Directs',
-    'messages.groups': 'Groupes',
-    
-    // Tasks
-    'tasks.title': 'Devoirs',
-    'tasks.new_task': 'Nouveau devoir',
-    'tasks.no_tasks': 'Aucun devoir',
-    'tasks.due_date': 'Date limite',
-    'tasks.submit': 'Remettre',
-    'tasks.submitted': 'Remis',
-    'tasks.pending': 'En attente',
-    'tasks.graded': 'Noté',
-    
-    // Attendance
-    'attendance.title': 'Présence',
-    'attendance.present': 'Présent',
-    'attendance.absent': 'Absent',
-    'attendance.late': 'En retard',
-    'attendance.justified': 'Justifié',
-    'attendance.take_attendance': 'Faire l\'appel',
-    
-    // Grades
-    'grades.title': 'Notes',
-    'grades.average': 'Moyenne',
-    'grades.subject': 'Matière',
-    'grades.grade': 'Note',
-    'grades.date': 'Date',
-    
-    // Payments
-    'payments.title': 'Paiements',
-    'payments.pending': 'En attente',
-    'payments.paid': 'Payés',
-    'payments.amount': 'Montant',
-    'payments.due_date': 'Date d\'échéance',
-    'payments.pay_now': 'Payer maintenant',
-    'payments.receipt': 'Reçu',
-    
-    // Documents
-    'documents.title': 'Documents',
-    'documents.sign': 'Signer',
-    'documents.signed': 'Signé',
-    'documents.pending_signature': 'En attente de signature',
-    'documents.download': 'Télécharger',
-    
-    // Appointments
-    'appointments.title': 'Rendez-vous',
-    'appointments.new': 'Nouveau rendez-vous',
-    'appointments.schedule': 'Planifier',
-    'appointments.cancel': 'Annuler le rendez-vous',
-    'appointments.confirm': 'Confirmer le rendez-vous',
-    'appointments.date': 'Date',
-    'appointments.time': 'Heure',
-    'appointments.teacher': 'Enseignant',
-    'appointments.parent': 'Parent',
-    
-    // Chatbot
-    'chatbot.title': 'Assistant IA',
-    'chatbot.placeholder': 'Posez votre question...',
-    'chatbot.thinking': 'Réflexion...',
-    'chatbot.error': 'Erreur lors du traitement',
-    
-    // Directory
-    'directory.title': 'Annuaire',
-    'directory.students': 'Élèves',
-    'directory.parents': 'Parents',
-    'directory.staff': 'Personnel',
-    'directory.search_placeholder': 'Rechercher par nom ou e-mail...',
-    
-    // CRM
-    'crm.title': 'CRM & Communication',
-    'crm.segments': 'Segments',
-    'crm.campaigns': 'Campagnes',
-    'crm.templates': 'Modèles',
-    'crm.new_segment': 'Nouveau segment',
-    'crm.new_campaign': 'Nouvelle campagne',
-    'crm.recipients': 'Destinataires',
-    'crm.send_now': 'Envoyer maintenant',
-    'crm.schedule': 'Programmer',
-    'crm.draft': 'Brouillon',
-    'crm.sent': 'Envoyé',
-    'crm.open_rate': 'Taux d\'ouverture',
-    'crm.click_rate': 'Taux de clics',
-    
-    // Settings
-    'settings.title': 'Paramètres',
-    'settings.language': 'Langue',
-    'settings.notifications': 'Notifications',
-    'settings.profile': 'Profil',
-    'settings.change_password': 'Changer le mot de passe',
-    
-    // Roles
-    'role.admin': 'Administrateur',
-    'role.teacher': 'Enseignant',
-    'role.parent': 'Parent',
-    'role.student': 'Élève',
-    'role.vocal': 'Délégué',
-    'role.super_admin': 'Super Admin',
-    
-    // Time
-    'time.today': 'Aujourd\'hui',
-    'time.yesterday': 'Hier',
-    'time.tomorrow': 'Demain',
-    'time.this_week': 'Cette semaine',
-    'time.this_month': 'Ce mois',
-    
-    // Status
-    'status.active': 'Actif',
-    'status.inactive': 'Inactif',
-    'status.pending': 'En attente',
-    'status.completed': 'Terminé',
-    'status.cancelled': 'Annulé',
+  fr: {
+    nav: {
+      home: 'Accueil',
+      dashboard: 'Tableau de bord',
+      messages: 'Messages',
+      announcements: 'Annonces',
+      calendar: 'Calendrier',
+      tasks: 'Tâches',
+      payments: 'Paiements',
+      documents: 'Documents',
+      chatbot: 'Assistant IA',
+      directory: 'Annuaire',
+      appointments: 'Rendez-vous',
+      attendance: 'Présence',
+      academic: 'Académique',
+      polls: 'Sondages',
+      invitations: 'Invitations',
+      crm: 'CRM',
+      superAdmin: 'Super Admin',
+      logout: 'Déconnexion',
+      login: 'Connexion'
+    },
+    landing: {
+      hero: {
+        title: 'La Plateforme Éducative du Futur',
+        subtitle: 'Nous connectons les familles, les enseignants et les étudiants dans un écosystème numérique sécurisé et intelligent.',
+        cta: 'Commencer'
+      },
+      features: {
+        title: 'Tout ce dont vous avez besoin',
+        communication: { title: 'Communication Instantanée', desc: 'Messages directs et de groupe avec les enseignants et les familles.' },
+        payments: { title: 'Paiements Simplifiés', desc: 'Gestion des frais de scolarité sans commissions.' },
+        academic: { title: 'Suivi Académique', desc: 'Notes, devoirs et présence en temps réel.' },
+        security: { title: 'Sécurité Totale', desc: 'Signatures numériques et vérification des documents.' }
+      },
+      forFamilies: {
+        title: 'Pour les Familles',
+        desc: 'Restez connecté à l\'éducation de vos enfants.'
+      },
+      forTeachers: {
+        title: 'Pour les Enseignants',
+        desc: 'Outils numériques pour améliorer votre enseignement.'
+      }
+    },
+    common: {
+      loading: 'Chargement...',
+      save: 'Enregistrer',
+      cancel: 'Annuler',
+      delete: 'Supprimer',
+      edit: 'Modifier',
+      create: 'Créer',
+      search: 'Rechercher',
+      filter: 'Filtrer',
+      export: 'Exporter',
+      import: 'Importer',
+      download: 'Télécharger',
+      upload: 'Téléverser',
+      back: 'Retour',
+      next: 'Suivant',
+      previous: 'Précédent',
+      confirm: 'Confirmer',
+      yes: 'Oui',
+      no: 'Non',
+      all: 'Tous',
+      none: 'Aucun',
+      select: 'Sélectionner',
+      noResults: 'Aucun résultat',
+      error: 'Erreur',
+      success: 'Succès',
+      warning: 'Avertissement',
+      info: 'Information'
+    },
+    dashboard: {
+      welcome: 'Bienvenue',
+      overview: 'Aperçu',
+      recentActivity: 'Activité Récente',
+      pendingTasks: 'Tâches en Attente',
+      unreadMessages: 'Messages non lus',
+      upcomingEvents: 'Événements à Venir',
+      announcements: 'Annonces'
+    },
+    messages: {
+      title: 'Messages',
+      newMessage: 'Nouveau Message',
+      direct: 'Directs',
+      groups: 'Groupes',
+      typeMessage: 'Écrivez un message...',
+      send: 'Envoyer',
+      noMessages: 'Aucun message',
+      searchContacts: 'Rechercher des contacts'
+    },
+    payments: {
+      title: 'Paiements',
+      pending: 'En attente',
+      paid: 'Payé',
+      overdue: 'En retard',
+      amount: 'Montant',
+      dueDate: 'Date d\'échéance',
+      payNow: 'Payer Maintenant',
+      history: 'Historique',
+      speiInstructions: 'Instructions de Virement'
+    },
+    tasks: {
+      title: 'Tâches',
+      newTask: 'Nouvelle Tâche',
+      dueDate: 'Date limite',
+      priority: 'Priorité',
+      status: 'Statut',
+      completed: 'Terminée',
+      pending: 'En attente',
+      inProgress: 'En cours',
+      submit: 'Soumettre'
+    },
+    calendar: {
+      title: 'Calendrier',
+      today: 'Aujourd\'hui',
+      month: 'Mois',
+      week: 'Semaine',
+      day: 'Jour',
+      newEvent: 'Nouvel Événement',
+      noEvents: 'Aucun événement'
+    },
+    documents: {
+      title: 'Documents',
+      sign: 'Signer',
+      signed: 'Signé',
+      pending: 'En attente',
+      verify: 'Vérifier',
+      download: 'Télécharger'
+    },
+    chatbot: {
+      title: 'Assistant IA',
+      askQuestion: 'Comment puis-je vous aider?',
+      thinking: 'Réflexion...',
+      helpful: 'Était-ce utile?',
+      notHelpful: 'Pas utile'
+    },
+    appointments: {
+      title: 'Rendez-vous',
+      schedule: 'Planifier',
+      availableSlots: 'Créneaux disponibles',
+      selectTeacher: 'Sélectionner un enseignant',
+      selectDate: 'Sélectionner une date',
+      selectTime: 'Sélectionner l\'heure',
+      confirm: 'Confirmer le rendez-vous',
+      cancel: 'Annuler le rendez-vous',
+      reason: 'Raison'
+    },
+    attendance: {
+      title: 'Présence',
+      present: 'Présent',
+      absent: 'Absent',
+      late: 'En retard',
+      excused: 'Excusé',
+      date: 'Date',
+      student: 'Élève'
+    },
+    crm: {
+      title: 'CRM & Communication',
+      contacts: 'Contacts',
+      campaigns: 'Campagnes',
+      templates: 'Modèles',
+      newCampaign: 'Nouvelle Campagne',
+      sendEmail: 'Envoyer un Email',
+      emailsSent: 'Emails envoyés',
+      openRate: 'Taux d\'ouverture'
+    },
+    roles: {
+      admin: 'Administrateur',
+      teacher: 'Enseignant',
+      parent: 'Parent',
+      student: 'Élève',
+      superAdmin: 'Super Admin'
+    },
+    time: {
+      today: 'Aujourd\'hui',
+      yesterday: 'Hier',
+      daysAgo: 'il y a {n} jours',
+      hoursAgo: 'il y a {n} heures',
+      minutesAgo: 'il y a {n} minutes',
+      justNow: 'À l\'instant'
+    }
   },
-  
-  JA: {
-    // General
-    'app.name': 'IAスクール',
-    'app.loading': '読み込み中...',
-    'app.error': 'エラー',
-    'app.success': '成功',
-    'app.save': '保存',
-    'app.cancel': 'キャンセル',
-    'app.delete': '削除',
-    'app.edit': '編集',
-    'app.create': '作成',
-    'app.search': '検索',
-    'app.filter': 'フィルター',
-    'app.export': 'エクスポート',
-    'app.import': 'インポート',
-    'app.back': '戻る',
-    'app.next': '次へ',
-    'app.previous': '前へ',
-    'app.confirm': '確認',
-    'app.close': '閉じる',
-    'app.yes': 'はい',
-    'app.no': 'いいえ',
-    'app.all': 'すべて',
-    'app.none': 'なし',
-    'app.view': '表示',
-    'app.download': 'ダウンロード',
-    'app.upload': 'アップロード',
-    'app.send': '送信',
-    'app.copy': 'コピー',
-    'app.copied': 'コピーしました',
-    
-    // Auth
-    'auth.login': 'ログイン',
-    'auth.logout': 'ログアウト',
-    'auth.email': 'メールアドレス',
-    'auth.password': 'パスワード',
-    'auth.forgot_password': 'パスワードを忘れた場合',
-    'auth.login_error': '認証情報が無効です',
-    'auth.welcome_back': 'おかえりなさい',
-    
-    // Navigation
-    'nav.dashboard': 'ホーム',
-    'nav.announcements': 'お知らせ',
-    'nav.messages': 'メッセージ',
-    'nav.calendar': 'カレンダー',
-    'nav.tasks': '課題',
-    'nav.attendance': '出席',
-    'nav.grades': '成績',
-    'nav.payments': '支払い',
-    'nav.documents': '書類',
-    'nav.polls': 'アンケート',
-    'nav.appointments': '予約',
-    'nav.chatbot': 'AIアシスタント',
-    'nav.directory': '名簿',
-    'nav.settings': '設定',
-    'nav.invitations': '招待',
-    'nav.crm': 'CRM',
-    
-    // Dashboard
-    'dashboard.welcome': 'ようこそ',
-    'dashboard.pending_tasks': '未完了の課題',
-    'dashboard.upcoming_events': '今後のイベント',
-    'dashboard.recent_announcements': '最近のお知らせ',
-    'dashboard.unread_messages': '未読メッセージ',
-    'dashboard.pending_payments': '未払いの支払い',
-    'dashboard.today_attendance': '本日の出席',
-    
-    // Announcements
-    'announcements.title': 'お知らせ',
-    'announcements.new': '新しいお知らせ',
-    'announcements.no_announcements': 'お知らせはありません',
-    'announcements.mark_read': '既読にする',
-    'announcements.urgent': '緊急',
-    'announcements.normal': '通常',
-    
-    // Messages
-    'messages.title': 'メッセージ',
-    'messages.new_conversation': '新しい会話',
-    'messages.no_messages': 'メッセージはありません',
-    'messages.type_message': 'メッセージを入力...',
-    'messages.send': '送信',
-    'messages.direct': 'ダイレクト',
-    'messages.groups': 'グループ',
-    
-    // Tasks
-    'tasks.title': '課題',
-    'tasks.new_task': '新しい課題',
-    'tasks.no_tasks': '課題はありません',
-    'tasks.due_date': '提出期限',
-    'tasks.submit': '提出',
-    'tasks.submitted': '提出済み',
-    'tasks.pending': '未提出',
-    'tasks.graded': '採点済み',
-    
-    // Attendance
-    'attendance.title': '出席',
-    'attendance.present': '出席',
-    'attendance.absent': '欠席',
-    'attendance.late': '遅刻',
-    'attendance.justified': '公欠',
-    'attendance.take_attendance': '出席を取る',
-    
-    // Grades
-    'grades.title': '成績',
-    'grades.average': '平均',
-    'grades.subject': '科目',
-    'grades.grade': '成績',
-    'grades.date': '日付',
-    
-    // Payments
-    'payments.title': '支払い',
-    'payments.pending': '未払い',
-    'payments.paid': '支払い済み',
-    'payments.amount': '金額',
-    'payments.due_date': '支払期限',
-    'payments.pay_now': '今すぐ支払う',
-    'payments.receipt': '領収書',
-    
-    // Documents
-    'documents.title': '書類',
-    'documents.sign': '署名',
-    'documents.signed': '署名済み',
-    'documents.pending_signature': '署名待ち',
-    'documents.download': 'ダウンロード',
-    
-    // Appointments
-    'appointments.title': '予約',
-    'appointments.new': '新しい予約',
-    'appointments.schedule': '予約する',
-    'appointments.cancel': '予約をキャンセル',
-    'appointments.confirm': '予約を確認',
-    'appointments.date': '日付',
-    'appointments.time': '時間',
-    'appointments.teacher': '先生',
-    'appointments.parent': '保護者',
-    
-    // Chatbot
-    'chatbot.title': 'AIアシスタント',
-    'chatbot.placeholder': '質問を入力...',
-    'chatbot.thinking': '考え中...',
-    'chatbot.error': 'エラーが発生しました',
-    
-    // Directory
-    'directory.title': '名簿',
-    'directory.students': '生徒',
-    'directory.parents': '保護者',
-    'directory.staff': 'スタッフ',
-    'directory.search_placeholder': '名前またはメールで検索...',
-    
-    // CRM
-    'crm.title': 'CRM＆コミュニケーション',
-    'crm.segments': 'セグメント',
-    'crm.campaigns': 'キャンペーン',
-    'crm.templates': 'テンプレート',
-    'crm.new_segment': '新しいセグメント',
-    'crm.new_campaign': '新しいキャンペーン',
-    'crm.recipients': '受信者',
-    'crm.send_now': '今すぐ送信',
-    'crm.schedule': 'スケジュール',
-    'crm.draft': '下書き',
-    'crm.sent': '送信済み',
-    'crm.open_rate': '開封率',
-    'crm.click_rate': 'クリック率',
-    
-    // Settings
-    'settings.title': '設定',
-    'settings.language': '言語',
-    'settings.notifications': '通知',
-    'settings.profile': 'プロフィール',
-    'settings.change_password': 'パスワードを変更',
-    
-    // Roles
-    'role.admin': '管理者',
-    'role.teacher': '先生',
-    'role.parent': '保護者',
-    'role.student': '生徒',
-    'role.vocal': '学級委員',
-    'role.super_admin': 'スーパー管理者',
-    
-    // Time
-    'time.today': '今日',
-    'time.yesterday': '昨日',
-    'time.tomorrow': '明日',
-    'time.this_week': '今週',
-    'time.this_month': '今月',
-    
-    // Status
-    'status.active': '有効',
-    'status.inactive': '無効',
-    'status.pending': '保留中',
-    'status.completed': '完了',
-    'status.cancelled': 'キャンセル',
+  ja: {
+    nav: {
+      home: 'ホーム',
+      dashboard: 'ダッシュボード',
+      messages: 'メッセージ',
+      announcements: 'お知らせ',
+      calendar: 'カレンダー',
+      tasks: '課題',
+      payments: '支払い',
+      documents: '書類',
+      chatbot: 'AIアシスタント',
+      directory: 'ディレクトリ',
+      appointments: '予約',
+      attendance: '出席',
+      academic: '学業',
+      polls: 'アンケート',
+      invitations: '招待',
+      crm: 'CRM',
+      superAdmin: 'スーパー管理者',
+      logout: 'ログアウト',
+      login: 'ログイン'
+    },
+    landing: {
+      hero: {
+        title: '未来の教育プラットフォーム',
+        subtitle: '安全でインテリジェントなデジタルエコシステムで、家族、教師、生徒をつなぎます。',
+        cta: '今すぐ始める'
+      },
+      features: {
+        title: '必要なものすべて',
+        communication: { title: 'インスタントコミュニケーション', desc: '教師や家族との直接メッセージとグループメッセージ。' },
+        payments: { title: '簡単な支払い', desc: '手数料なしの授業料と支払い管理。' },
+        academic: { title: '学業追跡', desc: 'リアルタイムの成績、課題、出席。' },
+        security: { title: '完全なセキュリティ', desc: 'デジタル署名と書類検証。' }
+      },
+      forFamilies: {
+        title: 'ご家族向け',
+        desc: 'お子様の教育とつながりましょう。'
+      },
+      forTeachers: {
+        title: '教師向け',
+        desc: '教育を強化するデジタルツール。'
+      }
+    },
+    common: {
+      loading: '読み込み中...',
+      save: '保存',
+      cancel: 'キャンセル',
+      delete: '削除',
+      edit: '編集',
+      create: '作成',
+      search: '検索',
+      filter: 'フィルター',
+      export: 'エクスポート',
+      import: 'インポート',
+      download: 'ダウンロード',
+      upload: 'アップロード',
+      back: '戻る',
+      next: '次へ',
+      previous: '前へ',
+      confirm: '確認',
+      yes: 'はい',
+      no: 'いいえ',
+      all: 'すべて',
+      none: 'なし',
+      select: '選択',
+      noResults: '結果なし',
+      error: 'エラー',
+      success: '成功',
+      warning: '警告',
+      info: '情報'
+    },
+    dashboard: {
+      welcome: 'ようこそ',
+      overview: '概要',
+      recentActivity: '最近のアクティビティ',
+      pendingTasks: '未完了の課題',
+      unreadMessages: '未読メッセージ',
+      upcomingEvents: '今後のイベント',
+      announcements: 'お知らせ'
+    },
+    messages: {
+      title: 'メッセージ',
+      newMessage: '新しいメッセージ',
+      direct: 'ダイレクト',
+      groups: 'グループ',
+      typeMessage: 'メッセージを入力...',
+      send: '送信',
+      noMessages: 'メッセージなし',
+      searchContacts: '連絡先を検索'
+    },
+    payments: {
+      title: '支払い',
+      pending: '未払い',
+      paid: '支払済み',
+      overdue: '期限切れ',
+      amount: '金額',
+      dueDate: '期限',
+      payNow: '今すぐ支払う',
+      history: '履歴',
+      speiInstructions: '振込手順'
+    },
+    tasks: {
+      title: '課題',
+      newTask: '新しい課題',
+      dueDate: '締め切り',
+      priority: '優先度',
+      status: 'ステータス',
+      completed: '完了',
+      pending: '未完了',
+      inProgress: '進行中',
+      submit: '提出'
+    },
+    calendar: {
+      title: 'カレンダー',
+      today: '今日',
+      month: '月',
+      week: '週',
+      day: '日',
+      newEvent: '新しいイベント',
+      noEvents: 'イベントなし'
+    },
+    documents: {
+      title: '書類',
+      sign: '署名',
+      signed: '署名済み',
+      pending: '未署名',
+      verify: '検証',
+      download: 'ダウンロード'
+    },
+    chatbot: {
+      title: 'AIアシスタント',
+      askQuestion: 'ご用件は？',
+      thinking: '考え中...',
+      helpful: '役に立ちましたか？',
+      notHelpful: '役に立たなかった'
+    },
+    appointments: {
+      title: '予約',
+      schedule: '予約する',
+      availableSlots: '空き時間',
+      selectTeacher: '教師を選択',
+      selectDate: '日付を選択',
+      selectTime: '時間を選択',
+      confirm: '予約を確認',
+      cancel: '予約をキャンセル',
+      reason: '理由'
+    },
+    attendance: {
+      title: '出席',
+      present: '出席',
+      absent: '欠席',
+      late: '遅刻',
+      excused: '許可済み',
+      date: '日付',
+      student: '生徒'
+    },
+    crm: {
+      title: 'CRM & コミュニケーション',
+      contacts: '連絡先',
+      campaigns: 'キャンペーン',
+      templates: 'テンプレート',
+      newCampaign: '新しいキャンペーン',
+      sendEmail: 'メール送信',
+      emailsSent: '送信済みメール',
+      openRate: '開封率'
+    },
+    roles: {
+      admin: '管理者',
+      teacher: '教師',
+      parent: '保護者',
+      student: '生徒',
+      superAdmin: 'スーパー管理者'
+    },
+    time: {
+      today: '今日',
+      yesterday: '昨日',
+      daysAgo: '{n}日前',
+      hoursAgo: '{n}時間前',
+      minutesAgo: '{n}分前',
+      justNow: 'たった今'
+    }
   }
-} as const;
+};
 
-export function getTranslation(lang: Language, key: TranslationKey): string {
-  return translations[lang]?.[key] || translations.ES[key] || key;
+export function getTranslation(lang: Language) {
+  return translations[lang] || translations.es;
 }

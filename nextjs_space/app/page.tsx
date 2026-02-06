@@ -3,10 +3,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { MessageSquare, Shield, BookOpen, CreditCard, PlayCircle, FileText, Calendar, Brain, ChevronRight, Bell, Users, XCircle, CheckCircle, ArrowRight, Instagram, Facebook, Linkedin, Twitter } from "lucide-react";
+import { MessageSquare, Shield, BookOpen, CreditCard, PlayCircle, FileText, Calendar, Brain, ChevronRight, Bell, Users, XCircle, CheckCircle, ArrowRight, Instagram, Facebook, Linkedin, Twitter, Globe } from "lucide-react";
+import { useLanguage } from "@/contexts/language-context";
+import { Language } from "@/lib/i18n/translations";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const { language, setLanguage, t, languageNames, languageFlags } = useLanguage();
+  const availableLanguages: Language[] = ['es', 'en', 'pt', 'de', 'fr', 'ja'];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,12 +42,55 @@ export default function LandingPage() {
               />
             </div>
           </Link>
-          <Link
-            href="/login"
-            className={`px-6 py-3 text-base font-medium rounded-lg transition-all duration-300 bg-[#1B4079] text-white hover:bg-[#4D7C8A] ${isScrolled ? "opacity-0" : "opacity-100"}`}
-          >
-            Iniciar Sesión
-          </Link>
+          <div className={`flex items-center gap-3 transition-opacity duration-300 ${isScrolled ? "opacity-0" : "opacity-100"}`}>
+            {/* Language Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                className="flex items-center gap-1 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all"
+                title="Change language"
+              >
+                <Globe className="w-4 h-4" />
+                <span className="text-lg">{languageFlags[language]}</span>
+              </button>
+              
+              <AnimatePresence>
+                {showLanguageMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50"
+                  >
+                    {availableLanguages.map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => {
+                          setLanguage(lang);
+                          setShowLanguageMenu(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 transition-colors ${
+                          language === lang ? 'bg-[#1B4079]/5 text-[#1B4079]' : 'text-gray-700'
+                        }`}
+                      >
+                        <span className="text-lg">{languageFlags[lang]}</span>
+                        <span className="text-sm font-medium">{languageNames[lang]}</span>
+                        {language === lang && (
+                          <span className="ml-auto text-[#1B4079]">✓</span>
+                        )}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            <Link
+              href="/login"
+              className="px-6 py-3 text-base font-medium rounded-lg transition-all duration-300 bg-[#1B4079] text-white hover:bg-[#4D7C8A]"
+            >
+              {t.nav.login}
+            </Link>
+          </div>
         </div>
       </nav>
 

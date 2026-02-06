@@ -29,7 +29,7 @@ export function Header({ user }: HeaderProps) {
   const isStudent = user?.role === "ALUMNO";
   const isVocal = user?.role === "VOCAL";
   
-  const availableLanguages: Language[] = ['ES', 'EN', 'PT', 'DE', 'FR', 'JA'];
+  const availableLanguages: Language[] = ['es', 'en', 'pt', 'de', 'fr', 'ja'];
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/login" });
