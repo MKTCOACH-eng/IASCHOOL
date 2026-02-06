@@ -56,20 +56,18 @@ export function Header({ user }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-24">
+        <div className="flex items-center justify-between h-28">
           {/* Logo and School Name */}
-          <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="relative w-16 h-16 transition-transform group-hover:scale-105">
+          <Link href="/dashboard" className="flex items-center group py-2">
+            <div className="relative w-24 h-20 transition-transform group-hover:scale-105">
               <Image
-                src="/vermont-logo.svg"
-                alt="Vermont School Logo"
+                src="/iaschool-logo.png"
+                alt="IA School Logo"
                 fill
                 className="object-contain"
+                priority
               />
             </div>
-            <span className="font-semibold text-[#1B4079] text-lg hidden sm:block">
-              {user?.schoolName ?? "Vermont School"}
-            </span>
           </Link>
 
           {/* Desktop Navigation */}
