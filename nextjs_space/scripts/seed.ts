@@ -7,6 +7,8 @@ async function main() {
   console.log("Seeding database...");
 
   // Clear existing data in correct order
+  await prisma.payment.deleteMany();
+  await prisma.charge.deleteMany();
   await prisma.eventAttendee.deleteMany();
   await prisma.event.deleteMany();
   await prisma.submissionAttachment.deleteMany();
@@ -258,7 +260,7 @@ async function main() {
   console.log("Created 2 groups");
 
   // Create students
-  await prisma.student.create({
+  const sofia = await prisma.student.create({
     data: {
       firstName: "Sofía",
       lastName: "López",
@@ -268,9 +270,9 @@ async function main() {
     },
   });
 
-  await prisma.student.create({
+  const carlos = await prisma.student.create({
     data: {
-      firstName: "Diego",
+      firstName: "Carlos",
       lastName: "Martínez",
       schoolId: school.id,
       groupId: group3A.id,
@@ -278,9 +280,9 @@ async function main() {
     },
   });
 
-  await prisma.student.create({
+  const mariana = await prisma.student.create({
     data: {
-      firstName: "Valentina",
+      firstName: "Mariana",
       lastName: "Rodríguez",
       schoolId: school.id,
       groupId: group3B.id,
@@ -564,6 +566,118 @@ async function main() {
   });
 
   console.log("Created sample events");
+
+  // Create sample charges
+  // Colegiatura Febrero 2026 for Sofía (María's child)
+  await prisma.charge.create({
+    data: {
+      concept: "Colegiatura Febrero 2026",
+      type: "COLEGIATURA",
+      amount: 5500,
+      amountPaid: 5500,
+      status: "PAGADO",
+      dueDate: new Date(now.getFullYear(), 1, 10), // Feb 10
+      periodMonth: 2,
+      periodYear: 2026,
+      studentId: sofia.id,
+      schoolId: school.id,
+      createdById: admin.id,
+      payments: {
+        create: {
+          amount: 5500,
+          method: "TRANSFERENCIA",
+          reference: "TRF-20260205-001",
+          recordedById: admin.id,
+          paidAt: new Date(now.getFullYear(), 1, 5),
+        },
+      },
+    },
+  });
+
+  // Colegiatura Marzo 2026 for Sofía - Pendiente
+  await prisma.charge.create({
+    data: {
+      concept: "Colegiatura Marzo 2026",
+      type: "COLEGIATURA",
+      amount: 5500,
+      amountPaid: 0,
+      status: "PENDIENTE",
+      dueDate: new Date(now.getFullYear(), 2, 10), // Mar 10
+      periodMonth: 3,
+      periodYear: 2026,
+      studentId: sofia.id,
+      schoolId: school.id,
+      createdById: admin.id,
+    },
+  });
+
+  // Inscripción for Carlos (Juan's child)
+  await prisma.charge.create({
+    data: {
+      concept: "Inscripción Ciclo 2025-2026",
+      type: "INSCRIPCION",
+      amount: 8000,
+      amountPaid: 4000,
+      status: "PARCIAL",
+      dueDate: new Date(now.getFullYear(), 0, 15), // Jan 15
+      studentId: carlos.id,
+      schoolId: school.id,
+      createdById: admin.id,
+      payments: {
+        create: {
+          amount: 4000,
+          method: "EFECTIVO",
+          notes: "Primer abono",
+          recordedById: admin.id,
+          paidAt: new Date(now.getFullYear(), 0, 10),
+        },
+      },
+    },
+  });
+
+  // Colegiatura vencida for Carlos
+  await prisma.charge.create({
+    data: {
+      concept: "Colegiatura Enero 2026",
+      type: "COLEGIATURA",
+      amount: 5500,
+      amountPaid: 0,
+      status: "VENCIDO",
+      dueDate: new Date(now.getFullYear(), 0, 10), // Jan 10
+      periodMonth: 1,
+      periodYear: 2026,
+      studentId: carlos.id,
+      schoolId: school.id,
+      createdById: admin.id,
+      notes: "Favor de ponerse al corriente lo antes posible",
+    },
+  });
+
+  // Material escolar for Mariana
+  await prisma.charge.create({
+    data: {
+      concept: "Material escolar - Segundo semestre",
+      type: "MATERIAL",
+      amount: 1200,
+      amountPaid: 1200,
+      status: "PAGADO",
+      dueDate: new Date(now.getFullYear(), 1, 1), // Feb 1
+      studentId: mariana.id,
+      schoolId: school.id,
+      createdById: admin.id,
+      payments: {
+        create: {
+          amount: 1200,
+          method: "TARJETA",
+          reference: "CARD-4521",
+          recordedById: admin.id,
+          paidAt: new Date(now.getFullYear(), 0, 28),
+        },
+      },
+    },
+  });
+
+  console.log("Created sample charges and payments");
 
   console.log("\n=== CREDENCIALES DE PRUEBA ===");
   console.log("Admin: john@doe.com / johndoe123");

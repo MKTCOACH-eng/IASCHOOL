@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -30,13 +30,13 @@ export function Header({ user }: HeaderProps) {
       { href: "/messages", label: "Mensajes", icon: MessageSquare },
       { href: "/tasks", label: "Tareas", icon: ClipboardList },
       { href: "/calendar", label: "Calendario", icon: Calendar },
+      { href: "/payments", label: "Pagos", icon: Wallet },
       { href: "/announcements", label: "Anuncios", icon: Bell },
     ];
 
     if (isAdmin) {
       return [
         ...baseItems,
-        { href: "/announcements/new", label: "Nuevo Anuncio", icon: Plus },
         { href: "/invitations", label: "Invitaciones", icon: UserPlus },
       ];
     }

@@ -59,6 +59,7 @@ model School {
   conversations Conversation[]
   subjects     Subject[]
   events       Event[]
+  charges      Charge[]
 }
 
 model User {
@@ -99,6 +100,10 @@ model User {
   // Calendario
   eventsCreated      Event[]   @relation("EventCreator")
   eventAttendances   EventAttendee[]
+  
+  // Pagos
+  chargesCreated     Charge[]  @relation("ChargeCreatedBy")
+  paymentsRecorded   Payment[] @relation("PaymentRecordedBy")
 }
 
 model Invitation {
@@ -151,6 +156,7 @@ model Student {
   group        Group?   @relation(fields: [groupId], references: [id])
   parents      User[]   @relation("ParentChildren")
   submissions  Submission[]
+  charges      Charge[]
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -280,6 +286,35 @@ enum EventAttendeeStatus {
   PENDING
   CONFIRMED
   DECLINED
+}
+
+// ==================== MÓDULO DE PAGOS ====================
+
+enum PaymentStatus {
+  PENDIENTE     // Pago pendiente
+  PAGADO        // Pago completado
+  VENCIDO       // Pago vencido
+  PARCIAL       // Pago parcial
+  CANCELADO     // Cargo cancelado
+}
+
+enum PaymentMethod {
+  EFECTIVO
+  TRANSFERENCIA
+  TARJETA
+  DEPOSITO
+  OTRO
+}
+
+enum ChargeType {
+  COLEGIATURA   // Mensualidad
+  INSCRIPCION   // Inscripción
+  MATERIAL      // Material escolar
+  UNIFORME      // Uniforme
+  EVENTO        // Eventos especiales
+  TRANSPORTE    // Transporte escolar
+  COMEDOR       // Comedor/Cafetería
+  OTRO          // Otros cargos
 }
 
 enum SubmissionStatus {
@@ -466,4 +501,71 @@ model EventAttendee {
   @@unique([eventId, userId])
   @@index([eventId])
   @@index([userId])
+}
+
+// ==================== CARGOS Y PAGOS ====================
+
+// Cargos (colegiaturas, inscripciones, etc.)
+model Charge {
+  id             String        @id @default(cuid())
+  concept        String        // Descripción del cargo
+  type           ChargeType    @default(COLEGIATURA)
+  amount         Float         // Monto total
+  amountPaid     Float         @default(0) // Monto pagado
+  status         PaymentStatus @default(PENDIENTE)
+  
+  // Fechas
+  dueDate        DateTime      // Fecha límite de pago
+  periodMonth    Int?          // Mes del periodo (1-12)
+  periodYear     Int?          // Año del periodo
+  
+  // Relaciones
+  studentId      String
+  student        Student       @relation(fields: [studentId], references: [id])
+  schoolId       String
+  school         School        @relation(fields: [schoolId], references: [id])
+  createdById    String
+  createdBy      User          @relation("ChargeCreatedBy", fields: [createdById], references: [id])
+  
+  // Pagos asociados
+  payments       Payment[]
+  
+  // Notas y observaciones
+  notes          String?       @db.Text
+  
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([studentId])
+  @@index([schoolId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([type])
+}
+
+// Pagos realizados
+model Payment {
+  id             String        @id @default(cuid())
+  amount         Float         // Monto del pago
+  method         PaymentMethod @default(EFECTIVO)
+  reference      String?       // Referencia de pago (# de transferencia, etc.)
+  
+  // Relaciones
+  chargeId       String
+  charge         Charge        @relation(fields: [chargeId], references: [id], onDelete: Cascade)
+  recordedById   String        // Usuario que registró el pago (admin)
+  recordedBy     User          @relation("PaymentRecordedBy", fields: [recordedById], references: [id])
+  
+  // Notas
+  notes          String?       @db.Text
+  
+  // Comprobante de pago (opcional)
+  receiptUrl     String?
+  receiptPath    String?
+  
+  paidAt         DateTime      @default(now())
+  createdAt      DateTime      @default(now())
+
+  @@index([chargeId])
+  @@index([paidAt])
 }
