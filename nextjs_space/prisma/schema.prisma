@@ -92,6 +92,7 @@ model School {
   events       Event[]
   charges      Charge[]
   documents    Document[]
+  chatbotConversations ChatbotConversation[]
 }
 
 model User {
@@ -153,6 +154,9 @@ model User {
   // Documentos y firmas digitales
   documentsCreated   Document[]          @relation("DocumentCreator")
   documentSignatures DocumentSignature[]
+  
+  // Chatbot IA
+  chatbotConversations ChatbotConversation[]
 }
 
 model Invitation {
@@ -797,4 +801,45 @@ model DocumentSignature {
   @@index([documentId])
   @@index([userId])
   @@index([verificationCode])
+}
+
+// ==================== CHATBOT IA ====================
+
+model ChatbotConversation {
+  id           String           @id @default(cuid())
+  userId       String
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schoolId     String
+  school       School           @relation(fields: [schoolId], references: [id])
+  
+  // Métricas
+  messageCount Int              @default(0)
+  topic        String?          // Tema principal detectado (pagos, tareas, calendario, etc.)
+  resolved     Boolean          @default(false) // Si el usuario indicó que su duda fue resuelta
+  rating       Int?             // Calificación 1-5
+  
+  messages     ChatbotMessage[]
+  
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([schoolId])
+  @@index([createdAt])
+}
+
+model ChatbotMessage {
+  id             String              @id @default(cuid())
+  conversationId String
+  conversation   ChatbotConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  role           String              // "user" | "assistant"
+  content        String              @db.Text
+  
+  // Métricas
+  responseTime   Int?                // Tiempo de respuesta en ms (solo para assistant)
+  
+  createdAt      DateTime            @default(now())
+
+  @@index([conversationId])
 }

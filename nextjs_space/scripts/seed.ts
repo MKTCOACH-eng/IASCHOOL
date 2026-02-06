@@ -7,6 +7,8 @@ async function main() {
   console.log("Seeding database...");
 
   // Clear existing data in correct order
+  await prisma.chatbotMessage.deleteMany();
+  await prisma.chatbotConversation.deleteMany();
   await prisma.documentSignature.deleteMany();
   await prisma.document.deleteMany();
   await prisma.pollVote.deleteMany();

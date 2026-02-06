@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet, BarChart3, Users, Vote, FileSignature } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet, BarChart3, Users, Vote, FileSignature, Bot } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertsCounter } from "@/components/academic-alerts";
@@ -65,6 +65,7 @@ export function Header({ user }: HeaderProps) {
     if (isAdmin) {
       return [
         ...baseItems,
+        { href: "/chatbot", label: "Asistente IA", icon: Bot },
         { href: "/attendance", label: "Asistencia", icon: Users },
         { href: "/polls", label: "Encuestas", icon: Vote },
         { href: "/invitations", label: "Invitaciones", icon: UserPlus },
@@ -82,6 +83,7 @@ export function Header({ user }: HeaderProps) {
     if (isVocal) {
       return [
         ...baseItems,
+        { href: "/chatbot", label: "Asistente IA", icon: Bot },
         { href: "/attendance", label: "Asistencia", icon: Users },
         { href: "/polls", label: "Encuestas", icon: Vote },
       ];
@@ -90,6 +92,7 @@ export function Header({ user }: HeaderProps) {
     // Padres
     return [
       ...baseItems,
+      { href: "/chatbot", label: "Asistente IA", icon: Bot },
       { href: "/attendance", label: "Asistencia", icon: Users },
       { href: "/polls", label: "Encuestas", icon: Vote },
     ];
