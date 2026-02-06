@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet, BarChart3 } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet, BarChart3, Users, Vote } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertsCounter } from "@/components/academic-alerts";
@@ -20,12 +20,36 @@ export function Header({ user }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isAdmin = user?.role === "ADMIN";
   const isTeacher = user?.role === "PROFESOR";
+  const isStudent = user?.role === "ALUMNO";
+  const isVocal = user?.role === "VOCAL";
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/login" });
   };
 
+  const getRoleName = () => {
+    switch (user?.role) {
+      case "ADMIN": return "Administrador";
+      case "PROFESOR": return "Profesor";
+      case "ALUMNO": return "Alumno";
+      case "VOCAL": return "Vocal de Grupo";
+      default: return "Padre de familia";
+    }
+  };
+
   const getNavItems = () => {
+    // Items para alumnos (vista simplificada)
+    if (isStudent) {
+      return [
+        { href: "/dashboard", label: "Inicio", icon: Home },
+        { href: "/tasks", label: "Tareas", icon: ClipboardList },
+        { href: "/calendar", label: "Calendario", icon: Calendar },
+        { href: "/messages", label: "Mensajes", icon: MessageSquare },
+        { href: "/attendance", label: "Asistencia", icon: Users },
+        { href: "/announcements", label: "Anuncios", icon: Bell },
+      ];
+    }
+
     const baseItems = [
       { href: "/dashboard", label: "Inicio", icon: Home },
       { href: "/messages", label: "Mensajes", icon: MessageSquare },
@@ -39,6 +63,8 @@ export function Header({ user }: HeaderProps) {
     if (isAdmin) {
       return [
         ...baseItems,
+        { href: "/attendance", label: "Asistencia", icon: Users },
+        { href: "/polls", label: "Encuestas", icon: Vote },
         { href: "/invitations", label: "Invitaciones", icon: UserPlus },
       ];
     }
@@ -46,11 +72,25 @@ export function Header({ user }: HeaderProps) {
     if (isTeacher) {
       return [
         ...baseItems,
+        { href: "/attendance", label: "Asistencia", icon: Users },
         { href: "/tasks/new", label: "Nueva Tarea", icon: Plus },
       ];
     }
 
-    return baseItems;
+    if (isVocal) {
+      return [
+        ...baseItems,
+        { href: "/attendance", label: "Asistencia", icon: Users },
+        { href: "/polls", label: "Encuestas", icon: Vote },
+      ];
+    }
+
+    // Padres
+    return [
+      ...baseItems,
+      { href: "/attendance", label: "Asistencia", icon: Users },
+      { href: "/polls", label: "Encuestas", icon: Vote },
+    ];
   };
 
   const navItems = getNavItems();
@@ -100,7 +140,7 @@ export function Header({ user }: HeaderProps) {
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-900">{user?.name ?? "Usuario"}</p>
                 <p className="text-xs text-[#4D7C8A]">
-                  {isAdmin ? "Administrador" : isTeacher ? "Profesor" : "Padre de familia"}
+                  {getRoleName()}
                 </p>
               </div>
             </div>

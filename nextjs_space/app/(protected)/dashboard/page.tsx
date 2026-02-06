@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth-options";
 import { redirect } from "next/navigation";
 import { AdminDashboard } from "./_components/admin-dashboard";
 import { ParentDashboard } from "./_components/parent-dashboard";
+import { StudentDashboard } from "./_components/student-dashboard";
 
 export const dynamic = "force-dynamic";
 
@@ -13,12 +14,16 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const user = session.user as any;
-  const isAdmin = user?.role === "ADMIN";
-
-  return isAdmin ? (
-    <AdminDashboard userId={user?.id} schoolId={user?.schoolId} userName={user?.name} />
-  ) : (
-    <ParentDashboard userId={user?.id} schoolId={user?.schoolId} userName={user?.name} />
-  );
+  const user = session.user as { id: string; role: string; schoolId: string; name: string };
+  
+  if (user.role === "ADMIN") {
+    return <AdminDashboard userId={user.id} schoolId={user.schoolId} userName={user.name} />;
+  }
+  
+  if (user.role === "ALUMNO") {
+    return <StudentDashboard />;
+  }
+  
+  // PADRE, PROFESOR, VOCAL
+  return <ParentDashboard userId={user.id} schoolId={user.schoolId} userName={user.name} />;
 }

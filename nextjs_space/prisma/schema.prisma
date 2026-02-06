@@ -17,6 +17,18 @@ enum Role {
   VOCAL
 }
 
+enum AttendanceStatus {
+  PRESENTE
+  AUSENTE
+  TARDANZA
+  JUSTIFICADO
+}
+
+enum PollStatus {
+  ACTIVE
+  CLOSED
+}
+
 enum InvitationStatus {
   PENDING
   ACCEPTED
@@ -87,6 +99,9 @@ model User {
   // Relación padres-hijos
   children           Student[] @relation("ParentChildren")
   
+  // Relación alumno-estudiante (para usuarios con rol ALUMNO)
+  studentProfile     Student?  @relation("StudentUser")
+  
   // Profesor asignado a grupos
   teacherGroups      Group[]   @relation("GroupTeacher")
   
@@ -107,6 +122,13 @@ model User {
   
   // Documentos de calificaciones
   gradeDocumentsUploaded GradeDocument[] @relation("GradeDocumentUploader")
+  
+  // Asistencias registradas por profesor
+  attendancesRecorded Attendance[] @relation("AttendanceRecorder")
+  
+  // Encuestas creadas (vocal)
+  pollsCreated       Poll[]    @relation("PollCreator")
+  pollVotes          PollVote[]
 }
 
 model Invitation {
@@ -142,6 +164,8 @@ model Group {
   conversations Conversation[]
   tasks        Task[]
   events       Event[]
+  attendances  Attendance[]
+  polls        Poll[]
   createdAt    DateTime  @default(now())
   isActive     Boolean   @default(true)
 
@@ -158,9 +182,15 @@ model Student {
   groupId      String?
   group        Group?   @relation(fields: [groupId], references: [id])
   parents      User[]   @relation("ParentChildren")
+  
+  // Usuario asociado (para alumnos con cuenta)
+  userId       String?  @unique
+  user         User?    @relation("StudentUser", fields: [userId], references: [id])
+  
   submissions  Submission[]
   charges      Charge[]
   gradeDocuments GradeDocument[]
+  attendances  Attendance[]
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -602,4 +632,79 @@ model Payment {
 
   @@index([chargeId])
   @@index([paidAt])
+}
+
+// ==================== MÓDULO DE ASISTENCIAS ====================
+
+model Attendance {
+  id           String           @id @default(cuid())
+  date         DateTime         @db.Date  // Fecha de la asistencia
+  status       AttendanceStatus @default(PRESENTE)
+  notes        String?          // Notas opcionales (motivo de falta, etc.)
+  
+  // Relaciones
+  studentId    String
+  student      Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  groupId      String
+  group        Group            @relation(fields: [groupId], references: [id])
+  recordedById String           // Profesor que registró
+  recordedBy   User             @relation("AttendanceRecorder", fields: [recordedById], references: [id])
+  
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([studentId, date])  // Un registro por estudiante por día
+  @@index([studentId])
+  @@index([groupId])
+  @@index([date])
+}
+
+// ==================== MÓDULO DE ENCUESTAS (VOCAL) ====================
+
+model Poll {
+  id           String     @id @default(cuid())
+  title        String
+  description  String?    @db.Text
+  status       PollStatus @default(ACTIVE)
+  allowMultiple Boolean   @default(false)  // Permite seleccionar múltiples opciones
+  isAnonymous  Boolean    @default(false)  // Votación anónima
+  endsAt       DateTime?  // Fecha límite para votar
+  
+  // Relaciones
+  groupId      String
+  group        Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdById  String     // Vocal que creó la encuesta
+  createdBy    User       @relation("PollCreator", fields: [createdById], references: [id])
+  
+  options      PollOption[]
+  
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([groupId])
+  @@index([status])
+}
+
+model PollOption {
+  id        String     @id @default(cuid())
+  text      String
+  pollId    String
+  poll      Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes     PollVote[]
+  createdAt DateTime   @default(now())
+
+  @@index([pollId])
+}
+
+model PollVote {
+  id        String     @id @default(cuid())
+  optionId  String
+  option    PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  createdAt DateTime   @default(now())
+
+  @@unique([optionId, userId])  // Un voto por usuario por opción
+  @@index([optionId])
+  @@index([userId])
 }

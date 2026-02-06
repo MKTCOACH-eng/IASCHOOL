@@ -7,6 +7,10 @@ async function main() {
   console.log("Seeding database...");
 
   // Clear existing data in correct order
+  await prisma.pollVote.deleteMany();
+  await prisma.pollOption.deleteMany();
+  await prisma.poll.deleteMany();
+  await prisma.attendance.deleteMany();
   await prisma.payment.deleteMany();
   await prisma.charge.deleteMany();
   await prisma.eventAttendee.deleteMany();
@@ -679,6 +683,145 @@ async function main() {
 
   console.log("Created sample charges and payments");
 
+  // Create student user account (ALUMNO)
+  const alumnoPassword = await bcrypt.hash("alumno123", 10);
+  const alumnoUser = await prisma.user.create({
+    data: {
+      email: "sofia.lopez@vermontschool.edu",
+      password: alumnoPassword,
+      name: "Sofía López",
+      role: "ALUMNO",
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+
+  // Connect alumno user to student
+  await prisma.student.update({
+    where: { id: sofia.id },
+    data: { userId: alumnoUser.id },
+  });
+  console.log("Created alumno user and linked to student");
+
+  // Create vocal user (VOCAL)
+  const vocalPassword = await bcrypt.hash("vocal123", 10);
+  const vocalUser = await prisma.user.create({
+    data: {
+      email: "vocal@email.com",
+      password: vocalPassword,
+      name: "Roberto Vocal",
+      role: "VOCAL",
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+
+  // Create a student for the vocal (vocal is also a parent)
+  await prisma.student.create({
+    data: {
+      firstName: "Diego",
+      lastName: "Vocal",
+      schoolId: school.id,
+      groupId: group3A.id,
+      parents: { connect: [{ id: vocalUser.id }] },
+    },
+  });
+
+  // Assign vocal to group
+  await prisma.group.update({
+    where: { id: group3A.id },
+    data: { vocalId: vocalUser.id },
+  });
+  console.log("Created vocal user");
+
+  // Create sample attendance records
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const twoDaysAgo = new Date(today);
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+  // Attendance for Sofia
+  await prisma.attendance.createMany({
+    data: [
+      {
+        studentId: sofia.id,
+        groupId: group3A.id,
+        date: twoDaysAgo,
+        status: "PRESENTE",
+        recordedById: profesorMath.id,
+      },
+      {
+        studentId: sofia.id,
+        groupId: group3A.id,
+        date: yesterday,
+        status: "PRESENTE",
+        recordedById: profesorMath.id,
+      },
+    ],
+  });
+
+  // Attendance for Carlos
+  await prisma.attendance.createMany({
+    data: [
+      {
+        studentId: carlos.id,
+        groupId: group3A.id,
+        date: twoDaysAgo,
+        status: "TARDANZA",
+        notes: "Llegó 10 minutos tarde",
+        recordedById: profesorMath.id,
+      },
+      {
+        studentId: carlos.id,
+        groupId: group3A.id,
+        date: yesterday,
+        status: "AUSENTE",
+        notes: "Cita médica",
+        recordedById: profesorMath.id,
+      },
+    ],
+  });
+  console.log("Created sample attendance records");
+
+  // Create sample poll
+  const poll = await prisma.poll.create({
+    data: {
+      title: "¿Qué día prefieren para la convivencia del grupo?",
+      description: "Estamos organizando una convivencia familiar. Por favor voten por el día que más les convenga.",
+      groupId: group3A.id,
+      createdById: vocalUser.id,
+      allowMultiple: false,
+      isAnonymous: false,
+      endsAt: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000), // 7 días
+      options: {
+        create: [
+          { text: "Sábado 15 de febrero" },
+          { text: "Sábado 22 de febrero" },
+          { text: "Domingo 23 de febrero" },
+        ],
+      },
+    },
+    include: { options: true },
+  });
+
+  // Add some votes
+  await prisma.pollVote.create({
+    data: {
+      optionId: poll.options[0].id,
+      userId: maria.id,
+    },
+  });
+  await prisma.pollVote.create({
+    data: {
+      optionId: poll.options[1].id,
+      userId: juan.id,
+    },
+  });
+  console.log("Created sample poll with votes");
+
   console.log("\n=== CREDENCIALES DE PRUEBA ===");
   console.log("Admin: john@doe.com / johndoe123");
   console.log("Admin: admin@vermontschool.edu / admin123");
@@ -687,6 +830,8 @@ async function main() {
   console.log("Padre: maria.lopez@email.com / padre123");
   console.log("Padre: juan.martinez@email.com / padre123");
   console.log("Padre: ana.rodriguez@email.com / padre123");
+  console.log("Alumno: sofia.lopez@vermontschool.edu / alumno123");
+  console.log("Vocal: vocal@email.com / vocal123");
   console.log("==============================\n");
 
   console.log("Seed completed successfully!");
