@@ -59,7 +59,7 @@ export function Header({ user }: HeaderProps) {
         <div className="flex items-center justify-between h-28 py-[6px]">
           {/* Logo and School Name */}
           <Link href="/dashboard" className="flex items-center group h-full">
-            <div className="relative w-[140px] h-full transition-transform group-hover:scale-105">
+            <div className="relative w-[100px] h-full transition-transform group-hover:scale-105">
               <Image
                 src="/iaschool-logo.png"
                 alt="IA School Logo"
