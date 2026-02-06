@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet, BarChart3, Users, Vote, FileSignature, Bot } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertsCounter } from "@/components/academic-alerts";
@@ -18,6 +18,7 @@ interface HeaderProps {
 
 export function Header({ user }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isSuperAdmin = user?.role === "SUPER_ADMIN";
   const isAdmin = user?.role === "ADMIN";
   const isTeacher = user?.role === "PROFESOR";
   const isStudent = user?.role === "ALUMNO";
@@ -29,6 +30,7 @@ export function Header({ user }: HeaderProps) {
 
   const getRoleName = () => {
     switch (user?.role) {
+      case "SUPER_ADMIN": return "Super Admin";
       case "ADMIN": return "Administrador";
       case "PROFESOR": return "Profesor";
       case "ALUMNO": return "Alumno";
@@ -38,6 +40,16 @@ export function Header({ user }: HeaderProps) {
   };
 
   const getNavItems = () => {
+    // Items para Super Admin (gestión global)
+    if (isSuperAdmin) {
+      return [
+        { href: "/super-admin", label: "Dashboard", icon: Home },
+        { href: "/super-admin/schools", label: "Escuelas", icon: Building2 },
+        { href: "/super-admin/config", label: "Configuración", icon: Settings },
+        { href: "/super-admin/audit", label: "Auditoría", icon: Activity },
+      ];
+    }
+
     // Items para alumnos (vista simplificada)
     if (isStudent) {
       return [

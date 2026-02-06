@@ -10,6 +10,7 @@ datasource db {
 }
 
 enum Role {
+  SUPER_ADMIN   // Administrador global del sistema (multi-escuela)
   ADMIN
   PROFESOR
   PADRE
@@ -80,8 +81,15 @@ model School {
   code         String         @unique
   logoUrl      String?
   primaryColor String         @default("#1B4079")
+  secondaryColor String?      @default("#CBDF90")
+  address      String?
+  phone        String?
+  email        String?
+  website      String?
+  description  String?        @db.Text
   isActive     Boolean        @default(true)
   createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now()) @updatedAt
   users        User[]
   announcements Announcement[]
   invitations  Invitation[]
@@ -93,6 +101,7 @@ model School {
   charges      Charge[]
   documents    Document[]
   chatbotConversations ChatbotConversation[]
+  settings     SchoolSettings?
 }
 
 model User {
@@ -842,4 +851,64 @@ model ChatbotMessage {
   createdAt      DateTime            @default(now())
 
   @@index([conversationId])
+}
+
+// ==================== SUPER ADMIN - SISTEMA MULTI-ESCUELA ====================
+
+// Configuraciones globales del sistema
+model SystemConfig {
+  id           String   @id @default(cuid())
+  key          String   @unique  // Ej: "max_schools", "default_theme", "maintenance_mode"
+  value        String   @db.Text // Valor como JSON string
+  description  String?
+  category     String   @default("general") // general, security, notifications, limits
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Configuraciones específicas por escuela
+model SchoolSettings {
+  id               String   @id @default(cuid())
+  schoolId         String   @unique
+  school           School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  
+  // Módulos habilitados
+  modulesEnabled   String   @default("[\"announcements\",\"messages\",\"tasks\",\"calendar\",\"payments\",\"attendance\",\"documents\",\"chatbot\"]") // JSON array
+  
+  // Límites
+  maxUsers         Int      @default(500)
+  maxStudents      Int      @default(1000)
+  maxGroups        Int      @default(50)
+  storageLimit     Int      @default(5120) // MB
+  
+  // Personalización
+  customDomain     String?
+  customCss        String?  @db.Text
+  welcomeMessage   String?  @db.Text
+  
+  // Plan/Suscripción
+  planType         String   @default("standard") // free, basic, standard, premium
+  planExpiresAt    DateTime?
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+// Registro de actividad del sistema (Auditoría)
+model SystemAuditLog {
+  id           String   @id @default(cuid())
+  action       String   // CREATE_SCHOOL, UPDATE_SCHOOL, DEACTIVATE_SCHOOL, UPDATE_CONFIG, etc.
+  entityType   String   // School, User, SystemConfig
+  entityId     String?
+  userId       String?  // Usuario que realizó la acción
+  userEmail    String?
+  details      String?  @db.Text // JSON con detalles adicionales
+  ipAddress    String?
+  userAgent    String?  @db.Text
+  createdAt    DateTime @default(now())
+
+  @@index([action])
+  @@index([entityType])
+  @@index([userId])
+  @@index([createdAt])
 }

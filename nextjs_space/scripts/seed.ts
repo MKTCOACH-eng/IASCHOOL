@@ -32,6 +32,9 @@ async function main() {
   await prisma.group.deleteMany();
   await prisma.announcementRead.deleteMany();
   await prisma.announcement.deleteMany();
+  await prisma.systemAuditLog.deleteMany();
+  await prisma.schoolSettings.deleteMany();
+  await prisma.systemConfig.deleteMany();
   await prisma.user.deleteMany();
   await prisma.invitation.deleteMany();
   await prisma.school.deleteMany();
@@ -49,9 +52,45 @@ async function main() {
   console.log("Created school:", school.name, "Code:", school.code);
 
   // Hash passwords
+  const superAdminPassword = await bcrypt.hash("superadmin123", 10);
   const adminPassword = await bcrypt.hash("admin123", 10);
   const padrePassword = await bcrypt.hash("padre123", 10);
   const testPassword = await bcrypt.hash("johndoe123", 10);
+
+  // Create Super Admin user (global system administrator)
+  const superAdmin = await prisma.user.create({
+    data: {
+      email: "superadmin@iaschool.edu",
+      password: superAdminPassword,
+      name: "Super Administrador",
+      role: Role.SUPER_ADMIN,
+      schoolId: null, // Super Admin no pertenece a ninguna escuela específica
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+  console.log("Created super admin:", superAdmin.name, "Email:", superAdmin.email);
+
+  // Create School Settings for Vermont School
+  await prisma.schoolSettings.create({
+    data: {
+      schoolId: school.id,
+      planType: "standard",
+      maxUsers: 500,
+      maxStudents: 1000,
+      maxGroups: 50,
+      storageLimit: 5120,
+    },
+  });
+
+  // Create some system configurations
+  await prisma.systemConfig.createMany({
+    data: [
+      { key: "maintenance_mode", value: "false", description: "Modo de mantenimiento del sistema", category: "general" },
+      { key: "max_file_size_mb", value: "10", description: "Tamaño máximo de archivo en MB", category: "limits" },
+      { key: "session_timeout_minutes", value: "60", description: "Tiempo de expiración de sesión", category: "security" },
+    ],
+  });
 
   // Create admin user (test account)
   const testAdmin = await prisma.user.create({
