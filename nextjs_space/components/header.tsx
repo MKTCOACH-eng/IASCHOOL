@@ -56,15 +56,15 @@ export function Header({ user }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex items-end justify-between h-24 pb-3">
+        <div className="flex items-center justify-between h-28">
           {/* Logo and School Name */}
-          <Link href="/dashboard" className="flex items-end group">
-            <div className="relative w-44 h-[72px] transition-transform group-hover:scale-105">
+          <Link href="/dashboard" className="flex items-center group">
+            <div className="relative w-36 h-20 transition-transform group-hover:scale-105">
               <Image
                 src="/iaschool-logo.png"
                 alt="IA School Logo"
                 fill
-                className="object-contain object-bottom"
+                className="object-contain"
                 priority
               />
             </div>
