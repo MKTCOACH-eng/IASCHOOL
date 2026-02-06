@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -22,6 +24,7 @@ import {
   Award,
   BarChart3,
   Users,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -177,6 +180,13 @@ export default function AcademicProgressPage() {
               : "Resumen del desempeño académico"}
           </p>
         </div>
+        
+        <Link href="/academic/grades">
+          <Button variant="outline" className="gap-2">
+            <FileText className="w-4 h-4" />
+            Ver Reporte de Calificaciones
+          </Button>
+        </Link>
 
         {stats.students.length > 1 && (
           <Select value={selectedStudent} onValueChange={setSelectedStudent}>
