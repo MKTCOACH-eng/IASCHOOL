@@ -22,6 +22,7 @@ export async function GET(request: Request) {
     const user = session.user as SessionUser;
     const { searchParams } = new URL(request.url);
     const groupId = searchParams.get("id");
+    const includeStudents = searchParams.get("includeStudents") === "true";
 
     // Si se pasa un ID, devolver detalles del grupo incluyendo estudiantes
     if (groupId) {
@@ -58,6 +59,8 @@ export async function GET(request: Request) {
       where: {
         schoolId: user.schoolId,
         isActive: true,
+        // Filtrar por profesor si es PROFESOR
+        ...(user.role === "PROFESOR" ? { teacherId: user.id } : {}),
       },
       include: {
         teacher: {
@@ -78,6 +81,18 @@ export async function GET(request: Request) {
             students: true,
           },
         },
+        // Incluir estudiantes si se solicita
+        ...(includeStudents ? {
+          students: {
+            where: { isActive: true },
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+            },
+            orderBy: [{ lastName: "asc" as const }, { firstName: "asc" as const }],
+          },
+        } : {}),
       },
       orderBy: [
         { grade: "asc" },
@@ -85,7 +100,7 @@ export async function GET(request: Request) {
       ],
     });
 
-    return NextResponse.json(groups);
+    return NextResponse.json({ groups });
   } catch (error) {
     console.error("Error fetching groups:", error);
     return NextResponse.json(

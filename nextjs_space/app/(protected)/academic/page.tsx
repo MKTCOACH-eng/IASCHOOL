@@ -25,6 +25,7 @@ import {
   BarChart3,
   Users,
   FileText,
+  Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -182,6 +183,12 @@ export default function AcademicProgressPage() {
         </div>
         
         <div className="flex flex-wrap gap-2">
+          <Link href="/academic/report-cards">
+            <Button className="gap-2 bg-gradient-to-r from-[#1B4079] to-[#2563EB] text-white hover:from-[#153360] hover:to-[#1D4ED8]">
+              <Download className="w-4 h-4" />
+              Generar Boleta PDF
+            </Button>
+          </Link>
           <Link href="/academic/grades">
             <Button variant="outline" className="gap-2">
               <FileText className="w-4 h-4" />
