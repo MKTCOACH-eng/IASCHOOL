@@ -103,6 +103,14 @@ model School {
   chatbotConversations ChatbotConversation[]
   settings     SchoolSettings?
   bankConfig   SchoolBankConfig?
+  
+  // Fase 4B: CRM y Comunicación
+  crmSegments      CrmSegment[]
+  crmCampaigns     CrmCampaign[]
+  emailTemplates   EmailTemplate[]
+  communicationLogs CommunicationLog[]
+  metricsSnapshots SchoolMetricsSnapshot[]
+  importLogs       ImportLog[]
 }
 
 model User {
@@ -172,6 +180,12 @@ model User {
   teacherAvailability  TeacherAvailability[] @relation("TeacherAvailability")
   appointmentsAsTeacher Appointment[]        @relation("TeacherAppointments")
   appointmentsAsParent  Appointment[]        @relation("ParentAppointments")
+  
+  // Fase 4B: CRM y Comunicación
+  languagePreference   UserLanguagePreference?
+  campaignsCreated     CrmCampaign[]
+  campaignRecipients   CrmCampaignRecipient[]
+  communicationLogs    CommunicationLog[]
 }
 
 model Invitation {
@@ -1061,6 +1075,7 @@ enum ImportType {
 model ImportLog {
   id              String       @id @default(cuid())
   schoolId        String
+  school          School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   type            ImportType
   status          ImportStatus @default(PENDING)
   
@@ -1096,6 +1111,7 @@ model ImportLog {
 model SchoolMetricsSnapshot {
   id                String   @id @default(cuid())
   schoolId          String
+  school            School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   date              DateTime @db.Date
   
   // Usuarios
@@ -1135,4 +1151,146 @@ model SchoolMetricsSnapshot {
   @@unique([schoolId, date])
   @@index([schoolId])
   @@index([date])
+}
+
+
+// ==========================================
+// FASE 4B: COMUNICACIÓN - TRADUCCIONES Y CRM
+// ==========================================
+
+enum Language {
+  ES  // Español
+  EN  // English
+  PT  // Português
+  DE  // Deutsch
+  FR  // Français
+  JA  // 日本語
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  CANCELLED
+}
+
+enum CampaignType {
+  EMAIL
+  PUSH
+  SMS
+}
+
+// Preferencias de idioma del usuario
+model UserLanguagePreference {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  language  Language @default(ES)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// Segmentos de usuarios para CRM
+model CrmSegment {
+  id          String   @id @default(cuid())
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  filters     Json     // Filtros dinámicos: { role: [], groupId: [], hasUnpaidCharges: true, etc }
+  userCount   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  campaigns   CrmCampaign[]
+
+  @@index([schoolId])
+}
+
+// Campañas de comunicación
+model CrmCampaign {
+  id           String         @id @default(cuid())
+  schoolId     String
+  school       School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  segmentId    String?
+  segment      CrmSegment?    @relation(fields: [segmentId], references: [id])
+  name         String
+  subject      String
+  content      String         @db.Text
+  type         CampaignType   @default(EMAIL)
+  status       CampaignStatus @default(DRAFT)
+  scheduledAt  DateTime?
+  sentAt       DateTime?
+  totalRecipients Int         @default(0)
+  deliveredCount  Int         @default(0)
+  openedCount     Int         @default(0)
+  clickedCount    Int         @default(0)
+  createdById  String
+  createdBy    User           @relation(fields: [createdById], references: [id])
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  recipients   CrmCampaignRecipient[]
+
+  @@index([schoolId])
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+// Destinatarios de campañas
+model CrmCampaignRecipient {
+  id          String      @id @default(cuid())
+  campaignId  String
+  campaign    CrmCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email       String
+  status      String      @default("pending") // pending, sent, delivered, opened, clicked, bounced, failed
+  sentAt      DateTime?
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  createdAt   DateTime    @default(now())
+
+  @@unique([campaignId, userId])
+  @@index([campaignId])
+  @@index([userId])
+  @@index([status])
+}
+
+// Plantillas de email
+model EmailTemplate {
+  id          String   @id @default(cuid())
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name        String
+  subject     String
+  content     String   @db.Text
+  category    String?  // welcome, reminder, announcement, etc
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([schoolId])
+  @@index([category])
+}
+
+// Historial de comunicaciones enviadas
+model CommunicationLog {
+  id          String   @id @default(cuid())
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // email, sms, push
+  subject     String?
+  content     String   @db.Text
+  status      String   // sent, delivered, failed, bounced
+  metadata    Json?    // Info adicional como IP, dispositivo, etc
+  sentAt      DateTime @default(now())
+  
+  @@index([schoolId])
+  @@index([userId])
+  @@index([sentAt])
 }

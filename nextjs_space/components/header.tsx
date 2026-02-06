@@ -3,10 +3,12 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen, Mail, Globe } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertsCounter } from "@/components/academic-alerts";
+import { useLanguage } from "@/contexts/language-context";
+import { Language } from "@/lib/i18n/translations";
 
 interface HeaderProps {
   user?: {
@@ -18,11 +20,16 @@ interface HeaderProps {
 
 export function Header({ user }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const { language, setLanguage, languageNames, languageFlags } = useLanguage();
+  
   const isSuperAdmin = user?.role === "SUPER_ADMIN";
   const isAdmin = user?.role === "ADMIN";
   const isTeacher = user?.role === "PROFESOR";
   const isStudent = user?.role === "ALUMNO";
   const isVocal = user?.role === "VOCAL";
+  
+  const availableLanguages: Language[] = ['ES', 'EN', 'PT', 'DE', 'FR', 'JA'];
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/login" });
@@ -80,6 +87,7 @@ export function Header({ user }: HeaderProps) {
         { href: "/chatbot", label: "Asistente IA", icon: Bot },
         { href: "/attendance", label: "Asistencia", icon: Users },
         { href: "/directory", label: "Directorio", icon: BookOpen },
+        { href: "/crm", label: "CRM", icon: Mail },
         { href: "/polls", label: "Encuestas", icon: Vote },
         { href: "/invitations", label: "Invitaciones", icon: UserPlus },
       ];
@@ -148,6 +156,48 @@ export function Header({ user }: HeaderProps) {
 
           {/* User Menu */}
           <div className="flex items-center gap-3">
+            {/* Language Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-all"
+                title="Cambiar idioma"
+              >
+                <Globe className="w-4 h-4" />
+                <span className="text-sm hidden sm:inline">{languageFlags[language]}</span>
+              </button>
+              
+              <AnimatePresence>
+                {showLanguageMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50"
+                  >
+                    {availableLanguages.map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => {
+                          setLanguage(lang);
+                          setShowLanguageMenu(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 transition-colors ${
+                          language === lang ? 'bg-[#1B4079]/5 text-[#1B4079]' : 'text-gray-700'
+                        }`}
+                      >
+                        <span className="text-lg">{languageFlags[lang]}</span>
+                        <span className="text-sm font-medium">{languageNames[lang]}</span>
+                        {language === lang && (
+                          <span className="ml-auto text-[#1B4079]">✓</span>
+                        )}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            
             {/* Alerts Counter */}
             <AlertsCounter />
             
