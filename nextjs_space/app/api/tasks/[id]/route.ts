@@ -47,6 +47,9 @@ export async function GET(
           },
           orderBy: { submittedAt: "desc" },
         },
+        _count: {
+          select: { submissions: true },
+        },
       },
     });
 
@@ -103,6 +106,7 @@ export async function PUT(
       description,
       instructions,
       subjectId,
+      groupId,
       dueDate,
       maxScore,
       status,
@@ -115,6 +119,14 @@ export async function PUT(
     if (subjectId !== undefined) updateData.subjectId = subjectId || null;
     if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null;
     if (maxScore !== undefined) updateData.maxScore = maxScore;
+    
+    // Solo permitir cambiar grupo si no hay entregas
+    if (groupId !== undefined && groupId !== task.groupId) {
+      const submissionCount = await db.submission.count({ where: { taskId: id } });
+      if (submissionCount === 0) {
+        updateData.groupId = groupId;
+      }
+    }
     
     if (status !== undefined) {
       updateData.status = status;

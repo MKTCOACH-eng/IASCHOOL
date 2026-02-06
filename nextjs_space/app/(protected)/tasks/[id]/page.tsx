@@ -27,6 +27,10 @@ import {
   Edit,
   Trash2,
   FileText,
+  Upload,
+  X,
+  Download,
+  Paperclip,
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -93,6 +97,8 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
   const [selectedStudent, setSelectedStudent] = useState<string>("");
   const [submissionContent, setSubmissionContent] = useState("");
   const [children, setChildren] = useState<Student[]>([]);
+  const [submissionFiles, setSubmissionFiles] = useState<File[]>([]);
+  const [uploadingFiles, setUploadingFiles] = useState(false);
   
   // For teachers: grading
   const [gradeData, setGradeData] = useState<Record<string, { score: string; feedback: string }>>({
@@ -185,34 +191,122 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
     }
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const newFiles = Array.from(files);
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      const validFiles = newFiles.filter(f => f.size <= maxSize);
+      if (validFiles.length < newFiles.length) {
+        toast.error("Algunos archivos exceden 10MB y fueron ignorados");
+      }
+      setSubmissionFiles(prev => [...prev, ...validFiles]);
+    }
+    e.target.value = "";
+  };
+
+  const removeFile = (index: number) => {
+    setSubmissionFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  const uploadFiles = async (): Promise<{ fileName: string; fileUrl: string; fileSize: number; mimeType: string; cloudStoragePath: string }[]> => {
+    const uploadedFiles = [];
+    
+    for (const file of submissionFiles) {
+      // Get presigned URL
+      const presignedRes = await fetch("/api/upload/presigned", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType: file.type,
+          isPublic: true,
+        }),
+      });
+      
+      if (!presignedRes.ok) {
+        throw new Error(`Error obteniendo URL para ${file.name}`);
+      }
+      
+      const { uploadUrl, cloud_storage_path } = await presignedRes.json();
+      
+      // Upload to S3
+      const uploadRes = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+          "Content-Disposition": "attachment",
+        },
+        body: file,
+      });
+      
+      if (!uploadRes.ok) {
+        throw new Error(`Error subiendo ${file.name}`);
+      }
+      
+      uploadedFiles.push({
+        fileName: file.name,
+        fileUrl: cloud_storage_path,
+        fileSize: file.size,
+        mimeType: file.type,
+        cloudStoragePath: cloud_storage_path,
+      });
+    }
+    
+    return uploadedFiles;
+  };
+
   const handleSubmit = async () => {
     if (!selectedStudent) {
       toast.error("Selecciona un estudiante");
       return;
     }
 
+    if (!submissionContent.trim() && submissionFiles.length === 0) {
+      toast.error("Agrega contenido o archivos");
+      return;
+    }
+
     setSubmitting(true);
     try {
+      let attachments: { fileName: string; fileUrl: string; fileSize: number; mimeType: string; cloudStoragePath: string }[] = [];
+      
+      if (submissionFiles.length > 0) {
+        setUploadingFiles(true);
+        attachments = await uploadFiles();
+        setUploadingFiles(false);
+      }
+      
       const res = await fetch(`/api/tasks/${resolvedParams.id}/submissions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           studentId: selectedStudent,
           content: submissionContent,
+          attachments,
         }),
       });
       if (res.ok) {
         toast.success("Tarea entregada exitosamente");
         setSubmissionContent("");
+        setSubmissionFiles([]);
         fetchTask();
       } else {
         const error = await res.json();
         toast.error(error.error || "Error al entregar");
       }
-    } catch {
+    } catch (error) {
+      console.error(error);
       toast.error("Error al entregar tarea");
     } finally {
       setSubmitting(false);
+      setUploadingFiles(false);
     }
   };
 
@@ -419,17 +513,72 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
                 className="mb-4"
               />
 
+              {/* File Upload Section */}
+              <div className="mb-4">
+                <label className="text-sm text-gray-600 mb-2 block">
+                  Archivos adjuntos (opcional)
+                </label>
+                <div className="border-2 border-dashed rounded-lg p-4">
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleFileSelect}
+                    className="hidden"
+                    id="submission-files"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png,.gif"
+                  />
+                  <label
+                    htmlFor="submission-files"
+                    className="flex items-center justify-center gap-2 cursor-pointer text-gray-500 hover:text-[#1B4079] transition-colors"
+                  >
+                    <Upload className="w-5 h-5" />
+                    <span>Seleccionar archivos (máx. 10MB c/u)</span>
+                  </label>
+                </div>
+                
+                {submissionFiles.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    {submissionFiles.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Paperclip className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span className="text-sm truncate">{file.name}</span>
+                          <span className="text-xs text-gray-400">
+                            ({formatFileSize(file.size)})
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(index)}
+                          className="p-1 hover:bg-gray-200 rounded"
+                        >
+                          <X className="w-4 h-4 text-gray-500" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <Button
                 onClick={handleSubmit}
                 disabled={submitting || !selectedStudent}
                 className="bg-[#1B4079] hover:bg-[#143056]"
               >
                 {submitting ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {uploadingFiles ? "Subiendo archivos..." : "Entregando..."}
+                  </>
                 ) : (
-                  <Send className="w-4 h-4 mr-2" />
+                  <>
+                    <Send className="w-4 h-4 mr-2" />
+                    Entregar
+                  </>
                 )}
-                Entregar
               </Button>
             </div>
           )}
@@ -469,19 +618,25 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
                       )}
 
                       {submission.attachments.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          {submission.attachments.map((att) => (
-                            <a
-                              key={att.id}
-                              href={att.fileUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-sm text-[#1B4079] hover:underline"
-                            >
-                              <FileText className="w-4 h-4" />
-                              {att.fileName}
-                            </a>
-                          ))}
+                        <div className="mb-3">
+                          <p className="text-xs text-gray-500 mb-2 flex items-center gap-1">
+                            <Paperclip className="w-3 h-3" />
+                            Archivos adjuntos
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {submission.attachments.map((att) => (
+                              <a
+                                key={att.id}
+                                href={`/api/files/${encodeURIComponent(att.fileUrl)}`}
+                                download={att.fileName}
+                                className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm text-gray-700 transition-colors"
+                              >
+                                <FileText className="w-4 h-4 text-[#1B4079]" />
+                                <span className="max-w-[150px] truncate">{att.fileName}</span>
+                                <Download className="w-3 h-3 text-gray-400" />
+                              </a>
+                            ))}
+                          </div>
                         </div>
                       )}
 
