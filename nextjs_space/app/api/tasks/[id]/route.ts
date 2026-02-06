@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { prisma as db } from "@/lib/db";
+import { sendNewTaskNotification } from "@/lib/send-notification";
 
 interface SessionUser {
   id: string;
@@ -129,10 +130,52 @@ export async function PUT(
       data: updateData,
       include: {
         subject: true,
-        group: true,
+        group: {
+          include: {
+            school: true,
+            students: {
+              include: {
+                parents: { select: { id: true, email: true, name: true } },
+              },
+            },
+          },
+        },
         teacher: { select: { id: true, name: true } },
       },
     });
+
+    // Send notifications when task is published
+    if (status === "PUBLISHED" && !task.publishedAt) {
+      const parents = new Map<string, { email: string; name: string; studentName: string }>();
+      
+      for (const student of updatedTask.group.students) {
+        for (const parent of student.parents) {
+          if (!parents.has(parent.id)) {
+            parents.set(parent.id, {
+              email: parent.email,
+              name: parent.name,
+              studentName: `${student.firstName} ${student.lastName}`,
+            });
+          }
+        }
+      }
+
+      // Send notifications in background (don't block response)
+      Promise.all(
+        Array.from(parents.values()).map((parent) =>
+          sendNewTaskNotification({
+            parentEmail: parent.email,
+            parentName: parent.name,
+            studentName: parent.studentName,
+            taskTitle: updatedTask.title,
+            teacherName: updatedTask.teacher.name,
+            subjectName: updatedTask.subject?.name,
+            dueDate: updatedTask.dueDate,
+            schoolName: updatedTask.group.school.name,
+          })
+        )
+      ).catch((err) => console.error("Error sending task notifications:", err));
+    }
 
     return NextResponse.json(updatedTask);
   } catch (error) {

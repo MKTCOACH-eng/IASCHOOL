@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { prisma as db } from "@/lib/db";
+import { sendTaskGradedNotification } from "@/lib/send-notification";
 
 interface SessionUser {
   id: string;
@@ -64,11 +65,37 @@ export async function PUT(
         reviewedById: score !== undefined ? user.id : undefined,
       },
       include: {
-        student: true,
+        student: {
+          include: {
+            parents: { select: { email: true, name: true } },
+            school: { select: { name: true } },
+          },
+        },
+        task: { select: { title: true, maxScore: true } },
         attachments: true,
         reviewedBy: { select: { name: true } },
       },
     });
+
+    // Send notification when submission is graded
+    if (score !== undefined && updated.student.parents.length > 0) {
+      const studentName = `${updated.student.firstName} ${updated.student.lastName}`;
+      
+      Promise.all(
+        updated.student.parents.map((parent) =>
+          sendTaskGradedNotification({
+            parentEmail: parent.email,
+            parentName: parent.name,
+            studentName,
+            taskTitle: updated.task.title,
+            score: updated.score!,
+            maxScore: updated.task.maxScore,
+            feedback: updated.feedback,
+            schoolName: updated.student.school.name,
+          })
+        )
+      ).catch((err) => console.error("Error sending grade notification:", err));
+    }
 
     return NextResponse.json(updated);
   } catch (error) {

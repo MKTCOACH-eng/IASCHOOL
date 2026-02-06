@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/db";
+import { sendAnnouncementNotification } from "@/lib/send-notification";
 
 export async function GET(request: Request) {
   try {
@@ -107,7 +108,34 @@ export async function POST(request: Request) {
         schoolId: user?.schoolId,
         createdById: user?.id,
       },
+      include: {
+        school: { select: { name: true } },
+      },
     });
+
+    // Send email notifications for urgent announcements
+    if (priority === "URGENT") {
+      const parents = await prisma.user.findMany({
+        where: {
+          schoolId: user?.schoolId,
+          role: "PADRE",
+        },
+        select: { email: true, name: true },
+      });
+
+      Promise.all(
+        parents.map((parent) =>
+          sendAnnouncementNotification({
+            parentEmail: parent.email,
+            parentName: parent.name,
+            title,
+            content,
+            priority: "URGENT",
+            schoolName: announcement.school.name,
+          })
+        )
+      ).catch((err) => console.error("Error sending announcement notifications:", err));
+    }
 
     return NextResponse.json(announcement);
   } catch (error) {
