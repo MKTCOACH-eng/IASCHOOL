@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertsCounter } from "@/components/academic-alerts";
@@ -79,6 +79,7 @@ export function Header({ user }: HeaderProps) {
         ...baseItems,
         { href: "/chatbot", label: "Asistente IA", icon: Bot },
         { href: "/attendance", label: "Asistencia", icon: Users },
+        { href: "/directory", label: "Directorio", icon: BookOpen },
         { href: "/polls", label: "Encuestas", icon: Vote },
         { href: "/invitations", label: "Invitaciones", icon: UserPlus },
       ];

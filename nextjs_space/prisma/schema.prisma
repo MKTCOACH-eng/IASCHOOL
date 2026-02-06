@@ -1039,3 +1039,100 @@ model SystemAuditLog {
   @@index([userId])
   @@index([createdAt])
 }
+
+// ==================== IMPORTACIÓN CSV ====================
+
+enum ImportStatus {
+  PENDING      // Pendiente de procesar
+  PROCESSING   // En proceso
+  COMPLETED    // Completado exitosamente
+  PARTIAL      // Completado con errores
+  FAILED       // Falló completamente
+}
+
+enum ImportType {
+  STUDENTS     // Importación de alumnos
+  PARENTS      // Importación de padres
+  TEACHERS     // Importación de profesores
+  GROUPS       // Importación de grupos
+  CHARGES      // Importación de cargos/cobros
+}
+
+model ImportLog {
+  id              String       @id @default(cuid())
+  schoolId        String
+  type            ImportType
+  status          ImportStatus @default(PENDING)
+  
+  // Estadísticas
+  totalRows       Int          @default(0)
+  successRows     Int          @default(0)
+  errorRows       Int          @default(0)
+  
+  // Archivo original
+  fileName        String
+  filePath        String?
+  
+  // Resultados detallados (JSON con errores por fila)
+  errors          String?      @db.Text
+  
+  // Quién importó
+  importedById    String
+  
+  // Timestamps
+  startedAt       DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime     @default(now())
+
+  @@index([schoolId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ==================== MÉTRICAS Y REPORTES ====================
+
+// Snapshots de métricas diarias por escuela
+model SchoolMetricsSnapshot {
+  id                String   @id @default(cuid())
+  schoolId          String
+  date              DateTime @db.Date
+  
+  // Usuarios
+  totalUsers        Int      @default(0)
+  activeUsers       Int      @default(0) // Usuarios que iniciaron sesión este día
+  totalParents      Int      @default(0)
+  totalTeachers     Int      @default(0)
+  totalStudents     Int      @default(0)
+  
+  // Grupos
+  totalGroups       Int      @default(0)
+  
+  // Comunicación
+  messagesCount     Int      @default(0)
+  announcementsCount Int     @default(0)
+  
+  // Académico
+  tasksCreated      Int      @default(0)
+  submissionsCount  Int      @default(0)
+  averageAttendance Float?
+  
+  // Pagos
+  chargesTotal      Float    @default(0)
+  paymentsTotal     Float    @default(0)
+  pendingPayments   Float    @default(0)
+  
+  // Chatbot
+  chatbotQueries    Int      @default(0)
+  chatbotResolved   Int      @default(0)
+  
+  // Citas
+  appointmentsScheduled Int  @default(0)
+  appointmentsCompleted Int  @default(0)
+  
+  createdAt         DateTime @default(now())
+
+  @@unique([schoolId, date])
+  @@index([schoolId])
+  @@index([date])
+}
