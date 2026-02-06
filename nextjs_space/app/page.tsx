@@ -7,9 +7,9 @@ export default function LandingPage() {
     <main className="min-h-screen bg-white">
       {/* Navigation - White Header */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-20 py-[6px]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 py-[6px]">
           <Link href="/" className="flex items-center h-full">
-            <div className="relative h-full w-[68px]">
+            <div className="relative h-full w-[52px]">
               <Image
                 src="/iaschool-logo.png"
                 alt="IA School"
@@ -21,7 +21,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/login"
-            className="px-6 py-2.5 bg-[#1B4079] text-white font-medium rounded-lg hover:bg-[#4D7C8A] transition-all"
+            className="px-5 py-2 bg-[#1B4079] text-white text-sm font-medium rounded-lg hover:bg-[#4D7C8A] transition-all"
           >
             Iniciar Sesión
           </Link>
