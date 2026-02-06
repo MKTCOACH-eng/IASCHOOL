@@ -7,6 +7,8 @@ async function main() {
   console.log("Seeding database...");
 
   // Clear existing data in correct order
+  await prisma.documentSignature.deleteMany();
+  await prisma.document.deleteMany();
   await prisma.pollVote.deleteMany();
   await prisma.pollOption.deleteMany();
   await prisma.poll.deleteMany();
@@ -821,6 +823,153 @@ async function main() {
     },
   });
   console.log("Created sample poll with votes");
+
+  // ==================== DOCUMENTOS ====================
+  // Documento 1: Autorización pendiente de firma
+  const doc1 = await prisma.document.create({
+    data: {
+      title: "Autorización Salida Educativa - Museo de Historia",
+      description: "Permiso para la salida educativa al Museo Nacional de Historia el día 20 de febrero de 2026",
+      content: `<h2>AUTORIZACIÓN DE SALIDA EDUCATIVA</h2>
+<p><strong>Vermont School</strong></p>
+<p>Por medio de la presente, autorizo a mi hijo(a) a participar en la salida educativa organizada por el colegio con los siguientes detalles:</p>
+<ul>
+  <li><strong>Destino:</strong> Museo Nacional de Historia</li>
+  <li><strong>Fecha:</strong> 20 de febrero de 2026</li>
+  <li><strong>Horario:</strong> 8:00 AM - 3:00 PM</li>
+  <li><strong>Transporte:</strong> Autobús escolar</li>
+  <li><strong>Costo:</strong> $250 MXN (incluye entrada y transporte)</li>
+</ul>
+<p>Me comprometo a:</p>
+<ol>
+  <li>Proporcionar lunch y agua para mi hijo(a)</li>
+  <li>Asegurar la puntualidad en el horario de salida</li>
+  <li>Mantener mis datos de contacto actualizados para cualquier emergencia</li>
+</ol>
+<p>En caso de emergencia médica, autorizo al personal del colegio a tomar las decisiones necesarias para el bienestar de mi hijo(a).</p>`,
+      type: "PERMISO",
+      status: "PENDING",
+      targetRole: "PADRE",
+      groupId: group3A.id,
+      expiresAt: new Date("2026-02-18"),
+      schoolId: school.id,
+      createdById: admin.id,
+    },
+  });
+
+  // Documento 2: Reglamento firmado por algunos
+  const doc2 = await prisma.document.create({
+    data: {
+      title: "Reglamento de Conducta Escolar 2026",
+      description: "Normativa de comportamiento y disciplina escolar para el ciclo 2025-2026",
+      content: `<h2>REGLAMENTO DE CONDUCTA ESCOLAR</h2>
+<h3>Ciclo Escolar 2025-2026</h3>
+<p>Vermont School establece el siguiente reglamento con el objetivo de mantener un ambiente de respeto, orden y convivencia armónica:</p>
+<h4>1. Puntualidad</h4>
+<p>Los alumnos deberán presentarse a las 7:45 AM. Después de las 8:00 AM se considerará retardo.</p>
+<h4>2. Uniforme</h4>
+<p>El uso del uniforme completo es obligatorio. No se permiten modificaciones ni accesorios adicionales.</p>
+<h4>3. Uso de dispositivos electrónicos</h4>
+<p>Los teléfonos celulares deberán permanecer apagados durante las horas de clase.</p>
+<h4>4. Respeto</h4>
+<p>Se espera trato respetuoso hacia compañeros, maestros y personal del colegio.</p>
+<h4>5. Tareas y trabajos</h4>
+<p>Las tareas deberán entregarse en tiempo y forma. Las entregas tardías tendrán penalización.</p>
+<p><strong>El incumplimiento de estas normas resultará en las sanciones correspondientes según la gravedad de la falta.</strong></p>`,
+      type: "REGLAMENTO",
+      status: "PARTIALLY_SIGNED",
+      targetRole: "PADRE",
+      schoolId: school.id,
+      createdById: admin.id,
+    },
+  });
+
+  // Agregar firmas al reglamento
+  await prisma.documentSignature.create({
+    data: {
+      documentId: doc2.id,
+      userId: maria.id,
+      signatureType: "ACCEPT",
+      ipAddress: "192.168.1.100",
+      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+      verificationCode: "reglamento-maria-2026",
+    },
+  });
+
+  // Documento 3: Circular completada
+  const doc3 = await prisma.document.create({
+    data: {
+      title: "Circular: Cambio de Horario Semana Santa",
+      description: "Información sobre modificaciones al horario durante Semana Santa",
+      content: `<h2>CIRCULAR INFORMATIVA</h2>
+<p><strong>Asunto:</strong> Horario Especial Semana Santa 2026</p>
+<p>Estimados padres de familia,</p>
+<p>Les informamos que durante la semana del 30 de marzo al 3 de abril de 2026, el horario escolar será modificado de la siguiente manera:</p>
+<table border="1" cellpadding="8" style="border-collapse: collapse; width: 100%;">
+  <tr><th>Día</th><th>Entrada</th><th>Salida</th></tr>
+  <tr><td>Lunes 30</td><td>8:00 AM</td><td>1:00 PM</td></tr>
+  <tr><td>Martes 31</td><td>8:00 AM</td><td>1:00 PM</td></tr>
+  <tr><td>Miércoles 1 - Viernes 3</td><td colspan="2">VACACIONES</td></tr>
+</table>
+<p>Las clases se reanudan normalmente el lunes 6 de abril.</p>
+<p>Agradecemos su comprensión y colaboración.</p>
+<p><em>Atentamente,<br/>Dirección General</em></p>`,
+      type: "CIRCULAR",
+      status: "COMPLETED",
+      schoolId: school.id,
+      createdById: admin.id,
+      completedAt: new Date("2026-02-01"),
+    },
+  });
+
+  // Agregar firmas a la circular completada
+  await prisma.documentSignature.create({
+    data: {
+      documentId: doc3.id,
+      userId: maria.id,
+      signatureType: "ACCEPT",
+      ipAddress: "192.168.1.100",
+      userAgent: "Mozilla/5.0 Chrome/120",
+      verificationCode: "circular-maria-2026",
+    },
+  });
+  await prisma.documentSignature.create({
+    data: {
+      documentId: doc3.id,
+      userId: juan.id,
+      signatureType: "ACCEPT",
+      ipAddress: "192.168.1.101",
+      userAgent: "Mozilla/5.0 Safari/17",
+      verificationCode: "circular-juan-2026",
+    },
+  });
+  await prisma.documentSignature.create({
+    data: {
+      documentId: doc3.id,
+      userId: ana.id,
+      signatureType: "ACCEPT",
+      ipAddress: "192.168.1.102",
+      userAgent: "Mozilla/5.0 Firefox/121",
+      verificationCode: "circular-ana-2026",
+    },
+  });
+
+  // Documento 4: Borrador (solo visible para admin)
+  await prisma.document.create({
+    data: {
+      title: "Contrato de Servicios Educativos 2026-2027",
+      description: "Borrador del contrato para el próximo ciclo escolar",
+      content: `<h2>CONTRATO DE PRESTACIÓN DE SERVICIOS EDUCATIVOS</h2>
+<p>Este contrato se celebra entre Vermont School y el padre/tutor del alumno inscrito...</p>
+<p><em>[Documento en proceso de elaboración]</em></p>`,
+      type: "CONTRATO",
+      status: "DRAFT",
+      schoolId: school.id,
+      createdById: admin.id,
+    },
+  });
+
+  console.log("Created sample documents with signatures");
 
   console.log("\n=== CREDENCIALES DE PRUEBA ===");
   console.log("Admin: john@doe.com / johndoe123");

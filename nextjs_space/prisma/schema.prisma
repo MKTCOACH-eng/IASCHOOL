@@ -29,6 +29,25 @@ enum PollStatus {
   CLOSED
 }
 
+enum DocumentStatus {
+  DRAFT           // Borrador
+  PENDING         // Pendiente de firma
+  PARTIALLY_SIGNED // Firmado parcialmente
+  COMPLETED       // Completamente firmado
+  EXPIRED         // Expirado
+  CANCELLED       // Cancelado
+}
+
+enum DocumentType {
+  PERMISO           // Permiso de salida/actividad
+  AUTORIZACION      // Autorización general
+  REGLAMENTO        // Reglamento escolar
+  CONTRATO          // Contrato de servicios
+  CONSTANCIA        // Constancia
+  CIRCULAR          // Circular informativa
+  OTRO              // Otro tipo
+}
+
 enum InvitationStatus {
   PENDING
   ACCEPTED
@@ -72,6 +91,7 @@ model School {
   subjects     Subject[]
   events       Event[]
   charges      Charge[]
+  documents    Document[]
 }
 
 model User {
@@ -129,6 +149,10 @@ model User {
   // Encuestas creadas (vocal)
   pollsCreated       Poll[]    @relation("PollCreator")
   pollVotes          PollVote[]
+  
+  // Documentos y firmas digitales
+  documentsCreated   Document[]          @relation("DocumentCreator")
+  documentSignatures DocumentSignature[]
 }
 
 model Invitation {
@@ -166,6 +190,7 @@ model Group {
   events       Event[]
   attendances  Attendance[]
   polls        Poll[]
+  documents    Document[]
   createdAt    DateTime  @default(now())
   isActive     Boolean   @default(true)
 
@@ -707,4 +732,69 @@ model PollVote {
   @@unique([optionId, userId])  // Un voto por usuario por opción
   @@index([optionId])
   @@index([userId])
+}
+
+// ==================== MÓDULO DE FIRMA DIGITAL ====================
+
+model Document {
+  id              String         @id @default(cuid())
+  title           String
+  description     String?        @db.Text
+  content         String         @db.Text   // Contenido HTML del documento
+  type            DocumentType   @default(AUTORIZACION)
+  status          DocumentStatus @default(DRAFT)
+  
+  // Archivo PDF generado (opcional)
+  pdfUrl          String?
+  pdfPath         String?
+  
+  // Fechas
+  expiresAt       DateTime?      // Fecha de expiración para firmar
+  completedAt     DateTime?      // Fecha en que se completó la firma
+  
+  // Destinatarios
+  targetRole      Role?          // Rol objetivo (PADRE, PROFESOR, etc.)
+  groupId         String?        // Grupo específico (opcional)
+  group           Group?         @relation(fields: [groupId], references: [id])
+  
+  // Relaciones
+  schoolId        String
+  school          School         @relation(fields: [schoolId], references: [id])
+  createdById     String
+  createdBy       User           @relation("DocumentCreator", fields: [createdById], references: [id])
+  
+  signatures      DocumentSignature[]
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([schoolId])
+  @@index([status])
+  @@index([type])
+  @@index([createdById])
+}
+
+model DocumentSignature {
+  id              String    @id @default(cuid())
+  documentId      String
+  document        Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  
+  // Datos de la firma
+  signatureData   String?   @db.Text   // Firma digital (base64 o hash)
+  signatureType   String    @default("ACCEPT") // ACCEPT (checkbox), DRAW (firma dibujada)
+  ipAddress       String?                // IP desde donde se firmó
+  userAgent       String?   @db.Text    // Navegador/dispositivo
+  
+  // Verificación
+  signedAt        DateTime  @default(now())
+  verificationCode String   @unique @default(cuid()) // Código único de verificación
+  
+  createdAt       DateTime  @default(now())
+
+  @@unique([documentId, userId])  // Un usuario solo firma una vez por documento
+  @@index([documentId])
+  @@index([userId])
+  @@index([verificationCode])
 }

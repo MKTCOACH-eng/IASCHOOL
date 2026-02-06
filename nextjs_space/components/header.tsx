@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet, BarChart3, Users, Vote } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet, BarChart3, Users, Vote, FileSignature } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertsCounter } from "@/components/academic-alerts";
@@ -46,6 +46,7 @@ export function Header({ user }: HeaderProps) {
         { href: "/calendar", label: "Calendario", icon: Calendar },
         { href: "/messages", label: "Mensajes", icon: MessageSquare },
         { href: "/attendance", label: "Asistencia", icon: Users },
+        { href: "/documents", label: "Documentos", icon: FileSignature },
         { href: "/announcements", label: "Anuncios", icon: Bell },
       ];
     }
@@ -57,6 +58,7 @@ export function Header({ user }: HeaderProps) {
       { href: "/academic", label: "Progreso", icon: BarChart3 },
       { href: "/calendar", label: "Calendario", icon: Calendar },
       { href: "/payments", label: "Pagos", icon: Wallet },
+      { href: "/documents", label: "Documentos", icon: FileSignature },
       { href: "/announcements", label: "Anuncios", icon: Bell },
     ];
 
