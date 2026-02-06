@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet, BarChart3 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -29,6 +29,7 @@ export function Header({ user }: HeaderProps) {
       { href: "/dashboard", label: "Inicio", icon: Home },
       { href: "/messages", label: "Mensajes", icon: MessageSquare },
       { href: "/tasks", label: "Tareas", icon: ClipboardList },
+      { href: "/academic", label: "Progreso", icon: BarChart3 },
       { href: "/calendar", label: "Calendario", icon: Calendar },
       { href: "/payments", label: "Pagos", icon: Wallet },
       { href: "/announcements", label: "Anuncios", icon: Bell },
