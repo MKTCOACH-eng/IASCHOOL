@@ -28,6 +28,10 @@ import {
   Receipt,
   TrendingUp,
   Users,
+  Building2,
+  Copy,
+  Banknote,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -93,6 +97,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; icon: any }>
 const PAYMENT_METHODS = [
   { value: "EFECTIVO", label: "Efectivo" },
   { value: "TRANSFERENCIA", label: "Transferencia" },
+  { value: "SPEI", label: "SPEI (sin comisión)" },
   { value: "TARJETA", label: "Tarjeta" },
   { value: "DEPOSITO", label: "Depósito" },
   { value: "OTRO", label: "Otro" },
@@ -102,6 +107,26 @@ const MONTHS = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
+
+interface SpeiInfo {
+  reference: string;
+  student: { firstName: string; lastName: string };
+  bankInfo: {
+    bankName: string;
+    accountHolder: string;
+    clabe: string;
+    accountNumber?: string;
+  };
+}
+
+interface BankConfig {
+  id: string;
+  bankName: string;
+  accountHolder: string;
+  clabe: string;
+  accountNumber?: string;
+  referencePrefix: string;
+}
 
 export default function PaymentsPage() {
   const { data: session, status } = useSession() || {};
@@ -114,6 +139,13 @@ export default function PaymentsPage() {
   const [showPaymentModal, setShowPaymentModal] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("");
   const [filterStudent, setFilterStudent] = useState<string>("");
+  
+  // SPEI states
+  const [speiInfo, setSpeiInfo] = useState<Record<string, SpeiInfo>>({});
+  const [loadingSpei, setLoadingSpei] = useState<string | null>(null);
+  const [showBankConfigModal, setShowBankConfigModal] = useState(false);
+  const [bankConfig, setBankConfig] = useState<BankConfig | null>(null);
+  const [savingBankConfig, setSavingBankConfig] = useState(false);
 
   const user = session?.user as any;
   const isAdmin = user?.role === "ADMIN";
@@ -174,6 +206,72 @@ export default function PaymentsPage() {
     }
   };
 
+  // SPEI functions
+  const fetchBankConfig = async () => {
+    try {
+      const res = await fetch("/api/charges/bank-config");
+      if (res.ok) {
+        const data = await res.json();
+        setBankConfig(data);
+      }
+    } catch (error) {
+      console.error("Error fetching bank config:", error);
+    }
+  };
+
+  const fetchSpeiReference = async (studentId: string) => {
+    if (speiInfo[studentId]) return; // Ya cargado
+    setLoadingSpei(studentId);
+    try {
+      const res = await fetch(`/api/charges/spei-reference?studentId=${studentId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setSpeiInfo(prev => ({ ...prev, [studentId]: data }));
+      }
+    } catch (error) {
+      console.error("Error fetching SPEI reference:", error);
+    } finally {
+      setLoadingSpei(null);
+    }
+  };
+
+  const saveBankConfig = async (config: Partial<BankConfig>) => {
+    setSavingBankConfig(true);
+    try {
+      const res = await fetch("/api/charges/bank-config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(config),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setBankConfig(data);
+        toast.success("Configuración bancaria guardada");
+        setShowBankConfigModal(false);
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Error al guardar configuración");
+      }
+    } catch (error) {
+      console.error("Error saving bank config:", error);
+      toast.error("Error al guardar configuración");
+    } finally {
+      setSavingBankConfig(false);
+    }
+  };
+
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success(`${label} copiado al portapapeles`);
+  };
+
+  // Fetch bank config on mount for admin
+  useEffect(() => {
+    if (isAdmin && status === "authenticated") {
+      fetchBankConfig();
+    }
+  }, [isAdmin, status]);
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("es-MX", {
       style: "currency",
@@ -215,13 +313,23 @@ export default function PaymentsPage() {
           </p>
         </div>
         {isAdmin && (
-          <Button
-            onClick={() => setShowCreateModal(true)}
-            className="bg-[#1B4079] hover:bg-[#15325f] text-white"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Nuevo cargo
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setShowBankConfigModal(true)}
+              variant="outline"
+              className="border-[#1B4079] text-[#1B4079]"
+            >
+              <Building2 className="h-4 w-4 mr-2" />
+              Config. SPEI
+            </Button>
+            <Button
+              onClick={() => setShowCreateModal(true)}
+              className="bg-[#1B4079] hover:bg-[#15325f] text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Nuevo cargo
+            </Button>
+          </div>
         )}
       </div>
 
@@ -272,6 +380,118 @@ export default function PaymentsPage() {
           </div>
         </div>
       </div>
+
+      {/* SPEI Payment Instructions for Parents */}
+      {!isAdmin && charges.length > 0 && (
+        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-5 shadow-sm border border-green-200 mb-6">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+              <Banknote className="h-6 w-6 text-green-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-green-800 text-lg mb-2">
+                💰 Paga por SPEI sin comisiones
+              </h3>
+              <p className="text-green-700 text-sm mb-4">
+                Realiza tu pago por transferencia bancaria usando la referencia única de cada alumno. Sin comisiones bancarias.
+              </p>
+              
+              {/* Get unique students from charges */}
+              {(() => {
+                const uniqueStudents = charges.reduce((acc, charge) => {
+                  if (!acc.find(s => s.id === charge.student.id)) {
+                    acc.push(charge.student);
+                  }
+                  return acc;
+                }, [] as typeof charges[0]["student"][]);
+
+                return (
+                  <div className="space-y-3">
+                    {uniqueStudents.map(student => (
+                      <div key={student.id} className="bg-white rounded-lg p-4 border border-green-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <User className="h-4 w-4 text-green-600" />
+                            <span className="font-medium text-gray-800">
+                              {student.firstName} {student.lastName}
+                            </span>
+                            {student.group && (
+                              <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">
+                                {student.group.name}
+                              </span>
+                            )}
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => fetchSpeiReference(student.id)}
+                            disabled={loadingSpei === student.id}
+                            className="text-green-700 border-green-300 hover:bg-green-50"
+                          >
+                            {loadingSpei === student.id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : speiInfo[student.id] ? (
+                              "Ver datos"
+                            ) : (
+                              "Ver instrucciones SPEI"
+                            )}
+                          </Button>
+                        </div>
+                        
+                        {speiInfo[student.id] && (
+                          <div className="bg-gray-50 rounded-lg p-3 space-y-2 text-sm">
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <p className="text-gray-500 text-xs">Banco</p>
+                                <p className="font-medium">{speiInfo[student.id].bankInfo.bankName}</p>
+                              </div>
+                              <div>
+                                <p className="text-gray-500 text-xs">Beneficiario</p>
+                                <p className="font-medium">{speiInfo[student.id].bankInfo.accountHolder}</p>
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-gray-500 text-xs">CLABE Interbancaria</p>
+                              <div className="flex items-center gap-2">
+                                <code className="font-mono text-base font-bold text-[#1B4079]">
+                                  {speiInfo[student.id].bankInfo.clabe}
+                                </code>
+                                <button
+                                  onClick={() => copyToClipboard(speiInfo[student.id].bankInfo.clabe, "CLABE")}
+                                  className="text-gray-400 hover:text-[#1B4079]"
+                                >
+                                  <Copy className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </div>
+                            <div className="pt-2 border-t border-gray-200">
+                              <p className="text-gray-500 text-xs">Referencia única (usar en concepto)</p>
+                              <div className="flex items-center gap-2">
+                                <code className="font-mono text-lg font-bold text-green-600">
+                                  {speiInfo[student.id].reference}
+                                </code>
+                                <button
+                                  onClick={() => copyToClipboard(speiInfo[student.id].reference, "Referencia")}
+                                  className="text-gray-400 hover:text-green-600"
+                                >
+                                  <Copy className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </div>
+                            <p className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                              ⚠️ Incluye siempre la referencia en el concepto de tu transferencia para identificar el pago
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-6">
@@ -360,6 +580,16 @@ export default function PaymentsPage() {
             setShowPaymentModal(null);
           }}
           formatCurrency={formatCurrency}
+        />
+      )}
+
+      {/* Bank Config Modal (Admin) */}
+      {showBankConfigModal && (
+        <BankConfigModal
+          config={bankConfig}
+          onClose={() => setShowBankConfigModal(false)}
+          onSave={saveBankConfig}
+          saving={savingBankConfig}
         />
       )}
     </div>
@@ -920,6 +1150,168 @@ function RecordPaymentModal({
             >
               {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
               Registrar pago
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// Bank Config Modal Component
+function BankConfigModal({
+  config,
+  onClose,
+  onSave,
+  saving,
+}: {
+  config: BankConfig | null;
+  onClose: () => void;
+  onSave: (config: Partial<BankConfig>) => void;
+  saving: boolean;
+}) {
+  const [formData, setFormData] = useState({
+    bankName: config?.bankName || "",
+    accountHolder: config?.accountHolder || "",
+    clabe: config?.clabe || "",
+    accountNumber: config?.accountNumber || "",
+    referencePrefix: config?.referencePrefix || "REF",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-[#1B4079]/10 flex items-center justify-center">
+              <Building2 className="h-5 w-5 text-[#1B4079]" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">Configuración Bancaria</h2>
+              <p className="text-sm text-gray-500">Datos para pagos SPEI</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nombre del Banco *
+            </label>
+            <select
+              value={formData.bankName}
+              onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B4079]"
+              required
+            >
+              <option value="">Seleccionar banco</option>
+              <option value="BBVA">BBVA</option>
+              <option value="Banorte">Banorte</option>
+              <option value="Santander">Santander</option>
+              <option value="Citibanamex">Citibanamex</option>
+              <option value="HSBC">HSBC</option>
+              <option value="Scotiabank">Scotiabank</option>
+              <option value="Inbursa">Inbursa</option>
+              <option value="Banregio">Banregio</option>
+              <option value="Banco Azteca">Banco Azteca</option>
+              <option value="BanCoppel">BanCoppel</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nombre del Titular *
+            </label>
+            <input
+              type="text"
+              value={formData.accountHolder}
+              onChange={(e) => setFormData({ ...formData, accountHolder: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B4079]"
+              placeholder="Ej: Escuela Vermont S.C."
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              CLABE Interbancaria (18 dígitos) *
+            </label>
+            <input
+              type="text"
+              value={formData.clabe}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, "").slice(0, 18);
+                setFormData({ ...formData, clabe: value });
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B4079] font-mono"
+              placeholder="012345678901234567"
+              maxLength={18}
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              {formData.clabe.length}/18 dígitos
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Número de Cuenta (opcional)
+            </label>
+            <input
+              type="text"
+              value={formData.accountNumber}
+              onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B4079] font-mono"
+              placeholder="1234567890"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Prefijo para Referencias
+            </label>
+            <input
+              type="text"
+              value={formData.referencePrefix}
+              onChange={(e) => {
+                const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4);
+                setFormData({ ...formData, referencePrefix: value });
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B4079] font-mono uppercase"
+              placeholder="VS"
+              maxLength={4}
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Ej: &quot;VS&quot; generará referencias como VS240001
+            </p>
+          </div>
+
+          <div className="bg-blue-50 p-3 rounded-lg">
+            <p className="text-sm text-blue-800">
+              💡 Esta información se mostrará a los padres para que puedan realizar transferencias SPEI sin comisiones.
+            </p>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4">
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              disabled={saving || formData.clabe.length !== 18}
+              className="bg-[#1B4079] hover:bg-[#15325f] text-white"
+            >
+              {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              Guardar configuración
             </Button>
           </div>
         </form>

@@ -102,6 +102,7 @@ model School {
   documents    Document[]
   chatbotConversations ChatbotConversation[]
   settings     SchoolSettings?
+  bankConfig   SchoolBankConfig?
 }
 
 model User {
@@ -235,6 +236,7 @@ model Student {
   gradeDocuments GradeDocument[]
   attendances  Attendance[]
   appointments Appointment[] @relation("StudentAppointments")
+  speiReference SpeiReference?
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -379,6 +381,7 @@ enum PaymentStatus {
 enum PaymentMethod {
   EFECTIVO
   TRANSFERENCIA
+  SPEI          // Transferencia SPEI con referencia única
   TARJETA
   DEPOSITO
   OTRO
@@ -898,6 +901,45 @@ model SchoolSettings {
   
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+// ==================== SISTEMA DE PAGOS SPEI ====================
+
+// Configuración bancaria de la escuela
+model SchoolBankConfig {
+  id            String   @id @default(cuid())
+  schoolId      String   @unique
+  school        School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  
+  bankName      String   // Nombre del banco (ej: "BBVA", "Banorte")
+  accountHolder String   // Nombre del titular
+  clabe         String   // CLABE interbancaria (18 dígitos)
+  accountNumber String?  // Número de cuenta (opcional)
+  
+  // Prefijo para referencias (ej: "VS" para Vermont School)
+  referencePrefix String @default("REF")
+  
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Referencias SPEI únicas por alumno
+model SpeiReference {
+  id              String   @id @default(cuid())
+  studentId       String   @unique
+  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  schoolId        String
+  
+  // Referencia numérica única (ej: "VS240001")
+  reference       String   @unique
+  
+  // Estado
+  isActive        Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([reference])
 }
 
 // ==================== SISTEMA DE CITAS ====================
