@@ -7,9 +7,9 @@ export default function LandingPage() {
     <main className="min-h-screen bg-white">
       {/* Navigation - White Header */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[312px] py-[6px]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[132px] py-[6px]">
           <Link href="/" className="flex items-center h-full">
-            <div className="relative h-[300px] w-[300px]">
+            <div className="relative h-[120px] w-[120px]">
               <Image
                 src="/iaschool-logo.png"
                 alt="IA School"
@@ -21,7 +21,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/login"
-            className="px-8 py-4 bg-[#1B4079] text-white text-xl font-medium rounded-xl hover:bg-[#4D7C8A] transition-all"
+            className="px-6 py-3 bg-[#1B4079] text-white text-base font-medium rounded-lg hover:bg-[#4D7C8A] transition-all"
           >
             Iniciar Sesión
           </Link>
@@ -29,7 +29,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section with Video Background */}
-      <div className="relative min-h-[95vh] flex items-center pt-[320px]">
+      <div className="relative min-h-[95vh] flex items-center pt-[140px]">
         {/* Background Video */}
         <div className="absolute inset-0 overflow-hidden">
           <video
