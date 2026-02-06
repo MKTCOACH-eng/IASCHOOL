@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Bell, BellRing, ArrowRight } from "lucide-react";
+import { Bell, BellRing, ArrowRight, ClipboardList } from "lucide-react";
 import { StatCard } from "@/components/stat-card";
 import { AnnouncementCard } from "@/components/announcement-card";
+import { AcademicAlerts } from "@/components/academic-alerts";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { useRouter } from "next/navigation";
 
@@ -88,7 +89,7 @@ export function ParentDashboard({ userId, schoolId, userName }: ParentDashboardP
         </p>
       </motion.div>
 
-      {/* Unread Count */}
+      {/* Stats Cards */}
       <div className="grid sm:grid-cols-2 gap-4">
         <StatCard
           title="Anuncios sin leer"
@@ -97,7 +98,25 @@ export function ParentDashboard({ userId, schoolId, userName }: ParentDashboardP
           color={unreadCount > 0 ? "#E53E3E" : "#1B4079"}
           delay={0.1}
         />
+        <Link href="/tasks">
+          <StatCard
+            title="Tareas"
+            value="Ver todas"
+            icon={ClipboardList}
+            color="#1B4079"
+            delay={0.2}
+          />
+        </Link>
       </div>
+
+      {/* Academic Alerts */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        <AcademicAlerts maxAlerts={4} />
+      </motion.div>
 
       {/* Recent Announcements */}
       <div>

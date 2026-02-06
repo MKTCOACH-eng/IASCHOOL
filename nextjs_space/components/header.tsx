@@ -6,6 +6,7 @@ import Image from "next/image";
 import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, Wallet, BarChart3 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { AlertsCounter } from "@/components/academic-alerts";
 
 interface HeaderProps {
   user?: {
@@ -87,6 +88,9 @@ export function Header({ user }: HeaderProps) {
 
           {/* User Menu */}
           <div className="flex items-center gap-3">
+            {/* Alerts Counter */}
+            <AlertsCounter />
+            
             <div className="hidden sm:flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-[#1B4079] flex items-center justify-center">
                 <span className="text-white text-sm font-medium">
