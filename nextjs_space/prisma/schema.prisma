@@ -425,6 +425,7 @@ model Student {
   id           String   @id @default(cuid())
   firstName    String
   lastName     String
+  birthDate    DateTime? // Fecha de nacimiento para felicitaciones automáticas
   photoUrl     String?  // Foto de perfil para reconocimiento facial
   schoolId     String
   school       School   @relation(fields: [schoolId], references: [id])

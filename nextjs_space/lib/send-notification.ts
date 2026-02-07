@@ -305,6 +305,57 @@ export async function sendAnnouncementNotification({
 }
 
 
+// Send birthday notification to student and parents
+export async function sendBirthdayNotification({
+  email,
+  recipientName,
+  studentName,
+  studentAge,
+  schoolName,
+  personalizedMessage,
+}: {
+  email: string;
+  recipientName: string;
+  studentName: string;
+  studentAge: number;
+  schoolName: string;
+  personalizedMessage?: string;
+}): Promise<boolean> {
+  const content = `
+    <div style="text-align: center;">
+      <div style="font-size: 60px; margin-bottom: 20px;">🎂🎉🎈</div>
+      <h2 style="color: #1B4079; margin: 0 0 20px 0; font-size: 28px;">¡Feliz Cumpleaños, ${studentName}!</h2>
+    </div>
+    <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+      Hola <strong>${recipientName}</strong>,
+    </p>
+    <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+      En este día tan especial, toda la comunidad de <strong>${schoolName}</strong> quiere desearle a <strong>${studentName}</strong> un muy feliz cumpleaños número <strong>${studentAge}</strong>.
+    </p>
+    <div style="background: linear-gradient(135deg, #CBDF90 0%, #8FAD88 100%); border-radius: 16px; padding: 25px; margin: 25px 0; text-align: center;">
+      <div style="font-size: 48px; margin-bottom: 10px;">🌟</div>
+      <p style="color: #1B4079; font-size: 18px; font-weight: 600; margin: 0;">
+        ${personalizedMessage || "Que este nuevo año de vida esté lleno de alegría, aprendizaje y momentos inolvidables."}
+      </p>
+    </div>
+    <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+      Esperamos que disfrutes mucho tu día especial rodeado de familia y amigos. 🎁
+    </p>
+    <div style="text-align: center; margin-top: 30px;">
+      <div style="display: inline-block; background-color: #1B4079; color: #ffffff; padding: 12px 32px; border-radius: 25px; font-weight: 600;">
+        ¡Muchas Felicidades! 🎊
+      </div>
+    </div>
+  `;
+
+  return sendNotificationEmail({
+    email,
+    subject: `🎂 ¡Feliz Cumpleaños ${studentName}! - ${schoolName}`,
+    htmlBody: emailTemplate(content, schoolName),
+    notificationId: process.env.NOTIF_ID_FELICITACIN_DE_CUMPLEAOS || "",
+  });
+}
+
 // Send CRM campaign email
 export async function sendCampaignEmail(
   email: string,
