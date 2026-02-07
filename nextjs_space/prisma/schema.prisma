@@ -182,6 +182,10 @@ model School {
   // Reminders IA
   reminderConfigs  ReminderConfig[]     @relation("SchoolReminderConfigs")
   reminderLogs     ReminderLog[]        @relation("SchoolReminderLogs")
+  
+  // Programa de Referidos Escolar
+  referralProgram  SchoolReferralProgram? @relation("SchoolReferralProgram")
+  schoolReferrals  SchoolReferral[]     @relation("SchoolReferralsReceived")
 }
 
 model User {
@@ -347,6 +351,13 @@ model User {
   lastLoginAt             DateTime?
   failedLoginAttempts     Int               @default(0)
   lockedUntil             DateTime?
+  
+  // Programa de Referidos Escolar
+  schoolReferralsMade     SchoolReferral[]      @relation("UserSchoolReferrals")
+  schoolReferralsProcessed SchoolReferral[]     @relation("ProcessedSchoolReferrals")
+  referralRewardsReceived ReferralReward[]      @relation("ReferralRewardsBeneficiary")
+  referralRewardsApplied  ReferralReward[]      @relation("ReferralRewardsApplied")
+  referredBySchoolReferral SchoolReferral?      @relation("ReferredBySchoolReferral")
 }
 
 model Invitation {
@@ -892,6 +903,9 @@ model Charge {
   
   // Notas y observaciones
   notes          String?       @db.Text
+  
+  // Descuentos de referidos aplicados
+  referralRewards ReferralReward[] @relation("ReferralRewardCharge")
   
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
@@ -4440,4 +4454,168 @@ model SecurityAuditLog {
   @@index([schoolId])
   @@index([action])
   @@index([createdAt])
+}
+
+// =====================================================
+// PROGRAMA DE REFERIDOS ESCOLAR
+// Sistema para que padres refieran nuevas familias
+// =====================================================
+
+enum SchoolReferralStatus {
+  PENDING       // Referido enviado, pendiente de contacto
+  CONTACTED     // La escuela contactó al prospecto
+  INTERESTED    // El prospecto mostró interés
+  ENROLLED      // ¡El prospecto se inscribió! - ÉXITO
+  NOT_INTERESTED // El prospecto no mostró interés
+  ALREADY_REFERRED // Ya fue referido por alguien más
+  INVALID       // Datos inválidos o duplicados
+}
+
+enum ReferralRewardType {
+  DISCOUNT_PERCENTAGE   // Descuento porcentual en colegiatura
+  DISCOUNT_FIXED        // Descuento fijo en pesos
+  FREE_MONTHS           // Meses gratis de colegiatura
+  STORE_CREDIT          // Crédito en la tienda escolar
+  CASH_BACK             // Reembolso en efectivo
+  CUSTOM                // Recompensa personalizada
+}
+
+model SchoolReferralProgram {
+  id              String   @id @default(cuid())
+  
+  schoolId        String   @unique
+  school          School   @relation("SchoolReferralProgram", fields: [schoolId], references: [id], onDelete: Cascade)
+  
+  // Estado del programa
+  isActive        Boolean  @default(true)
+  
+  // Configuración de la recompensa
+  rewardType      ReferralRewardType @default(DISCOUNT_PERCENTAGE)
+  rewardValue     Decimal  @default(10)    // Valor del descuento/recompensa
+  rewardDescription String?  @db.Text      // Descripción personalizada
+  
+  // Límites
+  maxRewardsPerYear Int?     @default(5)    // Máximo de recompensas por padre/año
+  minEnrollmentValue Decimal? @default(0)   // Inscripción mínima para calificar
+  
+  // Condiciones de elegibilidad
+  requiresActiveAccount Boolean @default(true)   // El referidor debe estar al corriente
+  requiresMinMonths     Int?     @default(3)     // Meses mínimos en la escuela
+  
+  // Mensajes personalizados
+  welcomeMessage  String?   @db.Text  // Mensaje de bienvenida al referido
+  thankYouMessage String?   @db.Text  // Mensaje de agradecimiento al referidor
+  
+  // Términos y condiciones
+  termsUrl        String?
+  
+  // Contadores (cache para performance)
+  totalReferrals       Int @default(0)
+  successfulReferrals  Int @default(0)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relaciones
+  referrals       SchoolReferral[] @relation("ProgramReferrals")
+  rewards         ReferralReward[] @relation("ProgramRewards")
+  
+  @@index([schoolId])
+}
+
+model SchoolReferral {
+  id              String   @id @default(cuid())
+  
+  // Programa y escuela
+  programId       String
+  program         SchoolReferralProgram @relation("ProgramReferrals", fields: [programId], references: [id], onDelete: Cascade)
+  
+  schoolId        String
+  school          School   @relation("SchoolReferralsReceived", fields: [schoolId], references: [id], onDelete: Cascade)
+  
+  // Padre que refiere
+  referrerId      String
+  referrer        User     @relation("UserSchoolReferrals", fields: [referrerId], references: [id], onDelete: Cascade)
+  
+  // Datos del referido (prospecto)
+  referredName      String           // Nombre del padre/tutor prospecto
+  referredEmail     String?          // Email del prospecto
+  referredPhone     String           // Teléfono del prospecto (requerido)
+  referredChildName String?          // Nombre del niño (opcional)
+  referredChildGrade String?         // Grado de interés
+  referredNotes     String?  @db.Text // Notas adicionales
+  
+  // Estado y tracking
+  status          SchoolReferralStatus @default(PENDING)
+  statusHistory   Json?                // Historial de cambios de estado
+  
+  // Fechas importantes
+  contactedAt     DateTime?   // Cuándo la escuela contactó
+  enrolledAt      DateTime?   // Cuándo se inscribió (si convirtió)
+  
+  // Para detectar duplicados - hash del teléfono normalizado
+  phoneHash       String
+  
+  // Si el prospecto se convirtió en usuario
+  convertedUserId String?  @unique
+  convertedUser   User?    @relation("ReferredBySchoolReferral", fields: [convertedUserId], references: [id])
+  
+  // Notas del admin
+  adminNotes      String?  @db.Text
+  
+  // Quién procesó el referido
+  processedById   String?
+  processedBy     User?    @relation("ProcessedSchoolReferrals", fields: [processedById], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relación con recompensa (si se otorgó)
+  reward          ReferralReward? @relation("ReferralRewardLink")
+  
+  @@unique([schoolId, phoneHash]) // Solo un referido por teléfono por escuela
+  @@index([programId])
+  @@index([referrerId])
+  @@index([schoolId])
+  @@index([status])
+  @@index([phoneHash])
+}
+
+model ReferralReward {
+  id              String   @id @default(cuid())
+  
+  programId       String
+  program         SchoolReferralProgram @relation("ProgramRewards", fields: [programId], references: [id], onDelete: Cascade)
+  
+  // Referido que generó la recompensa
+  referralId      String   @unique
+  referral        SchoolReferral @relation("ReferralRewardLink", fields: [referralId], references: [id], onDelete: Cascade)
+  
+  // Beneficiario
+  beneficiaryId   String
+  beneficiary     User     @relation("ReferralRewardsBeneficiary", fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  
+  // Detalles de la recompensa
+  rewardType      ReferralRewardType
+  rewardValue     Decimal
+  description     String?  @db.Text
+  
+  // Estado
+  isApplied       Boolean  @default(false)
+  appliedAt       DateTime?
+  appliedById     String?
+  appliedBy       User?    @relation("ReferralRewardsApplied", fields: [appliedById], references: [id])
+  
+  // Si se vinculó a un cargo específico
+  appliedToChargeId String?
+  appliedToCharge   Charge?  @relation("ReferralRewardCharge", fields: [appliedToChargeId], references: [id])
+  
+  // Expiración
+  expiresAt       DateTime?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([programId])
+  @@index([beneficiaryId])
+  @@index([isApplied])
 }

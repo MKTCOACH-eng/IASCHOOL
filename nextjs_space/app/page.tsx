@@ -557,6 +557,7 @@ export default function LandingPage() {
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Calendario de eventos</span></li>
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Control de asistencia</span></li>
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Pagos y cobranza básica</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Login biométrico (Face ID/Touch ID)</span></li>
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Soporte por chat</span></li>
               </ul>
               <Link href="/login" className="block w-full py-3 text-center bg-gray-100 text-[#1B4079] font-semibold rounded-xl hover:bg-gray-200 transition-all">
@@ -582,9 +583,10 @@ export default function LandingPage() {
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Enfermería y expediente médico</span></li>
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Tienda escolar integrada</span></li>
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Galería de fotos por evento</span></li>
-                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Reportes avanzados</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Programa de Referidos con recompensas</span></li>
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Asistente IA para padres</span></li>
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Recordatorios automáticos</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Reportes avanzados</span></li>
               </ul>
               <Link href="/login" className="block w-full py-3 text-center bg-[#CBDF90] text-[#1B4079] font-bold rounded-xl hover:bg-white transition-all">
                 Elegir Estándar
@@ -603,11 +605,12 @@ export default function LandingPage() {
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Todo lo del plan Estándar</span></li>
-                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Gamificación con insignias</span></li>
-                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Blog de tips educativos IA</span></li>
-                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Multi-vendor con Stripe Connect</span></li>
-                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Rendimiento de profesores</span></li>
-                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">CRM y campañas de email</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Gamificación con insignias y niveles</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Tips educativos personalizados con IA</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Multi-vendor (proveedores externos)</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Evaluación de rendimiento docente</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">CRM y campañas de comunicación</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Análisis de sentimiento IA</span></li>
                 <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Soporte prioritario 24/7</span></li>
               </ul>
               <Link href="/login" className="block w-full py-3 text-center bg-gray-100 text-[#1B4079] font-semibold rounded-xl hover:bg-gray-200 transition-all">

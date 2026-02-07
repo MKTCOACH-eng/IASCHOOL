@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen, Mail, Globe, ShoppingBag, Image as ImageIcon, Clock, UsersRound, PiggyBank, ClipboardCheck, LayoutDashboard, FileQuestion, FileText, TrendingUp, AlertTriangle, Heart, Upload, Video, Store, FileBarChart, Headphones, Star } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen, Mail, Globe, ShoppingBag, Image as ImageIcon, Clock, UsersRound, PiggyBank, ClipboardCheck, LayoutDashboard, FileQuestion, FileText, TrendingUp, AlertTriangle, Heart, Upload, Video, Store, FileBarChart, Headphones, Star, Gift } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertsCounter } from "@/components/academic-alerts";
@@ -105,6 +105,7 @@ export function Header({ user }: HeaderProps) {
         { href: "/import", label: "Importar", icon: Upload },
         { href: "/polls", label: t.nav.polls, icon: Vote },
         { href: "/invitations", label: t.nav.invitations, icon: UserPlus },
+        { href: "/admin/referrals", label: "Programa Referidos", icon: Gift },
         { href: "/admin/performance", label: "Rendimiento", icon: Star },
         { href: "/admin/reports", label: "Reportes", icon: FileBarChart },
         { href: "/admin/vendors", label: "Proveedores", icon: Store },
@@ -145,6 +146,7 @@ export function Header({ user }: HeaderProps) {
     return [
       ...baseItems,
       { href: "/vocal", label: "Grupo", icon: PiggyBank },
+      { href: "/referrals", label: "Recomienda", icon: Gift },
       { href: "/appointments", label: t.nav.appointments, icon: CalendarCheck },
       { href: "/academic/progress", label: "Progreso", icon: TrendingUp },
       { href: "/academic/report-cards", label: "Boletas", icon: FileText },

@@ -67,8 +67,8 @@ export default function SupportPage() {
   const [loading, setLoading] = useState(true);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [stats, setStats] = useState({ total: 0, open: 0, inProgress: 0, resolved: 0 });
-  const [statusFilter, setStatusFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -89,8 +89,8 @@ export default function SupportPage() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (statusFilter) params.append('status', statusFilter);
-      if (categoryFilter) params.append('category', categoryFilter);
+      if (statusFilter && statusFilter !== 'ALL') params.append('status', statusFilter);
+      if (categoryFilter && categoryFilter !== 'ALL') params.append('category', categoryFilter);
 
       const res = await fetch(`/api/support?${params}`);
       const data = await res.json();
@@ -305,7 +305,7 @@ export default function SupportPage() {
             <SelectValue placeholder="Estado" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+            <SelectItem value="ALL">Todos</SelectItem>
             {Object.entries(statusLabels).map(([key, label]) => (
               <SelectItem key={key} value={key}>{label}</SelectItem>
             ))}
@@ -316,7 +316,7 @@ export default function SupportPage() {
             <SelectValue placeholder="Categoría" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todas</SelectItem>
+            <SelectItem value="ALL">Todas</SelectItem>
             {Object.entries(categoryLabels).map(([key, label]) => (
               <SelectItem key={key} value={key}>{label}</SelectItem>
             ))}
