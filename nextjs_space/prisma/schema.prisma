@@ -121,6 +121,12 @@ model School {
   surveys          Survey[]
   enrollments      Enrollment[]
   permitRequests   PermitRequest[]
+  
+  // Nuevos módulos
+  reportCards      ReportCard[]      @relation("SchoolReportCards")
+  disciplineRecords DisciplineRecord[] @relation("SchoolDiscipline")
+  nurseVisits      NurseVisit[]      @relation("SchoolNurseVisits")
+  bulkImportJobs   BulkImportJob[]   @relation("SchoolImports")
 }
 
 model User {
@@ -226,6 +232,11 @@ model User {
   // Permisos/Justificantes
   permitRequestsCreated   PermitRequest[] @relation("PermitCreator")
   permitRequestsReviewed  PermitRequest[] @relation("PermitReviewer")
+  
+  // Nuevos módulos
+  disciplineRecords       DisciplineRecord[] @relation("DisciplineRecorder")
+  nurseVisits             NurseVisit[]       @relation("NurseRecorder")
+  bulkImportJobs          BulkImportJob[]    @relation("ImportCreator")
 }
 
 model Invitation {
@@ -307,6 +318,13 @@ model Student {
   fundContributions GroupFundContribution[]
   permitRequests PermitRequest[]
   enrollment   Enrollment? @relation("EnrollmentStudent")
+  
+  // Nuevos módulos
+  reportCards      ReportCard[]      @relation("StudentReportCards")
+  disciplineRecords DisciplineRecord[] @relation("StudentDiscipline")
+  nurseVisits      NurseVisit[]      @relation("StudentNurseVisits")
+  medicalInfo      StudentMedicalInfo? @relation("StudentMedicalInfo")
+  
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -484,6 +502,7 @@ model Subject {
   school      School   @relation(fields: [schoolId], references: [id])
   tasks       Task[]
   schedules   Schedule[]
+  reportCardGrades ReportCardGrade[] @relation("SubjectGrades")
   createdAt   DateTime @default(now())
   isActive    Boolean  @default(true)
 
@@ -1099,6 +1118,11 @@ model Appointment {
   notes           String?           @db.Text // Notas adicionales del padre
   teacherNotes    String?           @db.Text // Notas del profesor (después de la cita)
   location        String?           // Lugar de la cita
+  
+  // Videoconferencia
+  isVideoCall     Boolean           @default(false)
+  meetingUrl      String?           // URL de Jitsi Meet
+  meetingRoomId   String?           // ID único de la sala
   
   // Notificaciones
   parentNotified  Boolean           @default(false)
@@ -1974,4 +1998,309 @@ model PermitRequest {
   @@index([status])
   @@index([type])
   @@index([startDate])
+}
+
+// ==========================================
+// BOLETAS DE CALIFICACIONES
+// ==========================================
+
+enum ReportCardPeriod {
+  BIMESTRE_1
+  BIMESTRE_2
+  BIMESTRE_3
+  BIMESTRE_4
+  BIMESTRE_5
+  TRIMESTRE_1
+  TRIMESTRE_2
+  TRIMESTRE_3
+  SEMESTRE_1
+  SEMESTRE_2
+  ANUAL
+}
+
+enum ReportCardStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model ReportCard {
+  id           String            @id @default(cuid())
+  studentId    String
+  student      Student           @relation("StudentReportCards", fields: [studentId], references: [id])
+  schoolId     String
+  school       School            @relation("SchoolReportCards", fields: [schoolId], references: [id])
+  
+  schoolYear   String            // "2025-2026"
+  period       ReportCardPeriod
+  status       ReportCardStatus  @default(DRAFT)
+  
+  // Promedios calculados
+  finalAverage Float?
+  attendance   Float?            // Porcentaje de asistencia
+  absences     Int               @default(0)
+  tardies      Int               @default(0)
+  
+  // Comentarios generales
+  teacherComments String?        @db.Text
+  principalComments String?      @db.Text
+  
+  // PDF generado
+  pdfUrl       String?
+  generatedAt  DateTime?
+  publishedAt  DateTime?
+  
+  // Calificaciones por materia
+  grades       ReportCardGrade[]
+  
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  
+  @@unique([studentId, schoolYear, period])
+  @@index([schoolId])
+  @@index([status])
+}
+
+model ReportCardGrade {
+  id           String      @id @default(cuid())
+  reportCardId String
+  reportCard   ReportCard  @relation(fields: [reportCardId], references: [id], onDelete: Cascade)
+  subjectId    String
+  subject      Subject     @relation("SubjectGrades", fields: [subjectId], references: [id])
+  
+  grade        Float       // Calificación numérica
+  gradeText    String?     // Calificación textual (A, B, C / Excelente, Bueno)
+  comments     String?     // Comentarios del profesor
+  
+  @@unique([reportCardId, subjectId])
+}
+
+// ==========================================
+// SISTEMA DE DISCIPLINA
+// ==========================================
+
+enum DisciplineType {
+  POSITIVE          // Reconocimiento positivo
+  WARNING           // Advertencia verbal
+  WRITTEN_WARNING   // Amonestación escrita
+  DETENTION         // Detención
+  SUSPENSION        // Suspensión
+  PARENT_MEETING    // Cita con padres
+  OTHER
+}
+
+enum DisciplineSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model DisciplineRecord {
+  id           String             @id @default(cuid())
+  studentId    String
+  student      Student            @relation("StudentDiscipline", fields: [studentId], references: [id])
+  schoolId     String
+  school       School             @relation("SchoolDiscipline", fields: [schoolId], references: [id])
+  
+  type         DisciplineType
+  severity     DisciplineSeverity @default(MEDIUM)
+  
+  // Detalles del incidente
+  date         DateTime
+  description  String             @db.Text
+  location     String?            // Lugar del incidente
+  witnesses    String?            // Testigos
+  
+  // Puntos de conducta (positivos o negativos)
+  points       Int                @default(0)
+  
+  // Acción tomada
+  actionTaken  String?            @db.Text
+  
+  // Seguimiento
+  parentNotified Boolean          @default(false)
+  parentNotifiedAt DateTime?
+  parentResponse String?          @db.Text
+  resolved     Boolean            @default(false)
+  resolvedAt   DateTime?
+  
+  // Evidencia/Adjuntos
+  attachmentUrl String?
+  
+  // Registrado por
+  recordedById String
+  recordedBy   User               @relation("DisciplineRecorder", fields: [recordedById], references: [id])
+  
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  
+  @@index([studentId])
+  @@index([schoolId])
+  @@index([date])
+  @@index([type])
+}
+
+// ==========================================
+// MÓDULO DE ENFERMERÍA
+// ==========================================
+
+enum NurseVisitType {
+  ILLNESS           // Enfermedad
+  INJURY            // Lesión/Accidente
+  MEDICATION        // Administración de medicamento
+  CHECKUP           // Revisión rutinaria
+  EMERGENCY         // Emergencia
+  MENTAL_HEALTH     // Salud mental/emocional
+  OTHER
+}
+
+enum NurseVisitStatus {
+  IN_PROGRESS       // En atención
+  RETURNED_CLASS    // Regresó a clase
+  SENT_HOME         // Enviado a casa
+  EMERGENCY_TRANSFER // Transferido a emergencias
+  COMPLETED
+}
+
+model NurseVisit {
+  id           String           @id @default(cuid())
+  studentId    String
+  student      Student          @relation("StudentNurseVisits", fields: [studentId], references: [id])
+  schoolId     String
+  school       School           @relation("SchoolNurseVisits", fields: [schoolId], references: [id])
+  
+  type         NurseVisitType
+  status       NurseVisitStatus @default(IN_PROGRESS)
+  
+  // Tiempos
+  arrivalTime  DateTime         @default(now())
+  departureTime DateTime?
+  
+  // Síntomas y diagnóstico
+  chiefComplaint String          // Motivo principal de consulta
+  symptoms     String?           @db.Text
+  vitalSigns   String?           // Temperatura, presión, etc. (JSON)
+  assessment   String?           @db.Text
+  
+  // Tratamiento
+  treatment    String?           @db.Text
+  medicationGiven String?        // Medicamentos administrados
+  
+  // Seguimiento
+  followUpRequired Boolean       @default(false)
+  followUpNotes String?          @db.Text
+  
+  // Comunicación con padres
+  parentNotified Boolean         @default(false)
+  parentNotifiedAt DateTime?
+  parentNotifiedBy String?       // Nombre de quien notificó
+  parentResponse String?
+  
+  // En caso de emergencia
+  emergencyContact String?       // Contacto de emergencia usado
+  emergencyNotes String?         @db.Text
+  
+  // Archivo/Evidencia
+  attachmentUrl String?
+  
+  // Registrado por
+  recordedById String
+  recordedBy   User              @relation("NurseRecorder", fields: [recordedById], references: [id])
+  
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  
+  @@index([studentId])
+  @@index([schoolId])
+  @@index([arrivalTime])
+  @@index([type])
+  @@index([status])
+}
+
+// Historial médico del estudiante (información básica)
+model StudentMedicalInfo {
+  id           String   @id @default(cuid())
+  studentId    String   @unique
+  student      Student  @relation("StudentMedicalInfo", fields: [studentId], references: [id])
+  
+  // Información básica
+  bloodType    String?
+  allergies    String?  @db.Text
+  medications  String?  @db.Text  // Medicamentos que toma regularmente
+  conditions   String?  @db.Text  // Condiciones médicas
+  
+  // Contactos de emergencia
+  emergencyContact1Name  String?
+  emergencyContact1Phone String?
+  emergencyContact1Relation String?
+  emergencyContact2Name  String?
+  emergencyContact2Phone String?
+  emergencyContact2Relation String?
+  
+  // Doctor/Hospital preferido
+  doctorName   String?
+  doctorPhone  String?
+  preferredHospital String?
+  insuranceInfo String?
+  
+  // Notas adicionales
+  notes        String?  @db.Text
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ==========================================
+// IMPORTACIÓN MASIVA
+// ==========================================
+
+enum ImportJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  PARTIALLY_COMPLETED
+}
+
+enum ImportJobType {
+  STUDENTS
+  PARENTS
+  TEACHERS
+  GROUPS
+  SUBJECTS
+  GRADES
+}
+
+model BulkImportJob {
+  id           String          @id @default(cuid())
+  schoolId     String
+  school       School          @relation("SchoolImports", fields: [schoolId], references: [id])
+  
+  type         ImportJobType
+  status       ImportJobStatus @default(PENDING)
+  
+  // Archivo original
+  fileName     String
+  fileUrl      String?
+  
+  // Resultados
+  totalRows    Int             @default(0)
+  successCount Int             @default(0)
+  errorCount   Int             @default(0)
+  errors       String?         @db.Text  // JSON con errores detallados
+  
+  // Procesamiento
+  startedAt    DateTime?
+  completedAt  DateTime?
+  
+  // Usuario que inició
+  createdById  String
+  createdBy    User            @relation("ImportCreator", fields: [createdById], references: [id])
+  
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  
+  @@index([schoolId])
+  @@index([status])
 }
