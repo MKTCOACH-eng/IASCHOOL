@@ -21,9 +21,44 @@ export async function GET() {
 
     const user = session.user as SessionUser;
 
-    let groups = [];
+    let groups: Array<{
+      id: string;
+      name: string;
+      _count?: { students: number };
+      teacher?: { id: string; name: string } | null;
+      childName?: string;
+      isVocal?: boolean;
+      isPrimary?: boolean;
+    }> = [];
 
-    if (user.role === "PADRE") {
+    // Obtener grupos donde es vocal (aplica para VOCAL y PADRE que pueda ser vocal)
+    const vocalGroups = await db.groupVocal.findMany({
+      where: {
+        userId: user.id,
+        isActive: true,
+      },
+      include: {
+        group: {
+          include: {
+            teacher: { select: { id: true, name: true } },
+            _count: { select: { students: true } },
+          },
+        },
+      },
+    });
+
+    const vocalGroupMap = new Map(
+      vocalGroups.map((v) => [v.groupId, { isPrimary: v.isPrimary }])
+    );
+
+    if (user.role === "VOCAL") {
+      // Para vocales: obtener sus grupos asignados
+      groups = vocalGroups.map((v) => ({
+        ...v.group,
+        isVocal: true,
+        isPrimary: v.isPrimary,
+      }));
+    } else if (user.role === "PADRE") {
       // Para padres: obtener grupos de sus hijos
       const userWithChildren = await db.user.findUnique({
         where: { id: user.id },
@@ -51,9 +86,12 @@ export async function GET() {
         const uniqueGroups = new Map();
         for (const child of userWithChildren.children) {
           if (child.group && !uniqueGroups.has(child.group.id)) {
+            const vocalInfo = vocalGroupMap.get(child.group.id);
             uniqueGroups.set(child.group.id, {
               ...child.group,
               childName: `${child.firstName} ${child.lastName}`,
+              isVocal: !!vocalInfo,
+              isPrimary: vocalInfo?.isPrimary || false,
             });
           }
         }
@@ -114,12 +152,14 @@ export async function GET() {
       existingChats.map((c) => [c.groupId, c])
     );
 
-    const groupsWithChatInfo = groups.map((group: { id: string; name: string; _count?: { students: number }; teacher?: { id: string; name: string } | null; childName?: string }) => ({
+    const groupsWithChatInfo = groups.map((group) => ({
       id: group.id,
       name: group.name,
       studentsCount: group._count?.students || 0,
       teacher: group.teacher,
       childName: group.childName,
+      isVocal: group.isVocal || false,
+      isPrimary: group.isPrimary || false,
       existingChat: chatsByGroup.get(group.id) || null,
     }));
 
