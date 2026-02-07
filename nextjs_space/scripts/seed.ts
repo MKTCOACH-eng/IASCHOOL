@@ -1123,6 +1123,188 @@ async function main() {
     },
   });
 
+  // Más productos de uniformes
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: uniformes.id,
+      name: "Falda Escolar Azul",
+      description: "Falda tableada azul marino, largo a la rodilla",
+      price: 380,
+      stock: 40,
+      sizes: ["4", "6", "8", "10", "12", "14"],
+      colors: ["Azul Marino"],
+      isRequired: true,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: uniformes.id,
+      name: "Short Deportivo",
+      description: "Short deportivo con logo, ideal para educación física",
+      price: 280,
+      stock: 45,
+      sizes: ["XS", "S", "M", "L", "XL"],
+      colors: ["Azul Marino", "Blanco"],
+      isRequired: true,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: uniformes.id,
+      name: "Playera Deportiva",
+      description: "Playera dry-fit para educación física",
+      price: 320,
+      stock: 55,
+      sizes: ["XS", "S", "M", "L", "XL"],
+      colors: ["Blanco", "Gris"],
+      isRequired: true,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: uniformes.id,
+      name: "Chaleco Escolar",
+      description: "Chaleco de lana con logo bordado, ideal para temporada fría",
+      price: 520,
+      stock: 30,
+      sizes: ["XS", "S", "M", "L", "XL"],
+      colors: ["Azul Marino"],
+      isRequired: false,
+    },
+  });
+
+  // Más productos de libros
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: libros.id,
+      name: "Libro Ciencias Naturales 3°",
+      description: "Libro de texto oficial de Ciencias Naturales",
+      price: 260,
+      stock: 38,
+      isRequired: true,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: libros.id,
+      name: "Libro Historia 3°",
+      description: "Libro de texto oficial de Historia de México",
+      price: 240,
+      stock: 42,
+      isRequired: true,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: libros.id,
+      name: "Libro Inglés - Level 3",
+      description: "Libro de inglés con actividades interactivas y acceso digital",
+      price: 450,
+      stock: 35,
+      isRequired: true,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: libros.id,
+      name: "Cuaderno de Caligrafía",
+      description: "Cuaderno para practicar escritura y mejorar letra",
+      price: 85,
+      stock: 70,
+      isRequired: false,
+    },
+  });
+
+  // Más productos de materiales
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: materiales.id,
+      name: "Calculadora Científica",
+      description: "Calculadora científica Casio FX-82, autorizada para exámenes",
+      price: 380,
+      stock: 25,
+      isRequired: false,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: materiales.id,
+      name: "Mochila Escolar Vermont",
+      description: "Mochila ergonómica con logo del colegio, múltiples compartimentos",
+      price: 750,
+      stock: 20,
+      colors: ["Azul Marino", "Negro"],
+      isRequired: false,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: materiales.id,
+      name: "Lonchera Térmica Vermont",
+      description: "Lonchera con aislamiento térmico y logo del colegio",
+      price: 320,
+      stock: 35,
+      colors: ["Azul", "Rosa", "Verde"],
+      isRequired: false,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: materiales.id,
+      name: "Kit de Geometría",
+      description: "Incluye: regla, escuadras, compás y transportador",
+      price: 150,
+      stock: 50,
+      isRequired: false,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: materiales.id,
+      name: "Colores Profesionales (36 pzas)",
+      description: "Caja de colores de madera de alta calidad",
+      price: 280,
+      stock: 40,
+      isRequired: false,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: materiales.id,
+      name: "Botella de Agua Vermont",
+      description: "Botella reutilizable de acero inoxidable 500ml con logo",
+      price: 220,
+      stock: 45,
+      colors: ["Azul", "Plata", "Rosa"],
+      isRequired: false,
+    },
+  });
+
   console.log("Created store categories and products");
 
   // Crear álbum de fotos de ejemplo
