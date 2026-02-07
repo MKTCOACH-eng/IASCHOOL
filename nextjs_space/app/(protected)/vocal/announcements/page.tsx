@@ -102,17 +102,21 @@ export default function GroupAnnouncementsPage() {
     try {
       setLoading(true);
 
+      // Obtener grupos del usuario primero
+      const groupsRes = await fetch("/api/groups/my-groups");
+      if (groupsRes.ok) {
+        const groupsData = await groupsRes.json();
+        const vocalGroups = user?.role === "VOCAL" 
+          ? groupsData.filter((g: { isVocal?: boolean }) => g.isVocal)
+          : groupsData;
+        setGroups(vocalGroups.map((g: { id: string; name: string }) => ({ id: g.id, name: g.name })));
+      }
+
       // Obtener avisos
       const announcementsRes = await fetch("/api/vocal/announcements");
       if (announcementsRes.ok) {
         const data = await announcementsRes.json();
         setAnnouncements(data);
-
-        // Extraer grupos únicos
-        const uniqueGroups = Array.from(
-          new Map(data.map((a: Announcement) => [a.group.id, a.group])).values()
-        ) as Group[];
-        setGroups(uniqueGroups);
       }
 
       // Obtener colectas activas para vincular

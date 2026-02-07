@@ -105,17 +105,22 @@ export default function FundsPage() {
     try {
       setLoading(true);
 
+      // Obtener grupos del usuario primero
+      const groupsRes = await fetch("/api/groups/my-groups");
+      if (groupsRes.ok) {
+        const groupsData = await groupsRes.json();
+        // Filtrar solo grupos donde es vocal (si es rol VOCAL)
+        const vocalGroups = user?.role === "VOCAL" 
+          ? groupsData.filter((g: { isVocal?: boolean }) => g.isVocal)
+          : groupsData;
+        setGroups(vocalGroups.map((g: { id: string; name: string }) => ({ id: g.id, name: g.name })));
+      }
+
       // Obtener colectas
       const fundsRes = await fetch("/api/vocal/funds");
       if (fundsRes.ok) {
         const fundsData = await fundsRes.json();
         setFunds(fundsData);
-
-        // Extraer grupos únicos
-        const uniqueGroups = Array.from(
-          new Map(fundsData.map((f: Fund) => [f.group.id, f.group])).values()
-        ) as Group[];
-        setGroups(uniqueGroups);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
