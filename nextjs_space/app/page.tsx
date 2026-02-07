@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { MessageSquare, Shield, BookOpen, CreditCard, PlayCircle, FileText, Calendar, Brain, ChevronRight, Bell, Users, XCircle, CheckCircle, ArrowRight, Instagram, Facebook, Linkedin, Twitter, Globe } from "lucide-react";
+import LandingChatbot from "@/components/landing-chatbot";
 import { useLanguage } from "@/contexts/language-context";
 import { Language } from "@/lib/i18n/translations";
 import { AnimatePresence, motion } from "framer-motion";
@@ -620,6 +621,9 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+      
+      {/* Chatbot flotante */}
+      <LandingChatbot />
     </main>
   );
 }

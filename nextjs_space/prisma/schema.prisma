@@ -158,6 +158,30 @@ model School {
   
   // Comedor
   cafeteriaMenus   CafeteriaMenu[]      @relation("SchoolCafeteria")
+  
+  // Rendimiento de Profesores
+  teacherMetrics   TeacherPerformanceMetric[] @relation("SchoolTeacherPerformance")
+  teacherReviews   TeacherPerformanceReview[] @relation("SchoolTeacherReviews")
+  
+  // Reportes
+  reportSchedules  ReportSchedule[]     @relation("SchoolReportSchedules")
+  reportExecutions ReportExecution[]    @relation("SchoolReportExecutions")
+  
+  // Proveedores
+  vendors          Vendor[]             @relation("SchoolVendors")
+  
+  // Configuración de Envíos
+  shippingConfig   ShippingConfig?      @relation("SchoolShippingConfig")
+  
+  // Configuración de Cargo por Servicio
+  serviceFeeConfig ServiceFeeConfig?    @relation("SchoolServiceFeeConfig")
+  
+  // Sistema de Soporte
+  supportTickets   SupportTicket[]      @relation("SchoolSupportTickets")
+  
+  // Reminders IA
+  reminderConfigs  ReminderConfig[]     @relation("SchoolReminderConfigs")
+  reminderLogs     ReminderLog[]        @relation("SchoolReminderLogs")
 }
 
 model User {
@@ -292,6 +316,28 @@ model User {
   // Cotizaciones (super admin)
   quotesCreated           Quote[] @relation("QuotesCreated")
   negotiationsCreated     QuoteNegotiation[] @relation("NegotiationsCreated")
+  
+  // Rendimiento de Profesores
+  teacherMetrics          TeacherPerformanceMetric[] @relation("TeacherMetrics")
+  teacherReviews          TeacherPerformanceReview[] @relation("TeacherReviews")
+  teacherReviewsGiven     TeacherPerformanceReview[] @relation("TeacherReviewsGiven")
+  
+  // Reportes
+  reportSchedulesCreated  ReportSchedule[]  @relation("ReportSchedulesCreated")
+  reportsGenerated        ReportExecution[] @relation("ReportsGenerated")
+  
+  // Proveedores
+  vendorsOwned            Vendor[]          @relation("VendorOwner")
+  vendorApprovals         Vendor[]          @relation("VendorApprovals")
+  vendorOrdersPlaced      VendorOrder[]     @relation("VendorOrdersPlaced")
+  
+  // Sistema de Soporte
+  ticketsCreated          SupportTicket[]   @relation("TicketsCreated")
+  ticketsAssigned         SupportTicket[]   @relation("TicketsAssigned")
+  ticketMessages          SupportTicketMessage[] @relation("TicketMessages")
+  
+  // Reminders
+  remindersReceived       ReminderLog[]     @relation("RemindersReceived")
 }
 
 model Invitation {
@@ -391,6 +437,9 @@ model Student {
   
   // Suscripción del padre para este estudiante
   subscription      ParentSubscription? @relation("StudentSubscription")
+  
+  // Pedidos de proveedores
+  vendorOrders      VendorOrder[] @relation("VendorOrdersForStudent")
   
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
@@ -1505,6 +1554,7 @@ model StoreCategory {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   products    StoreProduct[]
+  vendorProducts VendorProduct[]
 
   @@index([schoolId])
 }
@@ -3183,4 +3233,702 @@ model StripeConnectAccount {
   @@unique([entityType, entityId])
   @@index([entityType])
   @@index([stripeAccountId])
+}
+
+// ==========================================
+// MÓDULO DE RENDIMIENTO DE PROFESORES
+// ==========================================
+
+enum PerformanceCategory {
+  ATTENDANCE
+  TASK_COMPLETION
+  COMMUNICATION
+  STUDENT_GRADES
+  PARENT_SATISFACTION
+  PUNCTUALITY
+}
+
+model TeacherPerformanceMetric {
+  id            String   @id @default(cuid())
+  schoolId      String
+  school        School   @relation("SchoolTeacherPerformance", fields: [schoolId], references: [id])
+  
+  teacherId     String
+  teacher       User     @relation("TeacherMetrics", fields: [teacherId], references: [id])
+  
+  category      PerformanceCategory
+  
+  periodStart   DateTime
+  periodEnd     DateTime
+  
+  // Valores
+  value         Decimal  @db.Decimal(5, 2)  // Porcentaje o puntaje
+  target        Decimal? @db.Decimal(5, 2)  // Meta objetivo
+  
+  // Detalles adicionales
+  details       Json?    // Detalles específicos según categoría
+  notes         String?
+  
+  calculatedAt  DateTime @default(now())
+  createdAt     DateTime @default(now())
+  
+  @@index([schoolId])
+  @@index([teacherId])
+  @@index([category])
+  @@index([periodStart, periodEnd])
+}
+
+model TeacherPerformanceReview {
+  id            String   @id @default(cuid())
+  schoolId      String
+  school        School   @relation("SchoolTeacherReviews", fields: [schoolId], references: [id])
+  
+  teacherId     String
+  teacher       User     @relation("TeacherReviews", fields: [teacherId], references: [id])
+  
+  reviewerId    String
+  reviewer      User     @relation("TeacherReviewsGiven", fields: [reviewerId], references: [id])
+  
+  periodStart   DateTime
+  periodEnd     DateTime
+  
+  // Puntuación general
+  overallScore  Decimal  @db.Decimal(5, 2)
+  
+  // Desglose por categoría
+  attendanceScore      Decimal? @db.Decimal(5, 2)
+  taskCompletionScore  Decimal? @db.Decimal(5, 2)
+  communicationScore   Decimal? @db.Decimal(5, 2)
+  studentGradesScore   Decimal? @db.Decimal(5, 2)
+  punctualityScore     Decimal? @db.Decimal(5, 2)
+  
+  // Feedback
+  strengths     String?
+  areasToImprove String?
+  comments      String?
+  goals         String?  // Metas para siguiente período
+  
+  // Estado
+  status        String   @default("draft") // draft, submitted, acknowledged
+  acknowledgedAt DateTime?
+  teacherComments String?  // Comentarios del profesor
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@index([schoolId])
+  @@index([teacherId])
+  @@index([periodStart, periodEnd])
+}
+
+// ==========================================
+// MÓDULO DE REPORTES POR ÁREA
+// ==========================================
+
+enum ReportType {
+  ACADEMIC
+  FINANCIAL
+  ATTENDANCE
+  COMMUNICATION
+  DISCIPLINE
+  HEALTH
+  PERFORMANCE
+  ENROLLMENT
+  STORE
+  CUSTOM
+}
+
+model ReportSchedule {
+  id            String     @id @default(cuid())
+  schoolId      String
+  school        School     @relation("SchoolReportSchedules", fields: [schoolId], references: [id])
+  
+  name          String
+  description   String?
+  reportType    ReportType
+  
+  // Configuración
+  frequency     String     // "daily", "weekly", "monthly", "quarterly"
+  dayOfWeek     Int?       // 1-7 para weekly
+  dayOfMonth    Int?       // 1-31 para monthly
+  
+  // Filtros guardados
+  filters       Json?      // Filtros específicos del reporte
+  
+  // Distribución
+  recipients    String[]   // Email addresses
+  
+  isActive      Boolean    @default(true)
+  lastRunAt     DateTime?
+  nextRunAt     DateTime?
+  
+  createdById   String
+  createdBy     User       @relation("ReportSchedulesCreated", fields: [createdById], references: [id])
+  
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  
+  executions    ReportExecution[]
+  
+  @@index([schoolId])
+  @@index([reportType])
+}
+
+model ReportExecution {
+  id            String     @id @default(cuid())
+  scheduleId    String?
+  schedule      ReportSchedule? @relation(fields: [scheduleId], references: [id])
+  
+  schoolId      String
+  school        School     @relation("SchoolReportExecutions", fields: [schoolId], references: [id])
+  
+  reportType    ReportType
+  name          String
+  
+  // Parámetros usados
+  parameters    Json?
+  
+  // Resultados
+  status        String     @default("running") // running, completed, failed
+  fileUrl       String?    // URL del archivo generado
+  errorMessage  String?
+  
+  // Métricas de ejecución
+  startedAt     DateTime   @default(now())
+  completedAt   DateTime?
+  rowCount      Int?       // Cantidad de registros en el reporte
+  
+  generatedById String
+  generatedBy   User       @relation("ReportsGenerated", fields: [generatedById], references: [id])
+  
+  createdAt     DateTime   @default(now())
+  
+  @@index([schoolId])
+  @@index([reportType])
+  @@index([status])
+}
+
+// ==========================================
+// MÓDULO DE PROVEEDORES (VENDORS)
+// ==========================================
+
+enum VendorStatus {
+  PENDING
+  APPROVED
+  SUSPENDED
+  REJECTED
+}
+
+enum VendorType {
+  STORE         // Tienda escolar
+  CAFETERIA     // Comedor
+  BOTH
+}
+
+model Vendor {
+  id              String       @id @default(cuid())
+  schoolId        String
+  school          School       @relation("SchoolVendors", fields: [schoolId], references: [id])
+  
+  // Información básica
+  name            String
+  description     String?
+  logoUrl         String?
+  
+  // Tipo y estado
+  type            VendorType
+  status          VendorStatus @default(PENDING)
+  
+  // Contacto
+  contactName     String
+  contactEmail    String
+  contactPhone    String?
+  
+  // Dirección (para envíos)
+  address         String?
+  city            String?
+  state           String?
+  zipCode         String?
+  
+  // RFC para facturación
+  rfc             String?
+  businessName    String?
+  
+  // Stripe Connect
+  stripeAccountId String?
+  chargesEnabled  Boolean      @default(false)
+  payoutsEnabled  Boolean      @default(false)
+  
+  // Configuración de envíos
+  shippingEnabled Boolean      @default(false)
+  enviaApiKey     String?      // API key de envia.com
+  
+  // Comisiones
+  commissionRate  Decimal      @default(0) @db.Decimal(5, 2)  // % que cobra el colegio
+  
+  // Usuario propietario
+  ownerId         String
+  owner           User         @relation("VendorOwner", fields: [ownerId], references: [id])
+  
+  approvedById    String?
+  approvedBy      User?        @relation("VendorApprovals", fields: [approvedById], references: [id])
+  approvedAt      DateTime?
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  products        VendorProduct[]
+  orders          VendorOrder[]
+  payouts         VendorPayout[]
+  
+  @@index([schoolId])
+  @@index([status])
+  @@index([type])
+  @@index([ownerId])
+}
+
+model VendorProduct {
+  id              String    @id @default(cuid())
+  vendorId        String
+  vendor          Vendor    @relation(fields: [vendorId], references: [id])
+  
+  // Categoría (si aplica al Store del colegio)
+  categoryId      String?
+  category        StoreCategory? @relation(fields: [categoryId], references: [id])
+  
+  // Datos del producto
+  name            String
+  description     String?
+  sku             String?
+  imageUrl        String?
+  images          String[]   // URLs adicionales
+  
+  // Precios
+  price           Decimal    @db.Decimal(10, 2)
+  compareAtPrice  Decimal?   @db.Decimal(10, 2)  // Precio tachado
+  cost            Decimal?   @db.Decimal(10, 2)  // Costo del proveedor
+  
+  // Inventario
+  trackInventory  Boolean    @default(true)
+  stock           Int        @default(0)
+  lowStockAlert   Int        @default(5)
+  
+  // Variantes (tallas, colores)
+  hasVariants     Boolean    @default(false)
+  variants        Json?      // [{name: "Talla", options: ["CH", "M", "G"]}]
+  
+  // Opciones de envío
+  weight          Decimal?   @db.Decimal(10, 2)  // kg
+  dimensions      String?    // "30x20x10 cm"
+  
+  // Estado
+  isActive        Boolean    @default(true)
+  isFeatured      Boolean    @default(false)
+  
+  // Para comedor
+  mealType        MealType?
+  dayOfWeek       Int?       // 1-5
+  availableFrom   DateTime?
+  availableTo     DateTime?
+  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  orderItems      VendorOrderItem[]
+  
+  @@index([vendorId])
+  @@index([categoryId])
+  @@index([isActive])
+}
+
+model VendorOrder {
+  id              String    @id @default(cuid())
+  orderNumber     String    @unique
+  vendorId        String
+  vendor          Vendor    @relation(fields: [vendorId], references: [id])
+  
+  // Comprador
+  customerId      String
+  customer        User      @relation("VendorOrdersPlaced", fields: [customerId], references: [id])
+  
+  // Estudiante (si aplica)
+  studentId       String?
+  student         Student?  @relation("VendorOrdersForStudent", fields: [studentId], references: [id])
+  
+  // Totales
+  subtotal        Decimal   @db.Decimal(10, 2)
+  serviceFee      Decimal   @default(0) @db.Decimal(10, 2)  // Cargo por servicio
+  shippingCost    Decimal   @default(0) @db.Decimal(10, 2)
+  tax             Decimal   @default(0) @db.Decimal(10, 2)
+  total           Decimal   @db.Decimal(10, 2)
+  
+  // Distribución de pagos
+  vendorAmount    Decimal   @db.Decimal(10, 2)  // Lo que recibe el proveedor
+  platformAmount  Decimal   @db.Decimal(10, 2)  // Lo que recibe la plataforma/colegio
+  
+  // Pago
+  paymentStatus   String    @default("pending")  // pending, paid, failed, refunded
+  paymentMethod   String?
+  stripePaymentId String?
+  
+  // Estado del pedido
+  status          String    @default("pending")  // pending, confirmed, preparing, shipped, delivered, cancelled
+  
+  // Envío (si aplica)
+  shippingMethod  String?   // "pickup", "delivery", "envia"
+  shippingAddress Json?
+  trackingNumber  String?
+  trackingUrl     String?
+  enviaShipmentId String?
+  
+  // Notas
+  notes           String?
+  internalNotes   String?
+  
+  // Timestamps
+  confirmedAt     DateTime?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  cancelledAt     DateTime?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  items           VendorOrderItem[]
+  
+  @@index([vendorId])
+  @@index([customerId])
+  @@index([status])
+  @@index([paymentStatus])
+}
+
+model VendorOrderItem {
+  id              String        @id @default(cuid())
+  orderId         String
+  order           VendorOrder   @relation(fields: [orderId], references: [id])
+  
+  productId       String
+  product         VendorProduct @relation(fields: [productId], references: [id])
+  
+  name            String        // Snapshot del nombre
+  sku             String?
+  
+  quantity        Int
+  unitPrice       Decimal       @db.Decimal(10, 2)
+  total           Decimal       @db.Decimal(10, 2)
+  
+  // Variantes seleccionadas
+  selectedVariants Json?       // {"Talla": "M", "Color": "Azul"}
+  
+  createdAt       DateTime      @default(now())
+  
+  @@index([orderId])
+  @@index([productId])
+}
+
+model VendorPayout {
+  id              String    @id @default(cuid())
+  vendorId        String
+  vendor          Vendor    @relation(fields: [vendorId], references: [id])
+  
+  // Monto
+  amount          Decimal   @db.Decimal(10, 2)
+  currency        String    @default("MXN")
+  
+  // Período cubierto
+  periodStart     DateTime
+  periodEnd       DateTime
+  
+  // Estado
+  status          String    @default("pending")  // pending, processing, completed, failed
+  
+  // Detalles de Stripe
+  stripeTransferId String?
+  stripePayoutId   String?
+  
+  // Desglose
+  orderCount      Int
+  grossAmount     Decimal   @db.Decimal(10, 2)  // Total de ventas
+  commissionAmount Decimal  @db.Decimal(10, 2)  // Comisión retenida
+  netAmount       Decimal   @db.Decimal(10, 2)  // Monto a pagar
+  
+  processedAt     DateTime?
+  failureReason   String?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([vendorId])
+  @@index([status])
+}
+
+// ==========================================
+// CONFIGURACIÓN DE ENVÍOS (ENVIA.COM)
+// ==========================================
+
+model ShippingConfig {
+  id              String   @id @default(cuid())
+  schoolId        String   @unique
+  school          School   @relation("SchoolShippingConfig", fields: [schoolId], references: [id])
+  
+  // Envia.com
+  enviaEnabled    Boolean  @default(false)
+  enviaApiKey     String?
+  enviaSecretKey  String?
+  
+  // Origen de envío (dirección del colegio/almacén)
+  originName      String?
+  originStreet    String?
+  originNumber    String?
+  originColony    String?
+  originCity      String?
+  originState     String?
+  originZipCode   String?
+  originPhone     String?
+  
+  // Carriers habilitados
+  enabledCarriers String[]  // ["fedex", "dhl", "estafeta", "ups"]
+  
+  // Configuración
+  freeShippingThreshold Decimal? @db.Decimal(10, 2)  // Envío gratis arriba de X
+  handlingFee     Decimal? @db.Decimal(10, 2)        // Cargo de manejo
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ==========================================
+// CONFIGURACIÓN DE CARGOS POR SERVICIO
+// ==========================================
+
+model ServiceFeeConfig {
+  id              String   @id @default(cuid())
+  schoolId        String   @unique
+  school          School   @relation("SchoolServiceFeeConfig", fields: [schoolId], references: [id])
+  
+  // Cargo por servicio de e-commerce
+  ecommerceEnabled Boolean @default(true)
+  ecommerceFeeType String  @default("percentage")  // "percentage" | "fixed" | "both"
+  ecommerceFeePercent Decimal @default(0) @db.Decimal(5, 2)
+  ecommerceFeeFixed   Decimal @default(0) @db.Decimal(10, 2)
+  ecommerceMinFee     Decimal? @db.Decimal(10, 2)  // Mínimo a cobrar
+  ecommerceMaxFee     Decimal? @db.Decimal(10, 2)  // Máximo a cobrar
+  
+  // A quién va el cargo por servicio
+  ecommerceFeeDestination String @default("school")  // "school" | "platform" | "split"
+  platformSplitPercent    Decimal @default(0) @db.Decimal(5, 2)  // Si es split
+  
+  // Cuenta destino del cargo por servicio (si va al colegio)
+  serviceFeeStripeAccountId String?
+  
+  // Cargo por servicio de comedor
+  cafeteriaEnabled     Boolean @default(true)
+  cafeteriaFeeType     String  @default("percentage")
+  cafeteriaFeePercent  Decimal @default(0) @db.Decimal(5, 2)
+  cafeteriaFeeFixed    Decimal @default(0) @db.Decimal(10, 2)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ==========================================
+// SISTEMA DE SOPORTE (TICKETS)
+// ==========================================
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_CUSTOMER
+  WAITING_INTERNAL
+  RESOLVED
+  CLOSED
+}
+
+enum TicketCategory {
+  TECHNICAL       // Problemas técnicos
+  BILLING         // Facturación y pagos
+  ACADEMIC        // Consultas académicas
+  COMPLAINT       // Quejas
+  SUGGESTION      // Sugerencias
+  GENERAL         // General
+}
+
+model SupportTicket {
+  id              String         @id @default(cuid())
+  ticketNumber    String         @unique  // TICKET-2026-0001
+  
+  // Origen
+  schoolId        String?
+  school          School?        @relation("SchoolSupportTickets", fields: [schoolId], references: [id])
+  
+  // Creador (puede ser usuario de colegio o usuario externo)
+  createdById     String?
+  createdBy       User?          @relation("TicketsCreated", fields: [createdById], references: [id])
+  
+  // Para usuarios no registrados
+  guestEmail      String?
+  guestName       String?
+  
+  // Clasificación
+  category        TicketCategory
+  priority        TicketPriority @default(MEDIUM)
+  
+  // Contenido
+  subject         String
+  description     String
+  
+  // Archivos adjuntos
+  attachments     String[]       // URLs
+  
+  // Estado
+  status          TicketStatus   @default(OPEN)
+  
+  // Asignación
+  assignedToId    String?
+  assignedTo      User?          @relation("TicketsAssigned", fields: [assignedToId], references: [id])
+  
+  // Tipo de ticket
+  isInternal      Boolean        @default(false)  // Ticket interno del colegio
+  isPlatformLevel Boolean        @default(false)  // Ticket a nivel IA School
+  
+  // Métricas
+  firstResponseAt DateTime?
+  resolvedAt      DateTime?
+  satisfactionRating Int?        // 1-5
+  satisfactionFeedback String?
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  messages        SupportTicketMessage[]
+  
+  @@index([schoolId])
+  @@index([status])
+  @@index([category])
+  @@index([assignedToId])
+}
+
+model SupportTicketMessage {
+  id              String        @id @default(cuid())
+  ticketId        String
+  ticket          SupportTicket @relation(fields: [ticketId], references: [id])
+  
+  // Autor
+  authorId        String?
+  author          User?         @relation("TicketMessages", fields: [authorId], references: [id])
+  
+  // Para respuestas de guest
+  authorName      String?
+  authorEmail     String?
+  
+  // Contenido
+  content         String
+  attachments     String[]
+  
+  // Tipo de mensaje
+  isInternal      Boolean       @default(false)  // Nota interna (no visible para cliente)
+  isFromAI        Boolean       @default(false)  // Respuesta del chatbot
+  
+  createdAt       DateTime      @default(now())
+  
+  @@index([ticketId])
+}
+
+// ==========================================
+// CONFIGURACIÓN DE REMINDERS IA
+// ==========================================
+
+enum ReminderType {
+  APPOINTMENT         // Tienes una cita
+  TASK_PENDING        // No has registrado la tarea
+  SURVEY_PENDING      // No has respondido la encuesta
+  PAYMENT_DUE         // No se ha registrado tu pago
+  EVENT_UPCOMING      // Evento próximo
+  GRADE_PENDING       // Calificaciones por registrar
+  ATTENDANCE_MISSING  // Falta registrar asistencia
+  MESSAGE_UNREAD      // Mensajes sin leer
+  DOCUMENT_PENDING    // Documentos por firmar
+  PERMIT_PENDING      // Permiso pendiente de autorizar
+  CUSTOM              // Personalizado
+}
+
+model ReminderConfig {
+  id              String       @id @default(cuid())
+  schoolId        String
+  school          School       @relation("SchoolReminderConfigs", fields: [schoolId], references: [id])
+  
+  reminderType    ReminderType
+  
+  // A quién aplica
+  targetRoles     String[]     // ["PADRE", "PROFESOR", "ADMIN"]
+  
+  // Cuándo enviar
+  enabled         Boolean      @default(true)
+  daysBeforeDue   Int          @default(1)  // Días antes del vencimiento
+  sendTime        String       @default("09:00")  // Hora de envío
+  
+  // Canales
+  sendEmail       Boolean      @default(true)
+  sendPush        Boolean      @default(true)
+  sendInApp       Boolean      @default(true)
+  
+  // Mensaje personalizado (opcional)
+  customSubject   String?
+  customMessage   String?
+  
+  // Frecuencia si es recurrente
+  maxReminders    Int          @default(3)  // Máximo de recordatorios
+  intervalDays    Int          @default(1)  // Intervalo entre recordatorios
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  @@unique([schoolId, reminderType])
+  @@index([schoolId])
+}
+
+model ReminderLog {
+  id              String       @id @default(cuid())
+  schoolId        String
+  school          School       @relation("SchoolReminderLogs", fields: [schoolId], references: [id])
+  
+  reminderType    ReminderType
+  
+  // Destinatario
+  userId          String
+  user            User         @relation("RemindersReceived", fields: [userId], references: [id])
+  
+  // Referencia al objeto relacionado
+  referenceType   String?      // "task", "event", "payment", etc.
+  referenceId     String?
+  
+  // Mensaje enviado
+  subject         String
+  message         String
+  
+  // Canales utilizados
+  sentViaEmail    Boolean      @default(false)
+  sentViaPush     Boolean      @default(false)
+  sentViaInApp    Boolean      @default(false)
+  
+  // Estado
+  status          String       @default("sent")  // sent, delivered, failed
+  errorMessage    String?
+  
+  // IA generó el mensaje?
+  isAiGenerated   Boolean      @default(false)
+  
+  sentAt          DateTime     @default(now())
+  
+  @@index([schoolId])
+  @@index([userId])
+  @@index([reminderType])
+  @@index([sentAt])
 }

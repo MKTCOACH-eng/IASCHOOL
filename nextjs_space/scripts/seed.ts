@@ -1772,10 +1772,12 @@ async function main() {
           "Progreso académico",
           "Notificaciones push",
           "PWA instalable",
-          "Multi-idioma (ES/EN)",
+          "Multi-idioma (ES/EN/PT/DE/FR/JA)",
           "Mensajería básica (texto)",
           "Importación masiva CSV/Excel",
-          "Invitaciones y onboarding"
+          "Invitaciones y onboarding",
+          "Chatbot IA en landing (ventas)",
+          "Sistema de soporte básico"
         ]),
         annualDiscountMonths: 2,
       },
@@ -1800,7 +1802,11 @@ async function main() {
           "Galería de fotos",
           "Tienda escolar básica",
           "Vocal de grupo (colectas)",
-          "Documentos firmables"
+          "Documentos firmables",
+          "Rendimiento de profesores básico",
+          "Reportes por área (descarga manual)",
+          "Reminders automáticos (email/push)",
+          "Sistema de soporte con tickets"
         ]),
         annualDiscountMonths: 2,
       },
@@ -1814,7 +1820,7 @@ async function main() {
         features: JSON.stringify([
           "Todo lo del plan Estándar +",
           "Videollamadas (citas con video)",
-          "Chatbot IA asistente",
+          "Chatbot IA asistente para padres",
           "Análisis de sentimiento IA",
           "Dashboard ejecutivo",
           "Reportes semanales automáticos",
@@ -1826,9 +1832,16 @@ async function main() {
           "Pagos online (Stripe)",
           "Becas y descuentos",
           "Recibos PDF",
-          "Reportes financieros",
+          "Reportes financieros avanzados",
+          "E-commerce multi-vendor con Stripe Connect",
           "Tienda con envíos (Envia.com)",
-          "Comedor (menú + pagos)"
+          "Comedor multi-vendor",
+          "Proveedores autorizados",
+          "Cargo por servicio configurable",
+          "Rendimiento de profesores avanzado (evaluaciones)",
+          "Reminders IA personalizados",
+          "Bot IA personal para padres",
+          "Soporte prioritario con chatbot IA"
         ]),
         annualDiscountMonths: 2,
       },
