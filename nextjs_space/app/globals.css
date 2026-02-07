@@ -5,10 +5,20 @@
 :root {
   --primary: #1B4079;
   --primary-light: #2a5299;
+  --primary-foreground: #ffffff;
   --secondary: #4D7C8A;
+  --secondary-foreground: #ffffff;
   --accent-1: #7F9C96;
   --accent-2: #8FAD88;
   --accent-3: #CBDF90;
+  --accent-foreground: #1e293b;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --background: #ffffff;
+  --foreground: #1e293b;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --ring: #1B4079;
   --bg-subtle: #f8fafc;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
