@@ -116,16 +116,15 @@ export default function LandingPage() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white/90 text-sm font-medium mb-6 border border-white/20">
               <Brain className="w-4 h-4" />
-              Plataforma educativa con Inteligencia Artificial
+              {t.landing.hero.badge}
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              El sistema operativo para{" "}
-              <span className="text-[#CBDF90]">colegios del futuro</span>
+              {t.landing.hero.title}{" "}
+              <span className="text-[#CBDF90]">{t.landing.hero.titleHighlight}</span>
             </h1>
             <p className="text-lg sm:text-xl text-white/90 mb-10 leading-relaxed">
-              Una plataforma integral que conecta a directivos, profesores y familias 
-              para crear comunidades educativas más organizadas y eficientes.
+              {t.landing.hero.subtitle}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -133,26 +132,26 @@ export default function LandingPage() {
                 href="/login"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#CBDF90] text-[#1B4079] font-bold rounded-xl hover:bg-white transition-all shadow-lg hover:shadow-xl hover:scale-105"
               >
-                Solicitar Demo
+                {t.landing.hero.cta}
                 <ChevronRight className="w-5 h-5" />
               </Link>
               <a
                 href="#funcionalidades"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/20 transition-all border border-white/30"
               >
-                Descubrir IA School
+                {t.landing.hero.discover}
               </a>
             </div>
 
             {/* Trust badges */}
             <div className="mt-12 pt-8 border-t border-white/20">
-              <p className="text-white/60 text-sm mb-4">Confiado por instituciones educativas líderes</p>
+              <p className="text-white/60 text-sm mb-4">{t.landing.trust.title}</p>
               <div className="flex items-center gap-6 text-white/80">
-                <span className="text-sm font-medium">+50 colegios</span>
+                <span className="text-sm font-medium">{t.landing.trust.schools}</span>
                 <span className="text-white/30">|</span>
-                <span className="text-sm font-medium">+10,000 familias</span>
+                <span className="text-sm font-medium">{t.landing.trust.families}</span>
                 <span className="text-white/30">|</span>
-                <span className="text-sm font-medium">99.9% uptime</span>
+                <span className="text-sm font-medium">{t.landing.trust.uptime}</span>
               </div>
             </div>
           </div>
@@ -164,11 +163,10 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              ¿Tu colegio también vive este caos?
+              {t.landing.problem.title}
             </h2>
             <p className="text-gray-600 max-w-3xl mx-auto text-lg">
-              Información dispersa en WhatsApp, correos sin respuesta, pagos sin control, 
-              profesores abrumados y padres desinformados. <strong className="text-[#1B4079]">IA School lo resuelve todo.</strong>
+              {t.landing.problem.desc} <strong className="text-[#1B4079]">{t.landing.problem.solution}</strong>
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 items-center">
@@ -176,8 +174,8 @@ export default function LandingPage() {
               <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
                 <XCircle className="w-8 h-8 text-[#1B4079]" />
               </div>
-              <h3 className="font-bold text-[#1B4079] mb-2">Sin IA School</h3>
-              <p className="text-gray-500 text-sm">50+ grupos de WhatsApp, información perdida, padres confundidos, carga administrativa excesiva</p>
+              <h3 className="font-bold text-[#1B4079] mb-2">{t.landing.problem.without}</h3>
+              <p className="text-gray-500 text-sm">{t.landing.problem.withoutDesc}</p>
             </div>
             <div className="flex items-center justify-center">
               <ArrowRight className="w-10 h-10 text-[#1B4079]" />
@@ -186,109 +184,8 @@ export default function LandingPage() {
               <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-8 h-8 text-[#1B4079]" />
               </div>
-              <h3 className="font-bold text-[#1B4079] mb-2">Con IA School</h3>
-              <p className="text-gray-600 text-sm">Una sola plataforma, comunicación clara, operación eficiente, familias satisfechas</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Comparison Table */}
-      <div className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              IA School vs. Otras Plataformas
-            </h2>
-            <p className="text-gray-600">
-              Una comparación clara de por qué somos la mejor opción
-            </p>
-          </div>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[800px]">
-                <thead>
-                  <tr className="bg-[#1B4079] text-white">
-                    <th className="py-4 px-4 text-left font-semibold">Característica</th>
-                    <th className="py-4 px-3 text-center font-semibold bg-[#CBDF90] text-[#1B4079]">IA School</th>
-                    <th className="py-4 px-3 text-center font-semibold text-white/80">Servo Escolar</th>
-                    <th className="py-4 px-3 text-center font-semibold text-white/80">Google Classroom</th>
-                    <th className="py-4 px-4 text-left font-semibold text-white/90">Por qué importa</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 text-sm">
-                  <tr>
-                    <td className="py-3 px-4 text-gray-700 font-medium">Control operativo total</td>
-                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Alto</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Medio</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /> Nulo</span></td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">Dirección necesita ver <em>todo</em>, no solo enviar avisos</td>
-                  </tr>
-                  <tr className="bg-gray-50/50">
-                    <td className="py-3 px-4 text-gray-700 font-medium">Reducción del caos (WhatsApp/mails)</td>
-                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Sustituye</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Reduce</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /> No</span></td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">Menos fricción = menos quejas</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 px-4 text-gray-700 font-medium">Visibilidad sin pedir reportes</td>
-                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Dashboards</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">Directores no quieren &quot;perseguir info&quot;</td>
-                  </tr>
-                  <tr className="bg-gray-50/50">
-                    <td className="py-3 px-4 text-gray-700 font-medium">Gestión de padres difíciles</td>
-                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> IA + métricas</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">Prevención &gt; crisis</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 px-4 text-gray-700 font-medium">Escalabilidad administrativa</td>
-                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Alta</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">A 300 alumnos el caos explota</td>
-                  </tr>
-                  <tr className="bg-gray-50/50">
-                    <td className="py-3 px-4 text-gray-700 font-medium">Métricas de clima escolar</td>
-                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> IA</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">Nadie más lo mide</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 px-4 text-gray-700 font-medium">Integración academia + finanzas</td>
-                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /></span></td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">Hoy está fragmentado</td>
-                  </tr>
-                  <tr className="bg-gray-50/50">
-                    <td className="py-3 px-4 text-gray-700 font-medium">Dependencia de herramientas externas</td>
-                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><XCircle className="w-4 h-4" /> Ninguna</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Alta</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Alta</span></td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">Menos proveedores = menos problemas</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 px-4 text-gray-700 font-medium">Retención del sistema</td>
-                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Alta</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Media</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-red-500"><XCircle className="w-4 h-4" /> Baja</span></td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">Cambio de plataforma cuesta</td>
-                  </tr>
-                  <tr className="bg-gray-50/50">
-                    <td className="py-3 px-4 text-gray-700 font-medium">Valor percibido vs costo</td>
-                    <td className="py-3 px-3 text-center bg-green-50"><span className="inline-flex items-center gap-1 text-green-700 font-semibold"><CheckCircle className="w-4 h-4" /> Alto</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Medio</span></td>
-                    <td className="py-3 px-3 text-center"><span className="inline-flex items-center gap-1 text-amber-600">⚠️ Bajo</span></td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">Classroom es gratis, pero no resuelve</td>
-                  </tr>
-                </tbody>
-              </table>
+              <h3 className="font-bold text-[#1B4079] mb-2">{t.landing.problem.with}</h3>
+              <p className="text-gray-600 text-sm">{t.landing.problem.withDesc}</p>
             </div>
           </div>
         </div>
@@ -300,19 +197,19 @@ export default function LandingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-4xl sm:text-5xl font-bold text-white">85%</div>
-              <div className="text-white/70 text-sm mt-2">Reducción de carga administrativa</div>
+              <div className="text-white/70 text-sm mt-2">{t.landing.stats.adminReduction}</div>
             </div>
             <div>
               <div className="text-4xl sm:text-5xl font-bold text-[#CBDF90]">3x</div>
-              <div className="text-white/70 text-sm mt-2">Mejor comunicación familia-escuela</div>
+              <div className="text-white/70 text-sm mt-2">{t.landing.stats.communication}</div>
             </div>
             <div>
               <div className="text-4xl sm:text-5xl font-bold text-white">100%</div>
-              <div className="text-white/70 text-sm mt-2">Trazabilidad en cobranza</div>
+              <div className="text-white/70 text-sm mt-2">{t.landing.stats.traceability}</div>
             </div>
             <div>
               <div className="text-4xl sm:text-5xl font-bold text-[#CBDF90]">24/7</div>
-              <div className="text-white/70 text-sm mt-2">Información disponible</div>
+              <div className="text-white/70 text-sm mt-2">{t.landing.stats.availability}</div>
             </div>
           </div>
         </div>
@@ -335,8 +232,8 @@ export default function LandingPage() {
                     <Bell className="w-5 h-5 text-[#1B4079]" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Nuevo anuncio</p>
-                    <p className="text-sm font-medium text-gray-900">Reunión de padres - Viernes 3pm</p>
+                    <p className="text-xs text-gray-500">{t.landing.forFamilies.newAnnouncement}</p>
+                    <p className="text-sm font-medium text-gray-900">{t.landing.forFamilies.meetingFriday}</p>
                   </div>
                 </div>
               </div>
@@ -344,14 +241,13 @@ export default function LandingPage() {
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1B4079]/10 rounded-full text-[#1B4079] text-sm font-medium mb-4">
                 <Users className="w-4 h-4" />
-                Para Familias
+                {t.landing.forFamilies.badge}
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-                Toda la información de tus hijos, en la palma de tu mano
+                {t.landing.forFamilies.title}
               </h2>
               <p className="text-gray-600 mb-6">
-                Nunca más pierdas un aviso importante. Desde tareas hasta pagos, 
-                todo lo que necesitas saber sobre la educación de tus hijos está a un clic de distancia.
+                {t.landing.forFamilies.desc}
               </p>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
@@ -360,7 +256,7 @@ export default function LandingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-700"><strong>Anuncios en tiempo real</strong> — Recibe notificaciones instantáneas de todo lo importante</span>
+                  <span className="text-gray-700"><strong>{t.landing.forFamilies.feature1}</strong> — {t.landing.forFamilies.feature1Desc}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-[#8FAD88] flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -368,7 +264,7 @@ export default function LandingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-700"><strong>Seguimiento académico</strong> — Tareas, calificaciones y progreso siempre actualizados</span>
+                  <span className="text-gray-700"><strong>{t.landing.forFamilies.feature2}</strong> — {t.landing.forFamilies.feature2Desc}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-[#8FAD88] flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -376,7 +272,7 @@ export default function LandingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-700"><strong>Comunicación directa</strong> — Chat profesional con profesores y administración</span>
+                  <span className="text-gray-700"><strong>{t.landing.forFamilies.feature3}</strong> — {t.landing.forFamilies.feature3Desc}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-[#8FAD88] flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -384,7 +280,7 @@ export default function LandingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-700"><strong>Multi-hijo</strong> — Gestiona la información de todos tus hijos en una sola cuenta</span>
+                  <span className="text-gray-700"><strong>{t.landing.forFamilies.feature4}</strong> — {t.landing.forFamilies.feature4Desc}</span>
                 </li>
               </ul>
             </div>
@@ -399,14 +295,13 @@ export default function LandingPage() {
             <div className="order-2 lg:order-1">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#4D7C8A]/10 rounded-full text-[#4D7C8A] text-sm font-medium mb-4">
                 <BookOpen className="w-4 h-4" />
-                Para Profesores
+                {t.landing.forTeachers.badge}
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-                Más tiempo enseñando, menos tiempo administrando
+                {t.landing.forTeachers.title}
               </h2>
               <p className="text-gray-600 mb-6">
-                Herramientas intuitivas que automatizan las tareas repetitivas y te permiten 
-                enfocarte en lo que realmente importa: la educación de tus alumnos.
+                {t.landing.forTeachers.desc}
               </p>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
@@ -415,7 +310,7 @@ export default function LandingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-700"><strong>Gestión de tareas simplificada</strong> — Publica, recibe y califica en minutos</span>
+                  <span className="text-gray-700"><strong>{t.landing.forTeachers.feature1}</strong> — {t.landing.forTeachers.feature1Desc}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-[#4D7C8A] flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -423,7 +318,7 @@ export default function LandingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-700"><strong>Asistencia digital</strong> — Control de asistencia con reportes automáticos</span>
+                  <span className="text-gray-700"><strong>{t.landing.forTeachers.feature2}</strong> — {t.landing.forTeachers.feature2Desc}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-[#4D7C8A] flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -431,7 +326,7 @@ export default function LandingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-700"><strong>Comunicación profesional</strong> — Canales formales con familias, sin WhatsApp</span>
+                  <span className="text-gray-700"><strong>{t.landing.forTeachers.feature3}</strong> — {t.landing.forTeachers.feature3Desc}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-[#4D7C8A] flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -439,7 +334,7 @@ export default function LandingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-700"><strong>Métricas del grupo</strong> — Visualiza participación y rendimiento al instante</span>
+                  <span className="text-gray-700"><strong>{t.landing.forTeachers.feature4}</strong> — {t.landing.forTeachers.feature4Desc}</span>
                 </li>
               </ul>
             </div>
@@ -453,7 +348,7 @@ export default function LandingPage() {
               <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl p-3 shadow-lg">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <span className="text-sm font-medium text-gray-700">28/30 tareas entregadas</span>
+                  <span className="text-sm font-medium text-gray-700">28/30 {t.landing.forTeachers.tasksDelivered}</span>
                 </div>
               </div>
             </div>
@@ -466,10 +361,10 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Todo lo que tu colegio necesita, en un solo lugar
+              {t.landing.features.title}
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Módulos integrados que trabajan juntos para crear una experiencia educativa excepcional
+              {t.landing.features.subtitle}
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -477,10 +372,9 @@ export default function LandingPage() {
               <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
                 <MessageSquare className="w-7 h-7 text-[#1B4079]" />
               </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-3">Comunicación Inteligente</h3>
+              <h3 className="font-bold text-gray-900 text-lg mb-3">{t.landing.features.communication.title}</h3>
               <p className="text-gray-600">
-                Anuncios oficiales, mensajería directa, canales por grupo y notificaciones push. 
-                Comunicación clara y trazable.
+                {t.landing.features.communication.desc}
               </p>
             </div>
 
@@ -488,10 +382,9 @@ export default function LandingPage() {
               <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
                 <BookOpen className="w-7 h-7 text-[#1B4079]" />
               </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-3">Gestión Académica</h3>
+              <h3 className="font-bold text-gray-900 text-lg mb-3">{t.landing.features.academic.title}</h3>
               <p className="text-gray-600">
-                Tareas, entregas, calificaciones, asistencia y reportes. 
-                Seguimiento completo del progreso de cada alumno.
+                {t.landing.features.academic.desc}
               </p>
             </div>
 
@@ -499,10 +392,9 @@ export default function LandingPage() {
               <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
                 <CreditCard className="w-7 h-7 text-[#1B4079]" />
               </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-3">Control de Pagos</h3>
+              <h3 className="font-bold text-gray-900 text-lg mb-3">{t.landing.features.payments.title}</h3>
               <p className="text-gray-600">
-                Estados de cuenta, colegiaturas, recordatorios automáticos y reportes de cobranza 
-                con visibilidad total.
+                {t.landing.features.payments.desc}
               </p>
             </div>
 
@@ -510,10 +402,9 @@ export default function LandingPage() {
               <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
                 <Brain className="w-7 h-7 text-[#1B4079]" />
               </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-3">Inteligencia Artificial</h3>
+              <h3 className="font-bold text-gray-900 text-lg mb-3">{t.landing.features.ai.title}</h3>
               <p className="text-gray-600">
-                Bot asistente para familias, análisis de sentimiento en comunicaciones, 
-                alertas inteligentes y reportes automatizados.
+                {t.landing.features.ai.desc}
               </p>
             </div>
 
@@ -521,10 +412,9 @@ export default function LandingPage() {
               <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
                 <Calendar className="w-7 h-7 text-[#1B4079]" />
               </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-3">Calendario Unificado</h3>
+              <h3 className="font-bold text-gray-900 text-lg mb-3">{t.landing.features.calendar.title}</h3>
               <p className="text-gray-600">
-                Eventos, entregas, reuniones y actividades. Un solo calendario 
-                para toda la comunidad escolar.
+                {t.landing.features.calendar.desc}
               </p>
             </div>
 
@@ -532,10 +422,9 @@ export default function LandingPage() {
               <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-5">
                 <Shield className="w-7 h-7 text-[#1B4079]" />
               </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-3">Seguridad y Privacidad</h3>
+              <h3 className="font-bold text-gray-900 text-lg mb-3">{t.landing.features.security.title}</h3>
               <p className="text-gray-600">
-                Datos protegidos, acceso por roles, cifrado de extremo a extremo 
-                y cumplimiento de normativas de privacidad.
+                {t.landing.features.security.desc}
               </p>
             </div>
           </div>
@@ -548,13 +437,13 @@ export default function LandingPage() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1B4079]/10 rounded-full text-[#1B4079] text-sm font-medium mb-4">
               <FileText className="w-4 h-4" />
-              Recursos y Blog
+              {t.landing.blog.badge}
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Aprende más sobre transformación educativa
+              {t.landing.blog.title}
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Videos, artículos y recursos para directivos y educadores que quieren llevar su colegio al siguiente nivel
+              {t.landing.blog.subtitle}
             </p>
           </div>
 
@@ -567,12 +456,12 @@ export default function LandingPage() {
                     <PlayCircle className="w-10 h-10 text-white" />
                   </div>
                 </div>
-                <div className="absolute top-3 left-3 px-2 py-1 bg-red-500 text-white text-xs font-medium rounded">VIDEO</div>
+                <div className="absolute top-3 left-3 px-2 py-1 bg-red-500 text-white text-xs font-medium rounded">{t.landing.blog.video}</div>
               </div>
               <div className="p-5">
-                <h3 className="font-bold text-gray-900 mb-2">Cómo eliminar WhatsApp de tu colegio</h3>
-                <p className="text-gray-600 text-sm">Guía paso a paso para migrar la comunicación escolar a una plataforma profesional.</p>
-                <p className="text-[#1B4079] text-sm font-medium mt-3">Ver video · 12 min</p>
+                <h3 className="font-bold text-gray-900 mb-2">{t.landing.blog.video1Title}</h3>
+                <p className="text-gray-600 text-sm">{t.landing.blog.video1Desc}</p>
+                <p className="text-[#1B4079] text-sm font-medium mt-3">{t.landing.blog.watchVideo} · 12 min</p>
               </div>
             </div>
 
@@ -582,12 +471,12 @@ export default function LandingPage() {
                 <div className="absolute inset-0 flex items-center justify-center p-6">
                   <FileText className="w-16 h-16 text-white/80" />
                 </div>
-                <div className="absolute top-3 left-3 px-2 py-1 bg-[#1B4079] text-white text-xs font-medium rounded">ARTÍCULO</div>
+                <div className="absolute top-3 left-3 px-2 py-1 bg-[#1B4079] text-white text-xs font-medium rounded">{t.landing.blog.article}</div>
               </div>
               <div className="p-5">
-                <h3 className="font-bold text-gray-900 mb-2">5 señales de que tu colegio necesita digitalizarse</h3>
-                <p className="text-gray-600 text-sm">Identifica si tu institución está lista para dar el salto a la transformación digital.</p>
-                <p className="text-[#1B4079] text-sm font-medium mt-3">Leer artículo · 5 min</p>
+                <h3 className="font-bold text-gray-900 mb-2">{t.landing.blog.article1Title}</h3>
+                <p className="text-gray-600 text-sm">{t.landing.blog.article1Desc}</p>
+                <p className="text-[#1B4079] text-sm font-medium mt-3">{t.landing.blog.readArticle} · 5 min</p>
               </div>
             </div>
 
@@ -599,12 +488,12 @@ export default function LandingPage() {
                     <PlayCircle className="w-10 h-10 text-white" />
                   </div>
                 </div>
-                <div className="absolute top-3 left-3 px-2 py-1 bg-red-500 text-white text-xs font-medium rounded">VIDEO</div>
+                <div className="absolute top-3 left-3 px-2 py-1 bg-red-500 text-white text-xs font-medium rounded">{t.landing.blog.video}</div>
               </div>
               <div className="p-5">
-                <h3 className="font-bold text-gray-900 mb-2">Demo completo de IA School</h3>
-                <p className="text-gray-600 text-sm">Recorre todas las funcionalidades de la plataforma en esta demostración guiada.</p>
-                <p className="text-[#1B4079] text-sm font-medium mt-3">Ver video · 20 min</p>
+                <h3 className="font-bold text-gray-900 mb-2">{t.landing.blog.video2Title}</h3>
+                <p className="text-gray-600 text-sm">{t.landing.blog.video2Desc}</p>
+                <p className="text-[#1B4079] text-sm font-medium mt-3">{t.landing.blog.watchVideo} · 20 min</p>
               </div>
             </div>
           </div>
@@ -614,7 +503,7 @@ export default function LandingPage() {
               href="#"
               className="inline-flex items-center gap-2 text-[#1B4079] font-semibold hover:gap-3 transition-all"
             >
-              Ver todos los recursos
+              {t.landing.blog.viewAll}
               <ChevronRight className="w-5 h-5" />
             </a>
           </div>
@@ -631,17 +520,15 @@ export default function LandingPage() {
             <div className="relative z-10 max-w-3xl mx-auto text-center">
               <div className="text-5xl mb-6 text-white/80">"</div>
               <p className="text-xl md:text-2xl text-white leading-relaxed mb-8">
-                IA School transformó completamente la forma en que nos comunicamos con las familias. 
-                Pasamos de tener 47 grupos de WhatsApp a <strong className="text-[#CBDF90]">una sola plataforma 
-                donde todo está organizado</strong>. Los padres están más informados y nosotros más tranquilos.
+                {t.landing.testimonial.quote} <strong className="text-[#CBDF90]">{t.landing.testimonial.highlight}</strong>{t.landing.testimonial.quote2}
               </p>
               <div className="flex items-center justify-center gap-4">
                 <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xl">
                   MR
                 </div>
                 <div className="text-left">
-                  <p className="text-white font-semibold">María Rodríguez</p>
-                  <p className="text-white/70 text-sm">Directora, Colegio Vermont School</p>
+                  <p className="text-white font-semibold">{t.landing.testimonial.author}</p>
+                  <p className="text-white/70 text-sm">{t.landing.testimonial.role}</p>
                 </div>
               </div>
             </div>
@@ -653,25 +540,24 @@ export default function LandingPage() {
       <div className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-            ¿Listo para transformar tu colegio?
+            {t.landing.cta.title}
           </h2>
           <p className="text-gray-600 text-lg mb-10 max-w-2xl mx-auto">
-            Únete a las instituciones educativas que ya están revolucionando 
-            su operación con IA School. Agenda una demo personalizada.
+            {t.landing.cta.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/login"
               className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-[#1B4079] text-white font-bold rounded-xl hover:bg-[#4D7C8A] transition-all shadow-lg hover:shadow-xl hover:scale-105 text-lg"
             >
-              Solicitar Demo Gratis
+              {t.landing.cta.button}
               <ChevronRight className="w-5 h-5" />
             </Link>
             <a
               href="#funcionalidades"
               className="inline-flex items-center justify-center gap-2 px-10 py-5 border-2 border-[#1B4079] text-[#1B4079] font-bold rounded-xl hover:bg-[#1B4079]/5 transition-all text-lg"
             >
-              Conocer más
+              {t.landing.cta.learnMore}
             </a>
           </div>
         </div>
@@ -704,33 +590,32 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="md:col-span-2">
               <p className="text-gray-400 text-sm max-w-md">
-                El sistema operativo para colegios del futuro. Centraliza comunicación, 
-                gestión académica, pagos y análisis con IA en una sola plataforma.
+                {t.landing.footer.desc}
               </p>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4">Producto</h4>
+              <h4 className="text-white font-semibold mb-4">{t.landing.footer.product}</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#funcionalidades" className="hover:text-white transition-colors">Funcionalidades</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Precios</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Casos de éxito</a></li>
+                <li><a href="#funcionalidades" className="hover:text-white transition-colors">{t.landing.footer.features}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{t.landing.footer.pricing}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{t.landing.footer.caseStudies}</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4">Recursos</h4>
+              <h4 className="text-white font-semibold mb-4">{t.landing.footer.resources}</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Videos</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Soporte</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{t.landing.footer.blog}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{t.landing.footer.videos}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{t.landing.footer.support}</a></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-500 text-sm">
-              © 2026 IA School. Todos los derechos reservados.
+              {t.landing.footer.copyright}
             </p>
             <p className="text-gray-500 text-sm">
-              La tecnología que conecta familias y escuelas
+              {t.landing.footer.tagline}
             </p>
           </div>
         </div>

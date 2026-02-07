@@ -30,16 +30,123 @@ const esTranslations = {
     superAdmin: 'Super Admin', logout: 'Cerrar Sesión', login: 'Iniciar Sesión'
   },
   landing: {
-    hero: { title: 'La Plataforma Educativa del Futuro', subtitle: 'Conectamos familias, profesores y estudiantes en un ecosistema digital seguro e inteligente.', cta: 'Comenzar Ahora' },
-    features: {
-      title: 'Todo lo que necesitas',
-      communication: { title: 'Comunicación Instantánea', desc: 'Mensajes directos y grupales con profesores y familias.' },
-      payments: { title: 'Pagos Simplificados', desc: 'Gestión de colegiaturas y pagos sin comisiones.' },
-      academic: { title: 'Seguimiento Académico', desc: 'Calificaciones, tareas y asistencia en tiempo real.' },
-      security: { title: 'Seguridad Total', desc: 'Firma digital y verificación de documentos.' }
+    hero: { 
+      badge: 'Plataforma educativa con Inteligencia Artificial',
+      title: 'El sistema operativo para', 
+      titleHighlight: 'colegios del futuro',
+      subtitle: 'Una plataforma integral que conecta a directivos, profesores y familias para crear comunidades educativas más organizadas y eficientes.', 
+      cta: 'Solicitar Demo',
+      discover: 'Descubrir IA School'
     },
-    forFamilies: { title: 'Para Familias', desc: 'Mantente conectado con la educación de tus hijos.' },
-    forTeachers: { title: 'Para Profesores', desc: 'Herramientas digitales para potenciar tu enseñanza.' }
+    trust: {
+      title: 'Confiado por instituciones educativas líderes',
+      schools: '+50 colegios',
+      families: '+10,000 familias',
+      uptime: '99.9% uptime'
+    },
+    problem: {
+      title: '¿Tu colegio también vive este caos?',
+      desc: 'Información dispersa en WhatsApp, correos sin respuesta, pagos sin control, profesores abrumados y padres desinformados.',
+      solution: 'IA School lo resuelve todo.',
+      without: 'Sin IA School',
+      withoutDesc: '50+ grupos de WhatsApp, información perdida, padres confundidos, carga administrativa excesiva',
+      with: 'Con IA School',
+      withDesc: 'Una sola plataforma, comunicación clara, operación eficiente, familias satisfechas'
+    },
+    comparison: {
+      title: 'IA School vs. Otras Plataformas',
+      subtitle: 'Una comparación clara de por qué somos la mejor opción',
+      feature: 'Característica',
+      whyMatters: 'Por qué importa',
+      high: 'Alto', medium: 'Medio', low: 'Bajo', none: 'Nulo',
+      replaces: 'Sustituye', reduces: 'Reduce', dashboards: 'Dashboards', ai: 'IA', aiMetrics: 'IA + métricas'
+    },
+    stats: {
+      adminReduction: 'Reducción de carga administrativa',
+      communication: 'Mejor comunicación familia-escuela',
+      traceability: 'Trazabilidad en cobranza',
+      availability: 'Información disponible'
+    },
+    forFamilies: { 
+      badge: 'Para Familias',
+      title: 'Toda la información de tus hijos, en la palma de tu mano',
+      desc: 'Nunca más pierdas un aviso importante. Desde tareas hasta pagos, todo lo que necesitas saber sobre la educación de tus hijos está a un clic de distancia.',
+      feature1: 'Anuncios en tiempo real',
+      feature1Desc: 'Recibe notificaciones instantáneas de todo lo importante',
+      feature2: 'Seguimiento académico',
+      feature2Desc: 'Tareas, calificaciones y progreso siempre actualizados',
+      feature3: 'Comunicación directa',
+      feature3Desc: 'Chat profesional con profesores y administración',
+      feature4: 'Multi-hijo',
+      feature4Desc: 'Gestiona la información de todos tus hijos en una sola cuenta',
+      newAnnouncement: 'Nuevo anuncio',
+      meetingFriday: 'Reunión de padres - Viernes 3pm'
+    },
+    forTeachers: { 
+      badge: 'Para Profesores',
+      title: 'Más tiempo enseñando, menos tiempo administrando',
+      desc: 'Herramientas intuitivas que automatizan las tareas repetitivas y te permiten enfocarte en lo que realmente importa: la educación de tus alumnos.',
+      feature1: 'Gestión de tareas simplificada',
+      feature1Desc: 'Publica, recibe y califica en minutos',
+      feature2: 'Asistencia digital',
+      feature2Desc: 'Control de asistencia con reportes automáticos',
+      feature3: 'Comunicación profesional',
+      feature3Desc: 'Canales formales con familias, sin WhatsApp',
+      feature4: 'Métricas del grupo',
+      feature4Desc: 'Visualiza participación y rendimiento al instante',
+      tasksDelivered: 'tareas entregadas'
+    },
+    features: {
+      title: 'Todo lo que tu colegio necesita, en un solo lugar',
+      subtitle: 'Módulos integrados que trabajan juntos para crear una experiencia educativa excepcional',
+      communication: { title: 'Comunicación Inteligente', desc: 'Anuncios oficiales, mensajería directa, canales por grupo y notificaciones push. Comunicación clara y trazable.' },
+      academic: { title: 'Gestión Académica', desc: 'Tareas, entregas, calificaciones, asistencia y reportes. Seguimiento completo del progreso de cada alumno.' },
+      payments: { title: 'Control de Pagos', desc: 'Estados de cuenta, colegiaturas, recordatorios automáticos y reportes de cobranza con visibilidad total.' },
+      ai: { title: 'Inteligencia Artificial', desc: 'Bot asistente para familias, análisis de sentimiento en comunicaciones, alertas inteligentes y reportes automatizados.' },
+      calendar: { title: 'Calendario Unificado', desc: 'Eventos, entregas, reuniones y actividades. Un solo calendario para toda la comunidad escolar.' },
+      security: { title: 'Seguridad y Privacidad', desc: 'Datos protegidos, acceso por roles, cifrado de extremo a extremo y cumplimiento de normativas de privacidad.' }
+    },
+    blog: {
+      badge: 'Recursos y Blog',
+      title: 'Aprende más sobre transformación educativa',
+      subtitle: 'Videos, artículos y recursos para directivos y educadores que quieren llevar su colegio al siguiente nivel',
+      video: 'VIDEO', article: 'ARTÍCULO',
+      video1Title: 'Cómo eliminar WhatsApp de tu colegio',
+      video1Desc: 'Guía paso a paso para migrar la comunicación escolar a una plataforma profesional.',
+      watchVideo: 'Ver video',
+      article1Title: '5 señales de que tu colegio necesita digitalizarse',
+      article1Desc: 'Identifica si tu institución está lista para dar el salto a la transformación digital.',
+      readArticle: 'Leer artículo',
+      video2Title: 'Demo completo de IA School',
+      video2Desc: 'Recorre todas las funcionalidades de la plataforma en esta demostración guiada.',
+      viewAll: 'Ver todos los recursos'
+    },
+    testimonial: {
+      quote: 'IA School transformó completamente la forma en que nos comunicamos con las familias. Pasamos de tener 47 grupos de WhatsApp a',
+      highlight: 'una sola plataforma donde todo está organizado',
+      quote2: '. Los padres están más informados y nosotros más tranquilos.',
+      author: 'María Rodríguez',
+      role: 'Directora, Colegio Vermont School'
+    },
+    cta: {
+      title: '¿Listo para transformar tu colegio?',
+      subtitle: 'Únete a las instituciones educativas que ya están revolucionando su operación con IA School. Agenda una demo personalizada.',
+      button: 'Solicitar Demo Gratis',
+      learnMore: 'Conocer más'
+    },
+    footer: {
+      desc: 'El sistema operativo para colegios del futuro. Centraliza comunicación, gestión académica, pagos y análisis con IA en una sola plataforma.',
+      product: 'Producto',
+      features: 'Funcionalidades',
+      pricing: 'Precios',
+      caseStudies: 'Casos de éxito',
+      resources: 'Recursos',
+      blog: 'Blog',
+      videos: 'Videos',
+      support: 'Soporte',
+      copyright: '© 2026 IA School. Todos los derechos reservados.',
+      tagline: 'La tecnología que conecta familias y escuelas'
+    }
   },
   common: {
     loading: 'Cargando...', save: 'Guardar', cancel: 'Cancelar', delete: 'Eliminar', edit: 'Editar',
@@ -183,16 +290,123 @@ const enTranslations = {
     superAdmin: 'Super Admin', logout: 'Logout', login: 'Login'
   },
   landing: {
-    hero: { title: 'The Educational Platform of the Future', subtitle: 'Connecting families, teachers, and students in a secure and intelligent digital ecosystem.', cta: 'Get Started' },
-    features: {
-      title: 'Everything You Need',
-      communication: { title: 'Instant Communication', desc: 'Direct and group messages with teachers and families.' },
-      payments: { title: 'Simplified Payments', desc: 'Tuition and payment management without fees.' },
-      academic: { title: 'Academic Tracking', desc: 'Grades, assignments, and attendance in real-time.' },
-      security: { title: 'Total Security', desc: 'Digital signatures and document verification.' }
+    hero: { 
+      badge: 'Educational platform with Artificial Intelligence',
+      title: 'The operating system for', 
+      titleHighlight: 'schools of the future',
+      subtitle: 'A comprehensive platform that connects administrators, teachers, and families to create more organized and efficient educational communities.', 
+      cta: 'Request Demo',
+      discover: 'Discover IA School'
     },
-    forFamilies: { title: 'For Families', desc: 'Stay connected with your children\'s education.' },
-    forTeachers: { title: 'For Teachers', desc: 'Digital tools to enhance your teaching.' }
+    trust: {
+      title: 'Trusted by leading educational institutions',
+      schools: '+50 schools',
+      families: '+10,000 families',
+      uptime: '99.9% uptime'
+    },
+    problem: {
+      title: 'Does your school also experience this chaos?',
+      desc: 'Information scattered on WhatsApp, unanswered emails, uncontrolled payments, overwhelmed teachers and uninformed parents.',
+      solution: 'IA School solves everything.',
+      without: 'Without IA School',
+      withoutDesc: '50+ WhatsApp groups, lost information, confused parents, excessive administrative burden',
+      with: 'With IA School',
+      withDesc: 'One platform, clear communication, efficient operation, satisfied families'
+    },
+    comparison: {
+      title: 'IA School vs. Other Platforms',
+      subtitle: 'A clear comparison of why we are the best option',
+      feature: 'Feature',
+      whyMatters: 'Why it matters',
+      high: 'High', medium: 'Medium', low: 'Low', none: 'None',
+      replaces: 'Replaces', reduces: 'Reduces', dashboards: 'Dashboards', ai: 'AI', aiMetrics: 'AI + metrics'
+    },
+    stats: {
+      adminReduction: 'Administrative burden reduction',
+      communication: 'Better family-school communication',
+      traceability: 'Payment traceability',
+      availability: 'Information available'
+    },
+    forFamilies: { 
+      badge: 'For Families',
+      title: 'All your children\'s information, in the palm of your hand',
+      desc: 'Never miss an important notice again. From homework to payments, everything you need to know about your children\'s education is just a click away.',
+      feature1: 'Real-time announcements',
+      feature1Desc: 'Receive instant notifications of everything important',
+      feature2: 'Academic tracking',
+      feature2Desc: 'Tasks, grades, and progress always updated',
+      feature3: 'Direct communication',
+      feature3Desc: 'Professional chat with teachers and administration',
+      feature4: 'Multi-child',
+      feature4Desc: 'Manage all your children\'s information in one account',
+      newAnnouncement: 'New announcement',
+      meetingFriday: 'Parent meeting - Friday 3pm'
+    },
+    forTeachers: { 
+      badge: 'For Teachers',
+      title: 'More time teaching, less time managing',
+      desc: 'Intuitive tools that automate repetitive tasks and allow you to focus on what really matters: your students\' education.',
+      feature1: 'Simplified task management',
+      feature1Desc: 'Post, receive, and grade in minutes',
+      feature2: 'Digital attendance',
+      feature2Desc: 'Attendance control with automatic reports',
+      feature3: 'Professional communication',
+      feature3Desc: 'Formal channels with families, no WhatsApp',
+      feature4: 'Group metrics',
+      feature4Desc: 'View participation and performance instantly',
+      tasksDelivered: 'tasks delivered'
+    },
+    features: {
+      title: 'Everything your school needs, in one place',
+      subtitle: 'Integrated modules that work together to create an exceptional educational experience',
+      communication: { title: 'Smart Communication', desc: 'Official announcements, direct messaging, group channels, and push notifications. Clear and traceable communication.' },
+      academic: { title: 'Academic Management', desc: 'Tasks, submissions, grades, attendance, and reports. Complete tracking of each student\'s progress.' },
+      payments: { title: 'Payment Control', desc: 'Account statements, tuition, automatic reminders, and collection reports with full visibility.' },
+      ai: { title: 'Artificial Intelligence', desc: 'Assistant bot for families, sentiment analysis in communications, smart alerts, and automated reports.' },
+      calendar: { title: 'Unified Calendar', desc: 'Events, deadlines, meetings, and activities. One calendar for the entire school community.' },
+      security: { title: 'Security and Privacy', desc: 'Protected data, role-based access, end-to-end encryption, and privacy compliance.' }
+    },
+    blog: {
+      badge: 'Resources and Blog',
+      title: 'Learn more about educational transformation',
+      subtitle: 'Videos, articles, and resources for administrators and educators who want to take their school to the next level',
+      video: 'VIDEO', article: 'ARTICLE',
+      video1Title: 'How to eliminate WhatsApp from your school',
+      video1Desc: 'Step-by-step guide to migrate school communication to a professional platform.',
+      watchVideo: 'Watch video',
+      article1Title: '5 signs your school needs to digitize',
+      article1Desc: 'Identify if your institution is ready to make the leap to digital transformation.',
+      readArticle: 'Read article',
+      video2Title: 'Complete IA School demo',
+      video2Desc: 'Walk through all platform features in this guided demonstration.',
+      viewAll: 'View all resources'
+    },
+    testimonial: {
+      quote: 'IA School completely transformed how we communicate with families. We went from having 47 WhatsApp groups to',
+      highlight: 'one platform where everything is organized',
+      quote2: '. Parents are more informed and we are more at ease.',
+      author: 'María Rodríguez',
+      role: 'Director, Vermont School'
+    },
+    cta: {
+      title: 'Ready to transform your school?',
+      subtitle: 'Join the educational institutions that are already revolutionizing their operations with IA School. Schedule a personalized demo.',
+      button: 'Request Free Demo',
+      learnMore: 'Learn more'
+    },
+    footer: {
+      desc: 'The operating system for schools of the future. Centralize communication, academic management, payments, and AI analytics in one platform.',
+      product: 'Product',
+      features: 'Features',
+      pricing: 'Pricing',
+      caseStudies: 'Case Studies',
+      resources: 'Resources',
+      blog: 'Blog',
+      videos: 'Videos',
+      support: 'Support',
+      copyright: '© 2026 IA School. All rights reserved.',
+      tagline: 'The technology that connects families and schools'
+    }
   },
   common: {
     loading: 'Loading...', save: 'Save', cancel: 'Cancel', delete: 'Delete', edit: 'Edit',
@@ -336,16 +550,18 @@ const ptTranslations = {
     superAdmin: 'Super Admin', logout: 'Sair', login: 'Entrar'
   },
   landing: {
-    hero: { title: 'A Plataforma Educacional do Futuro', subtitle: 'Conectando famílias, professores e alunos em um ecossistema digital seguro e inteligente.', cta: 'Começar Agora' },
-    features: {
-      title: 'Tudo que Você Precisa',
-      communication: { title: 'Comunicação Instantânea', desc: 'Mensagens diretas e em grupo com professores e famílias.' },
-      payments: { title: 'Pagamentos Simplificados', desc: 'Gestão de mensalidades e pagamentos sem taxas.' },
-      academic: { title: 'Acompanhamento Acadêmico', desc: 'Notas, tarefas e frequência em tempo real.' },
-      security: { title: 'Segurança Total', desc: 'Assinatura digital e verificação de documentos.' }
-    },
-    forFamilies: { title: 'Para Famílias', desc: 'Mantenha-se conectado com a educação dos seus filhos.' },
-    forTeachers: { title: 'Para Professores', desc: 'Ferramentas digitais para potencializar seu ensino.' }
+    hero: { badge: 'Plataforma educacional com Inteligência Artificial', title: 'O sistema operacional para', titleHighlight: 'escolas do futuro', subtitle: 'Uma plataforma completa que conecta diretores, professores e famílias para criar comunidades educacionais mais organizadas e eficientes.', cta: 'Solicitar Demo', discover: 'Descobrir IA School' },
+    trust: { title: 'Confiado por instituições educacionais líderes', schools: '+50 escolas', families: '+10.000 famílias', uptime: '99.9% uptime' },
+    problem: { title: 'Sua escola também vive esse caos?', desc: 'Informações espalhadas no WhatsApp, emails sem resposta, pagamentos descontrolados, professores sobrecarregados e pais desinformados.', solution: 'IA School resolve tudo.', without: 'Sem IA School', withoutDesc: '50+ grupos de WhatsApp, informações perdidas, pais confusos, carga administrativa excessiva', with: 'Com IA School', withDesc: 'Uma só plataforma, comunicação clara, operação eficiente, famílias satisfeitas' },
+    comparison: { title: 'IA School vs. Outras Plataformas', subtitle: 'Uma comparação clara de por que somos a melhor opção', feature: 'Recurso', whyMatters: 'Por que importa', high: 'Alto', medium: 'Médio', low: 'Baixo', none: 'Nenhum', replaces: 'Substitui', reduces: 'Reduz', dashboards: 'Dashboards', ai: 'IA', aiMetrics: 'IA + métricas' },
+    stats: { adminReduction: 'Redução de carga administrativa', communication: 'Melhor comunicação família-escola', traceability: 'Rastreabilidade em cobranças', availability: 'Informação disponível' },
+    forFamilies: { badge: 'Para Famílias', title: 'Todas as informações dos seus filhos, na palma da mão', desc: 'Nunca mais perca um aviso importante. De tarefas a pagamentos, tudo que você precisa saber sobre a educação dos seus filhos está a um clique de distância.', feature1: 'Avisos em tempo real', feature1Desc: 'Receba notificações instantâneas de tudo importante', feature2: 'Acompanhamento acadêmico', feature2Desc: 'Tarefas, notas e progresso sempre atualizados', feature3: 'Comunicação direta', feature3Desc: 'Chat profissional com professores e administração', feature4: 'Multi-filhos', feature4Desc: 'Gerencie as informações de todos os filhos em uma só conta', newAnnouncement: 'Novo aviso', meetingFriday: 'Reunião de pais - Sexta 15h' },
+    forTeachers: { badge: 'Para Professores', title: 'Mais tempo ensinando, menos tempo administrando', desc: 'Ferramentas intuitivas que automatizam tarefas repetitivas e permitem que você se concentre no que realmente importa: a educação dos seus alunos.', feature1: 'Gestão de tarefas simplificada', feature1Desc: 'Publique, receba e avalie em minutos', feature2: 'Frequência digital', feature2Desc: 'Controle de frequência com relatórios automáticos', feature3: 'Comunicação profissional', feature3Desc: 'Canais formais com famílias, sem WhatsApp', feature4: 'Métricas da turma', feature4Desc: 'Visualize participação e desempenho instantaneamente', tasksDelivered: 'tarefas entregues' },
+    features: { title: 'Tudo que sua escola precisa, em um só lugar', subtitle: 'Módulos integrados que trabalham juntos para criar uma experiência educacional excepcional', communication: { title: 'Comunicação Inteligente', desc: 'Avisos oficiais, mensagens diretas, canais por grupo e notificações push. Comunicação clara e rastreável.' }, academic: { title: 'Gestão Acadêmica', desc: 'Tarefas, entregas, notas, frequência e relatórios. Acompanhamento completo do progresso de cada aluno.' }, payments: { title: 'Controle de Pagamentos', desc: 'Extratos, mensalidades, lembretes automáticos e relatórios de cobrança com visibilidade total.' }, ai: { title: 'Inteligência Artificial', desc: 'Bot assistente para famílias, análise de sentimento, alertas inteligentes e relatórios automatizados.' }, calendar: { title: 'Calendário Unificado', desc: 'Eventos, entregas, reuniões e atividades. Um só calendário para toda a comunidade escolar.' }, security: { title: 'Segurança e Privacidade', desc: 'Dados protegidos, acesso por funções, criptografia ponta a ponta e conformidade com privacidade.' } },
+    blog: { badge: 'Recursos e Blog', title: 'Saiba mais sobre transformação educacional', subtitle: 'Vídeos, artigos e recursos para diretores e educadores que querem levar sua escola ao próximo nível', video: 'VÍDEO', article: 'ARTIGO', video1Title: 'Como eliminar o WhatsApp da sua escola', video1Desc: 'Guia passo a passo para migrar a comunicação escolar para uma plataforma profissional.', watchVideo: 'Ver vídeo', article1Title: '5 sinais de que sua escola precisa se digitalizar', article1Desc: 'Identifique se sua instituição está pronta para a transformação digital.', readArticle: 'Ler artigo', video2Title: 'Demo completo do IA School', video2Desc: 'Conheça todas as funcionalidades da plataforma nesta demonstração guiada.', viewAll: 'Ver todos os recursos' },
+    testimonial: { quote: 'IA School transformou completamente a forma como nos comunicamos com as famílias. Passamos de 47 grupos de WhatsApp para', highlight: 'uma única plataforma onde tudo está organizado', quote2: '. Os pais estão mais informados e nós mais tranquilos.', author: 'María Rodríguez', role: 'Diretora, Colégio Vermont School' },
+    cta: { title: 'Pronto para transformar sua escola?', subtitle: 'Junte-se às instituições educacionais que já estão revolucionando suas operações com IA School. Agende uma demo personalizada.', button: 'Solicitar Demo Grátis', learnMore: 'Saiba mais' },
+    footer: { desc: 'O sistema operacional para escolas do futuro. Centralize comunicação, gestão acadêmica, pagamentos e análises com IA em uma só plataforma.', product: 'Produto', features: 'Funcionalidades', pricing: 'Preços', caseStudies: 'Casos de sucesso', resources: 'Recursos', blog: 'Blog', videos: 'Vídeos', support: 'Suporte', copyright: '© 2026 IA School. Todos os direitos reservados.', tagline: 'A tecnologia que conecta famílias e escolas' }
   },
   common: {
     loading: 'Carregando...', save: 'Salvar', cancel: 'Cancelar', delete: 'Excluir', edit: 'Editar',
@@ -489,16 +705,18 @@ const deTranslations = {
     superAdmin: 'Super Admin', logout: 'Abmelden', login: 'Anmelden'
   },
   landing: {
-    hero: { title: 'Die Bildungsplattform der Zukunft', subtitle: 'Wir verbinden Familien, Lehrer und Schüler in einem sicheren und intelligenten digitalen Ökosystem.', cta: 'Jetzt Starten' },
-    features: {
-      title: 'Alles was Sie brauchen',
-      communication: { title: 'Sofortige Kommunikation', desc: 'Direkte und Gruppennachrichten mit Lehrern und Familien.' },
-      payments: { title: 'Vereinfachte Zahlungen', desc: 'Gebühren- und Zahlungsverwaltung ohne Provisionen.' },
-      academic: { title: 'Akademische Verfolgung', desc: 'Noten, Aufgaben und Anwesenheit in Echtzeit.' },
-      security: { title: 'Vollständige Sicherheit', desc: 'Digitale Signaturen und Dokumentenverifizierung.' }
-    },
-    forFamilies: { title: 'Für Familien', desc: 'Bleiben Sie mit der Bildung Ihrer Kinder verbunden.' },
-    forTeachers: { title: 'Für Lehrer', desc: 'Digitale Werkzeuge zur Verbesserung Ihres Unterrichts.' }
+    hero: { badge: 'Bildungsplattform mit Künstlicher Intelligenz', title: 'Das Betriebssystem für', titleHighlight: 'Schulen der Zukunft', subtitle: 'Eine umfassende Plattform, die Schulleiter, Lehrer und Familien verbindet, um besser organisierte und effizientere Bildungsgemeinschaften zu schaffen.', cta: 'Demo Anfragen', discover: 'IA School Entdecken' },
+    trust: { title: 'Vertraut von führenden Bildungseinrichtungen', schools: '+50 Schulen', families: '+10.000 Familien', uptime: '99.9% Verfügbarkeit' },
+    problem: { title: 'Erlebt Ihre Schule auch dieses Chaos?', desc: 'Informationen verstreut auf WhatsApp, unbeantwortete E-Mails, unkontrollierte Zahlungen, überforderte Lehrer und uninformierte Eltern.', solution: 'IA School löst alles.', without: 'Ohne IA School', withoutDesc: '50+ WhatsApp-Gruppen, verlorene Informationen, verwirrte Eltern, übermäßige Verwaltungslast', with: 'Mit IA School', withDesc: 'Eine Plattform, klare Kommunikation, effizienter Betrieb, zufriedene Familien' },
+    comparison: { title: 'IA School vs. Andere Plattformen', subtitle: 'Ein klarer Vergleich, warum wir die beste Wahl sind', feature: 'Funktion', whyMatters: 'Warum es wichtig ist', high: 'Hoch', medium: 'Mittel', low: 'Niedrig', none: 'Keine', replaces: 'Ersetzt', reduces: 'Reduziert', dashboards: 'Dashboards', ai: 'KI', aiMetrics: 'KI + Metriken' },
+    stats: { adminReduction: 'Reduzierung der Verwaltungslast', communication: 'Bessere Familien-Schul-Kommunikation', traceability: 'Zahlungsnachverfolgbarkeit', availability: 'Informationen verfügbar' },
+    forFamilies: { badge: 'Für Familien', title: 'Alle Informationen Ihrer Kinder, in Ihrer Hand', desc: 'Verpassen Sie nie wieder eine wichtige Mitteilung. Von Hausaufgaben bis zu Zahlungen, alles was Sie über die Bildung Ihrer Kinder wissen müssen, ist nur einen Klick entfernt.', feature1: 'Echtzeit-Ankündigungen', feature1Desc: 'Erhalten Sie sofortige Benachrichtigungen über alles Wichtige', feature2: 'Akademische Verfolgung', feature2Desc: 'Aufgaben, Noten und Fortschritt immer aktuell', feature3: 'Direkte Kommunikation', feature3Desc: 'Professioneller Chat mit Lehrern und Verwaltung', feature4: 'Multi-Kind', feature4Desc: 'Verwalten Sie alle Informationen Ihrer Kinder in einem Konto', newAnnouncement: 'Neue Ankündigung', meetingFriday: 'Elternversammlung - Freitag 15 Uhr' },
+    forTeachers: { badge: 'Für Lehrer', title: 'Mehr Zeit zum Unterrichten, weniger Zeit zum Verwalten', desc: 'Intuitive Werkzeuge, die sich wiederholende Aufgaben automatisieren und Ihnen ermöglichen, sich auf das Wesentliche zu konzentrieren: die Bildung Ihrer Schüler.', feature1: 'Vereinfachte Aufgabenverwaltung', feature1Desc: 'Veröffentlichen, empfangen und bewerten Sie in Minuten', feature2: 'Digitale Anwesenheit', feature2Desc: 'Anwesenheitskontrolle mit automatischen Berichten', feature3: 'Professionelle Kommunikation', feature3Desc: 'Formelle Kanäle mit Familien, ohne WhatsApp', feature4: 'Gruppenmetriken', feature4Desc: 'Sehen Sie Teilnahme und Leistung sofort', tasksDelivered: 'Aufgaben abgegeben' },
+    features: { title: 'Alles was Ihre Schule braucht, an einem Ort', subtitle: 'Integrierte Module, die zusammenarbeiten, um ein außergewöhnliches Bildungserlebnis zu schaffen', communication: { title: 'Intelligente Kommunikation', desc: 'Offizielle Ankündigungen, Direktnachrichten, Gruppenkanäle und Push-Benachrichtigungen. Klare und nachverfolgbare Kommunikation.' }, academic: { title: 'Akademische Verwaltung', desc: 'Aufgaben, Einreichungen, Noten, Anwesenheit und Berichte. Vollständige Verfolgung des Fortschritts jedes Schülers.' }, payments: { title: 'Zahlungskontrolle', desc: 'Kontoauszüge, Schulgebühren, automatische Erinnerungen und Inkassoberichte mit voller Transparenz.' }, ai: { title: 'Künstliche Intelligenz', desc: 'Assistenz-Bot für Familien, Stimmungsanalyse in der Kommunikation, intelligente Alarme und automatisierte Berichte.' }, calendar: { title: 'Einheitlicher Kalender', desc: 'Veranstaltungen, Fristen, Meetings und Aktivitäten. Ein Kalender für die gesamte Schulgemeinschaft.' }, security: { title: 'Sicherheit und Datenschutz', desc: 'Geschützte Daten, rollenbasierter Zugang, Ende-zu-Ende-Verschlüsselung und Datenschutz-Compliance.' } },
+    blog: { badge: 'Ressourcen und Blog', title: 'Erfahren Sie mehr über Bildungstransformation', subtitle: 'Videos, Artikel und Ressourcen für Schulleiter und Pädagogen, die ihre Schule auf die nächste Stufe bringen möchten', video: 'VIDEO', article: 'ARTIKEL', video1Title: 'Wie Sie WhatsApp aus Ihrer Schule eliminieren', video1Desc: 'Schritt-für-Schritt-Anleitung zur Migration der Schulkommunikation auf eine professionelle Plattform.', watchVideo: 'Video ansehen', article1Title: '5 Zeichen, dass Ihre Schule digitalisieren muss', article1Desc: 'Erkennen Sie, ob Ihre Institution bereit für die digitale Transformation ist.', readArticle: 'Artikel lesen', video2Title: 'Vollständige IA School Demo', video2Desc: 'Erkunden Sie alle Plattformfunktionen in dieser geführten Demonstration.', viewAll: 'Alle Ressourcen anzeigen' },
+    testimonial: { quote: 'IA School hat die Art und Weise, wie wir mit Familien kommunizieren, vollständig verändert. Wir sind von 47 WhatsApp-Gruppen zu', highlight: 'einer Plattform, auf der alles organisiert ist', quote2: ' gewechselt. Eltern sind besser informiert und wir sind entspannter.', author: 'María Rodríguez', role: 'Direktorin, Vermont School' },
+    cta: { title: 'Bereit, Ihre Schule zu transformieren?', subtitle: 'Schließen Sie sich den Bildungseinrichtungen an, die bereits ihre Abläufe mit IA School revolutionieren. Vereinbaren Sie eine personalisierte Demo.', button: 'Kostenlose Demo Anfragen', learnMore: 'Mehr erfahren' },
+    footer: { desc: 'Das Betriebssystem für Schulen der Zukunft. Zentralisieren Sie Kommunikation, akademische Verwaltung, Zahlungen und KI-Analysen in einer Plattform.', product: 'Produkt', features: 'Funktionen', pricing: 'Preise', caseStudies: 'Fallstudien', resources: 'Ressourcen', blog: 'Blog', videos: 'Videos', support: 'Support', copyright: '© 2026 IA School. Alle Rechte vorbehalten.', tagline: 'Die Technologie, die Familien und Schulen verbindet' }
   },
   common: {
     loading: 'Laden...', save: 'Speichern', cancel: 'Abbrechen', delete: 'Löschen', edit: 'Bearbeiten',
@@ -642,16 +860,18 @@ const frTranslations = {
     superAdmin: 'Super Admin', logout: 'Déconnexion', login: 'Connexion'
   },
   landing: {
-    hero: { title: 'La Plateforme Éducative du Futur', subtitle: 'Nous connectons les familles, les enseignants et les étudiants dans un écosystème numérique sécurisé et intelligent.', cta: 'Commencer' },
-    features: {
-      title: 'Tout ce dont vous avez besoin',
-      communication: { title: 'Communication Instantanée', desc: 'Messages directs et de groupe avec les enseignants et les familles.' },
-      payments: { title: 'Paiements Simplifiés', desc: 'Gestion des frais de scolarité sans commissions.' },
-      academic: { title: 'Suivi Académique', desc: 'Notes, devoirs et présence en temps réel.' },
-      security: { title: 'Sécurité Totale', desc: 'Signatures numériques et vérification des documents.' }
-    },
-    forFamilies: { title: 'Pour les Familles', desc: 'Restez connecté à l\'éducation de vos enfants.' },
-    forTeachers: { title: 'Pour les Enseignants', desc: 'Outils numériques pour améliorer votre enseignement.' }
+    hero: { badge: 'Plateforme éducative avec Intelligence Artificielle', title: 'Le système d\'exploitation pour', titleHighlight: 'les écoles du futur', subtitle: 'Une plateforme complète qui connecte directeurs, enseignants et familles pour créer des communautés éducatives plus organisées et efficaces.', cta: 'Demander une Démo', discover: 'Découvrir IA School' },
+    trust: { title: 'Fait confiance par les institutions éducatives leaders', schools: '+50 écoles', families: '+10 000 familles', uptime: '99.9% disponibilité' },
+    problem: { title: 'Votre école vit-elle aussi ce chaos?', desc: 'Informations éparpillées sur WhatsApp, emails sans réponse, paiements incontrôlés, enseignants débordés et parents mal informés.', solution: 'IA School résout tout.', without: 'Sans IA School', withoutDesc: '50+ groupes WhatsApp, informations perdues, parents confus, charge administrative excessive', with: 'Avec IA School', withDesc: 'Une seule plateforme, communication claire, opération efficace, familles satisfaites' },
+    comparison: { title: 'IA School vs. Autres Plateformes', subtitle: 'Une comparaison claire de pourquoi nous sommes la meilleure option', feature: 'Fonctionnalité', whyMatters: 'Pourquoi c\'est important', high: 'Élevé', medium: 'Moyen', low: 'Faible', none: 'Aucun', replaces: 'Remplace', reduces: 'Réduit', dashboards: 'Tableaux de bord', ai: 'IA', aiMetrics: 'IA + métriques' },
+    stats: { adminReduction: 'Réduction de la charge administrative', communication: 'Meilleure communication famille-école', traceability: 'Traçabilité des paiements', availability: 'Information disponible' },
+    forFamilies: { badge: 'Pour les Familles', title: 'Toutes les informations de vos enfants, dans la paume de votre main', desc: 'Ne manquez plus jamais un avis important. Des devoirs aux paiements, tout ce que vous devez savoir sur l\'éducation de vos enfants est à un clic.', feature1: 'Annonces en temps réel', feature1Desc: 'Recevez des notifications instantanées de tout ce qui est important', feature2: 'Suivi académique', feature2Desc: 'Devoirs, notes et progrès toujours à jour', feature3: 'Communication directe', feature3Desc: 'Chat professionnel avec les enseignants et l\'administration', feature4: 'Multi-enfants', feature4Desc: 'Gérez les informations de tous vos enfants dans un seul compte', newAnnouncement: 'Nouvelle annonce', meetingFriday: 'Réunion des parents - Vendredi 15h' },
+    forTeachers: { badge: 'Pour les Enseignants', title: 'Plus de temps pour enseigner, moins pour administrer', desc: 'Des outils intuitifs qui automatisent les tâches répétitives et vous permettent de vous concentrer sur l\'essentiel: l\'éducation de vos élèves.', feature1: 'Gestion simplifiée des devoirs', feature1Desc: 'Publiez, recevez et notez en quelques minutes', feature2: 'Présence numérique', feature2Desc: 'Contrôle des présences avec rapports automatiques', feature3: 'Communication professionnelle', feature3Desc: 'Canaux formels avec les familles, sans WhatsApp', feature4: 'Métriques de groupe', feature4Desc: 'Visualisez participation et performance instantanément', tasksDelivered: 'devoirs rendus' },
+    features: { title: 'Tout ce dont votre école a besoin, en un seul endroit', subtitle: 'Modules intégrés qui travaillent ensemble pour créer une expérience éducative exceptionnelle', communication: { title: 'Communication Intelligente', desc: 'Annonces officielles, messagerie directe, canaux de groupe et notifications push. Communication claire et traçable.' }, academic: { title: 'Gestion Académique', desc: 'Devoirs, soumissions, notes, présence et rapports. Suivi complet du progrès de chaque élève.' }, payments: { title: 'Contrôle des Paiements', desc: 'Relevés de compte, frais de scolarité, rappels automatiques et rapports de recouvrement avec visibilité totale.' }, ai: { title: 'Intelligence Artificielle', desc: 'Bot assistant pour les familles, analyse des sentiments, alertes intelligentes et rapports automatisés.' }, calendar: { title: 'Calendrier Unifié', desc: 'Événements, échéances, réunions et activités. Un seul calendrier pour toute la communauté scolaire.' }, security: { title: 'Sécurité et Confidentialité', desc: 'Données protégées, accès basé sur les rôles, chiffrement de bout en bout et conformité aux règles de confidentialité.' } },
+    blog: { badge: 'Ressources et Blog', title: 'En savoir plus sur la transformation éducative', subtitle: 'Vidéos, articles et ressources pour les directeurs et éducateurs qui veulent faire passer leur école au niveau supérieur', video: 'VIDÉO', article: 'ARTICLE', video1Title: 'Comment éliminer WhatsApp de votre école', video1Desc: 'Guide étape par étape pour migrer la communication scolaire vers une plateforme professionnelle.', watchVideo: 'Voir la vidéo', article1Title: '5 signes que votre école doit se digitaliser', article1Desc: 'Identifiez si votre institution est prête pour la transformation numérique.', readArticle: 'Lire l\'article', video2Title: 'Démo complète d\'IA School', video2Desc: 'Parcourez toutes les fonctionnalités de la plateforme dans cette démonstration guidée.', viewAll: 'Voir toutes les ressources' },
+    testimonial: { quote: 'IA School a complètement transformé notre façon de communiquer avec les familles. Nous sommes passés de 47 groupes WhatsApp à', highlight: 'une seule plateforme où tout est organisé', quote2: '. Les parents sont mieux informés et nous sommes plus sereins.', author: 'María Rodríguez', role: 'Directrice, École Vermont' },
+    cta: { title: 'Prêt à transformer votre école?', subtitle: 'Rejoignez les institutions éducatives qui révolutionnent déjà leurs opérations avec IA School. Planifiez une démo personnalisée.', button: 'Demander une Démo Gratuite', learnMore: 'En savoir plus' },
+    footer: { desc: 'Le système d\'exploitation pour les écoles du futur. Centralisez communication, gestion académique, paiements et analyses IA en une seule plateforme.', product: 'Produit', features: 'Fonctionnalités', pricing: 'Tarifs', caseStudies: 'Études de cas', resources: 'Ressources', blog: 'Blog', videos: 'Vidéos', support: 'Support', copyright: '© 2026 IA School. Tous droits réservés.', tagline: 'La technologie qui connecte familles et écoles' }
   },
   common: {
     loading: 'Chargement...', save: 'Enregistrer', cancel: 'Annuler', delete: 'Supprimer', edit: 'Modifier',
@@ -795,16 +1015,18 @@ const jaTranslations = {
     superAdmin: 'スーパー管理者', logout: 'ログアウト', login: 'ログイン'
   },
   landing: {
-    hero: { title: '未来の教育プラットフォーム', subtitle: '安全でインテリジェントなデジタルエコシステムで、家族、教師、生徒をつなぎます。', cta: '今すぐ始める' },
-    features: {
-      title: '必要なものすべて',
-      communication: { title: 'インスタントコミュニケーション', desc: '教師や家族との直接メッセージとグループメッセージ。' },
-      payments: { title: '簡単な支払い', desc: '手数料なしの授業料と支払い管理。' },
-      academic: { title: '学業追跡', desc: 'リアルタイムの成績、課題、出席。' },
-      security: { title: '完全なセキュリティ', desc: 'デジタル署名と書類検証。' }
-    },
-    forFamilies: { title: 'ご家族向け', desc: 'お子様の教育とつながりましょう。' },
-    forTeachers: { title: '教師向け', desc: '教育を強化するデジタルツール。' }
+    hero: { badge: '人工知能を搭載した教育プラットフォーム', title: 'オペレーティングシステム', titleHighlight: '未来の学校のための', subtitle: '校長、教師、家族をつなぎ、より組織的で効率的な教育コミュニティを作る包括的なプラットフォーム。', cta: 'デモをリクエスト', discover: 'IA Schoolを発見' },
+    trust: { title: '主要な教育機関から信頼されています', schools: '50校以上', families: '10,000家族以上', uptime: '99.9%稼働' },
+    problem: { title: 'あなたの学校もこの混乱を経験していますか？', desc: 'WhatsAppに散らばった情報、返信のないメール、管理されていない支払い、疲弊した教師、情報を得ていない保護者。', solution: 'IA Schoolがすべてを解決します。', without: 'IA Schoolなし', withoutDesc: '50以上のWhatsAppグループ、失われた情報、混乱した保護者、過度の管理負担', with: 'IA Schoolあり', withDesc: '一つのプラットフォーム、明確なコミュニケーション、効率的な運営、満足した家族' },
+    comparison: { title: 'IA School vs. 他のプラットフォーム', subtitle: '私たちが最良の選択である理由の明確な比較', feature: '機能', whyMatters: 'なぜ重要か', high: '高い', medium: '中程度', low: '低い', none: 'なし', replaces: '置き換え', reduces: '削減', dashboards: 'ダッシュボード', ai: 'AI', aiMetrics: 'AI + メトリクス' },
+    stats: { adminReduction: '管理負担の削減', communication: '家庭と学校のコミュニケーション改善', traceability: '支払いのトレーサビリティ', availability: '情報の可用性' },
+    forFamilies: { badge: 'ご家族向け', title: 'お子様の情報すべてを手のひらに', desc: '重要なお知らせを見逃すことはもうありません。宿題から支払いまで、お子様の教育について知る必要があるすべてがワンクリックで。', feature1: 'リアルタイムのお知らせ', feature1Desc: '重要な情報の即時通知を受け取る', feature2: '学業追跡', feature2Desc: '課題、成績、進捗状況が常に最新', feature3: '直接コミュニケーション', feature3Desc: '教師や管理者とのプロフェッショナルなチャット', feature4: '複数のお子様', feature4Desc: 'すべてのお子様の情報を一つのアカウントで管理', newAnnouncement: '新しいお知らせ', meetingFriday: '保護者会 - 金曜日午後3時' },
+    forTeachers: { badge: '教師向け', title: '教えることにより多くの時間を、管理にはより少なく', desc: '繰り返しの作業を自動化し、本当に重要なこと、つまり生徒の教育に集中できるようにする直感的なツール。', feature1: '簡素化された課題管理', feature1Desc: '数分で投稿、受け取り、評価', feature2: 'デジタル出席', feature2Desc: '自動レポート付きの出席管理', feature3: 'プロフェッショナルなコミュニケーション', feature3Desc: 'WhatsAppなしで家族との正式なチャンネル', feature4: 'グループメトリクス', feature4Desc: '参加とパフォーマンスを即座に可視化', tasksDelivered: '課題提出済み' },
+    features: { title: 'あなたの学校に必要なすべてが一か所に', subtitle: '卓越した教育体験を生み出すために連携する統合モジュール', communication: { title: 'スマートコミュニケーション', desc: '公式のお知らせ、ダイレクトメッセージ、グループチャンネル、プッシュ通知。明確で追跡可能なコミュニケーション。' }, academic: { title: '学業管理', desc: '課題、提出、成績、出席、レポート。各生徒の進捗の完全な追跡。' }, payments: { title: '支払い管理', desc: '明細書、授業料、自動リマインダー、完全な可視性を持つ回収レポート。' }, ai: { title: '人工知能', desc: '家族向けアシスタントボット、コミュニケーションの感情分析、スマートアラート、自動レポート。' }, calendar: { title: '統一カレンダー', desc: 'イベント、締め切り、会議、活動。学校コミュニティ全体のための一つのカレンダー。' }, security: { title: 'セキュリティとプライバシー', desc: '保護されたデータ、役割ベースのアクセス、エンドツーエンド暗号化、プライバシーコンプライアンス。' } },
+    blog: { badge: 'リソースとブログ', title: '教育変革について詳しく学ぶ', subtitle: '学校を次のレベルに引き上げたい管理者と教育者のためのビデオ、記事、リソース', video: 'ビデオ', article: '記事', video1Title: '学校からWhatsAppを排除する方法', video1Desc: '学校コミュニケーションをプロフェッショナルなプラットフォームに移行するためのステップバイステップガイド。', watchVideo: 'ビデオを見る', article1Title: '学校がデジタル化すべき5つの兆候', article1Desc: 'あなたの機関がデジタル変革の準備ができているかを特定します。', readArticle: '記事を読む', video2Title: 'IA School完全デモ', video2Desc: 'このガイド付きデモンストレーションですべてのプラットフォーム機能をご覧ください。', viewAll: 'すべてのリソースを見る' },
+    testimonial: { quote: 'IA Schoolは家族とのコミュニケーション方法を完全に変えました。47のWhatsAppグループから', highlight: 'すべてが整理された一つのプラットフォーム', quote2: 'に移行しました。保護者はより情報を得ており、私たちはより安心しています。', author: 'マリア・ロドリゲス', role: 'バーモントスクール校長' },
+    cta: { title: '学校を変革する準備はできていますか？', subtitle: 'すでにIA Schoolで運営を革新している教育機関に参加しましょう。パーソナライズされたデモを予約してください。', button: '無料デモをリクエスト', learnMore: '詳しく見る' },
+    footer: { desc: '未来の学校のためのオペレーティングシステム。コミュニケーション、学業管理、支払い、AI分析を一つのプラットフォームに集約。', product: '製品', features: '機能', pricing: '料金', caseStudies: '事例', resources: 'リソース', blog: 'ブログ', videos: 'ビデオ', support: 'サポート', copyright: '© 2026 IA School. 全著作権所有。', tagline: '家族と学校をつなぐテクノロジー' }
   },
   common: {
     loading: '読み込み中...', save: '保存', cancel: 'キャンセル', delete: '削除', edit: '編集',
