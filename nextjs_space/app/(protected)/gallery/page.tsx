@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import {
   Image as ImageIcon, Plus, Upload, X, Calendar, Users, Eye, EyeOff,
   Loader2, ChevronLeft, ChevronRight, Download, Tag, Trash2, User,
-  Camera, FolderOpen, Search, Globe, Lock, UserCheck
+  Camera, FolderOpen, Search, Globe, Lock, UserCheck, Sparkles, Settings, Brain
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,6 +70,12 @@ export default function GalleryPage() {
   // Upload state
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  
+  // AI Analysis state
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analyzingPhotoId, setAnalyzingPhotoId] = useState<string | null>(null);
+  const [showProfilesModal, setShowProfilesModal] = useState(false);
+  const [studentsWithPhotos, setStudentsWithPhotos] = useState<{students: any[], stats: any}>({ students: [], stats: {} });
   
   // Form
   const [albumForm, setAlbumForm] = useState({
@@ -185,8 +191,8 @@ export default function GalleryPage() {
           headers: { "Content-Type": file.type }
         });
 
-        // Get public URL and save photo
-        const photoUrl = `https://i.ytimg.com/vi/8yDyrVe4ayo/hqdefault.jpg || ""}.s3.amazonaws.com/${cloud_storage_path}`;
+        // Get public URL from the presigned URL (remove query params)
+        const photoUrl = uploadUrl.split('?')[0];
         
         await fetch("/api/gallery/photos", {
           method: "POST",
@@ -238,6 +244,130 @@ export default function GalleryPage() {
       }
     } catch (error) {
       toast.error("Error al etiquetar");
+    }
+  };
+
+  // AI Facial Recognition
+  const analyzePhoto = async (photoId: string) => {
+    setAnalyzingPhotoId(photoId);
+    try {
+      const res = await fetch(`/api/gallery/photos/${photoId}/analyze`, {
+        method: "POST"
+      });
+      const data = await res.json();
+      
+      if (!res.ok) {
+        if (data.needsProfiles) {
+          toast.error("No hay fotos de perfil de estudiantes. Configura las fotos primero.");
+          setShowProfilesModal(true);
+          await fetchStudentProfiles();
+        } else {
+          toast.error(data.error || "Error en el análisis");
+        }
+        return;
+      }
+
+      if (data.tagsCreated > 0) {
+        toast.success(`¡${data.tagsCreated} estudiante(s) identificado(s)!`);
+        if (selectedAlbum) fetchAlbum(selectedAlbum.id);
+      } else if (data.facesDetected > 0) {
+        toast.info(`${data.facesDetected} rostro(s) detectado(s), pero no se identificaron estudiantes conocidos.`);
+      } else {
+        toast.info("No se detectaron rostros en esta foto.");
+      }
+    } catch (error) {
+      toast.error("Error al analizar la foto");
+    } finally {
+      setAnalyzingPhotoId(null);
+    }
+  };
+
+  const analyzeAllPhotos = async () => {
+    if (!selectedAlbum?.photos?.length) return;
+    
+    const unprocessedPhotos = selectedAlbum.photos.filter(p => !(p as any).isProcessed);
+    if (unprocessedPhotos.length === 0) {
+      toast.info("Todas las fotos ya han sido analizadas.");
+      return;
+    }
+
+    setAnalyzing(true);
+    let successCount = 0;
+    let tagsCreated = 0;
+
+    for (const photo of unprocessedPhotos) {
+      try {
+        const res = await fetch(`/api/gallery/photos/${photo.id}/analyze`, {
+          method: "POST"
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          successCount++;
+          tagsCreated += data.tagsCreated || 0;
+        }
+      } catch (error) {
+        console.error("Error analyzing photo:", photo.id);
+      }
+    }
+
+    setAnalyzing(false);
+    toast.success(`Análisis completado: ${successCount} fotos procesadas, ${tagsCreated} estudiantes identificados.`);
+    if (selectedAlbum) fetchAlbum(selectedAlbum.id);
+  };
+
+  const fetchStudentProfiles = async () => {
+    try {
+      const res = await fetch("/api/student/photos");
+      if (res.ok) {
+        const data = await res.json();
+        setStudentsWithPhotos(data);
+      }
+    } catch (error) {
+      console.error("Error fetching student profiles:", error);
+    }
+  };
+
+  const uploadStudentPhoto = async (studentId: string, file: File) => {
+    try {
+      // Get presigned URL
+      const presignedRes = await fetch("/api/upload/presigned", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: `student-profile-${studentId}-${file.name}`,
+          contentType: file.type,
+          isPublic: true
+        })
+      });
+
+      if (!presignedRes.ok) throw new Error("Failed to get upload URL");
+      const { uploadUrl, cloud_storage_path } = await presignedRes.json();
+
+      // Upload to S3
+      await fetch(uploadUrl, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type }
+      });
+
+      // The presigned URL upload already stored the file, we need to get the final URL
+      // For public files, construct the S3 URL directly
+      const photoUrl = uploadUrl.split('?')[0]; // Get the base URL without query params
+
+      // Update student
+      const updateRes = await fetch(`/api/student/${studentId}/photo`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ photoUrl })
+      });
+
+      if (updateRes.ok) {
+        toast.success("Foto de perfil actualizada");
+        await fetchStudentProfiles();
+      }
+    } catch (error) {
+      toast.error("Error al subir la foto");
     }
   };
 
@@ -311,6 +441,31 @@ export default function GalleryPage() {
                   className="hidden"
                 />
                 <Button
+                  variant="outline"
+                  onClick={() => { fetchStudentProfiles(); setShowProfilesModal(true); }}
+                  className="border-[#1B4079] text-[#1B4079] hover:bg-[#1B4079]/10"
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Fotos de Perfil
+                </Button>
+                <Button
+                  onClick={analyzeAllPhotos}
+                  disabled={analyzing || !photos.length}
+                  className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+                >
+                  {analyzing ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      Analizando...
+                    </>
+                  ) : (
+                    <>
+                      <Brain className="w-4 h-4 mr-2" />
+                      Análisis IA
+                    </>
+                  )}
+                </Button>
+                <Button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
                   className="bg-[#1B4079] hover:bg-[#4D7C8A]"
@@ -372,14 +527,28 @@ export default function GalleryPage() {
                 {canManage && (
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
                     <button
+                      onClick={e => { e.stopPropagation(); analyzePhoto(photo.id); }}
+                      disabled={analyzingPhotoId === photo.id}
+                      className="p-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full hover:from-purple-700 hover:to-indigo-700 text-white"
+                      title="Análisis IA"
+                    >
+                      {analyzingPhotoId === photo.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Sparkles className="w-4 h-4" />
+                      )}
+                    </button>
+                    <button
                       onClick={e => { e.stopPropagation(); setSelectedPhotoForTag(photo); setShowTagModal(true); }}
                       className="p-2 bg-white rounded-full hover:bg-gray-100"
+                      title="Etiquetar manualmente"
                     >
                       <Tag className="w-4 h-4" />
                     </button>
                     <button
                       onClick={e => { e.stopPropagation(); deletePhoto(photo.id); }}
                       className="p-2 bg-white rounded-full hover:bg-red-50 text-red-500"
+                      title="Eliminar"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -464,6 +633,107 @@ export default function GalleryPage() {
                     </button>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Student Profiles Modal for AI Recognition */}
+        {showProfilesModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl w-full max-w-3xl max-h-[85vh] overflow-hidden">
+              <div className="p-5 border-b flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-lg flex items-center gap-2">
+                    <Brain className="w-5 h-5 text-purple-600" />
+                    Fotos de Perfil para Reconocimiento Facial
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Sube fotos de perfil de los estudiantes para que la IA pueda identificarlos automáticamente
+                  </p>
+                </div>
+                <button onClick={() => setShowProfilesModal(false)}>
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              {/* Stats */}
+              <div className="p-4 bg-gray-50 border-b grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-gray-900">{studentsWithPhotos.stats.total || 0}</p>
+                  <p className="text-xs text-gray-500">Total Estudiantes</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-green-600">{studentsWithPhotos.stats.withPhoto || 0}</p>
+                  <p className="text-xs text-gray-500">Con Foto</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-amber-600">{studentsWithPhotos.stats.withoutPhoto || 0}</p>
+                  <p className="text-xs text-gray-500">Sin Foto</p>
+                </div>
+              </div>
+
+              <div className="p-4 overflow-y-auto max-h-[50vh]">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  {studentsWithPhotos.students.map(student => (
+                    <div key={student.id} className="relative group">
+                      <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 border-2 border-dashed border-gray-200">
+                        {student.photoUrl ? (
+                          <Image
+                            src={student.photoUrl}
+                            alt={`${student.firstName} ${student.lastName}`}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
+                            <User className="w-8 h-8 mb-1" />
+                            <span className="text-xs">Sin foto</span>
+                          </div>
+                        )}
+                        
+                        {/* Upload overlay */}
+                        <label className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) uploadStudentPhoto(student.id, file);
+                            }}
+                          />
+                          <div className="p-2 bg-white rounded-full">
+                            <Camera className="w-5 h-5 text-[#1B4079]" />
+                          </div>
+                        </label>
+                        
+                        {/* Status indicator */}
+                        <div className={`absolute top-1 right-1 w-3 h-3 rounded-full ${student.photoUrl ? 'bg-green-500' : 'bg-amber-500'}`} />
+                      </div>
+                      <p className="text-sm font-medium text-center mt-2 truncate">
+                        {student.firstName} {student.lastName}
+                      </p>
+                      {student.group && (
+                        <p className="text-xs text-gray-400 text-center truncate">{student.group.name}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                
+                {studentsWithPhotos.students.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <User className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+                    <p>No hay estudiantes registrados</p>
+                  </div>
+                )}
+              </div>
+              
+              <div className="p-4 border-t bg-gray-50">
+                <p className="text-xs text-gray-500 text-center">
+                  💡 Para mejores resultados, usa fotos frontales claras de cada estudiante.
+                  La IA comparará estas fotos con los rostros detectados en el álbum.
+                </p>
               </div>
             </div>
           </div>
