@@ -165,11 +165,11 @@ export function Header({ user }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-28 py-[6px]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20 py-2">
           {/* Logo and School Name */}
-          <Link href="/dashboard" className="flex items-center group h-full">
-            <div className="relative w-[100px] h-full transition-transform group-hover:scale-105">
+          <Link href="/dashboard" className="flex items-center group flex-shrink-0">
+            <div className="relative w-[140px] h-16 transition-transform group-hover:scale-105">
               <Image
                 src="/iaschool-logo.png"
                 alt="IA School Logo"
@@ -180,31 +180,53 @@ export function Header({ user }: HeaderProps) {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems?.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-[#1B4079] hover:bg-[#1B4079]/5 transition-all"
-              >
-                <item.icon className="w-4 h-4" />
-                <span className="text-sm font-medium">{item.label}</span>
-              </Link>
-            ))}
+          {/* Desktop Navigation - Scrollable */}
+          <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center mx-4 overflow-x-auto scrollbar-hide">
+            <div className="flex items-center gap-1">
+              {navItems?.slice(0, 8).map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-gray-600 hover:text-[#1B4079] hover:bg-[#1B4079]/5 transition-all whitespace-nowrap"
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span className="text-base font-medium">{item.label}</span>
+                </Link>
+              ))}
+              {navItems && navItems.length > 8 && (
+                <div className="relative group">
+                  <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-gray-600 hover:text-[#1B4079] hover:bg-[#1B4079]/5 transition-all">
+                    <Menu className="w-5 h-5" />
+                    <span className="text-base font-medium">Más</span>
+                  </button>
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all max-h-[70vh] overflow-y-auto">
+                    {navItems.slice(8).map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-[#1B4079]/5 hover:text-[#1B4079] transition-all"
+                      >
+                        <item.icon className="w-5 h-5" />
+                        <span className="text-base font-medium">{item.label}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* User Menu */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4 flex-shrink-0">
             {/* Language Selector */}
             <div className="relative">
               <button
                 onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-all"
+                className="flex items-center gap-2 px-3 py-2 rounded-xl text-gray-600 hover:bg-gray-100 transition-all"
                 title="Cambiar idioma"
               >
-                <Globe className="w-4 h-4" />
-                <span className="text-sm hidden sm:inline">{languageFlags[language]}</span>
+                <Globe className="w-5 h-5" />
+                <span className="text-base hidden sm:inline">{languageFlags[language]}</span>
               </button>
               
               <AnimatePresence>
@@ -213,7 +235,7 @@ export function Header({ user }: HeaderProps) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50"
+                    className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50"
                   >
                     {availableLanguages.map((lang) => (
                       <button
@@ -222,12 +244,12 @@ export function Header({ user }: HeaderProps) {
                           setLanguage(lang);
                           setShowLanguageMenu(false);
                         }}
-                        className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 transition-colors ${
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors ${
                           language === lang ? 'bg-[#1B4079]/5 text-[#1B4079]' : 'text-gray-700'
                         }`}
                       >
-                        <span className="text-lg">{languageFlags[lang]}</span>
-                        <span className="text-sm font-medium">{languageNames[lang]}</span>
+                        <span className="text-xl">{languageFlags[lang]}</span>
+                        <span className="text-base font-medium">{languageNames[lang]}</span>
                         {language === lang && (
                           <span className="ml-auto text-[#1B4079]">✓</span>
                         )}
@@ -241,33 +263,33 @@ export function Header({ user }: HeaderProps) {
             {/* Alerts Counter */}
             <AlertsCounter />
             
-            <div className="hidden sm:flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-[#1B4079] flex items-center justify-center">
-                <span className="text-white text-sm font-medium">
+            <div className="hidden sm:flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#1B4079] flex items-center justify-center shadow-md">
+                <span className="text-white text-base font-semibold">
                   {user?.name?.charAt(0)?.toUpperCase() ?? "U"}
                 </span>
               </div>
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{user?.name ?? "Usuario"}</p>
-                <p className="text-xs text-[#4D7C8A]">
+                <p className="text-base font-semibold text-gray-900">{user?.name ?? "Usuario"}</p>
+                <p className="text-sm text-[#4D7C8A]">
                   {getRoleName()}
                 </p>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all"
+              className="hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-xl text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all"
             >
-              <LogOut className="w-4 h-4" />
-              <span className="text-sm">{t.nav.logout}</span>
+              <LogOut className="w-5 h-5" />
+              <span className="text-base font-medium">{t.nav.logout}</span>
             </button>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+              className="lg:hidden p-2.5 rounded-xl text-gray-600 hover:bg-gray-100"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -280,27 +302,29 @@ export function Header({ user }: HeaderProps) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-gray-100 bg-white"
+            className="lg:hidden border-t border-gray-100 bg-white max-h-[80vh] overflow-y-auto"
           >
-            <div className="px-4 py-3 space-y-1">
+            <div className="px-4 py-4 space-y-1">
               {navItems?.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-[#1B4079]/5 transition-all"
+                  className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-[#1B4079]/5 transition-all active:scale-[0.98]"
                 >
-                  <item.icon className="w-5 h-5 text-[#1B4079]" />
-                  <span className="font-medium">{item.label}</span>
+                  <item.icon className="w-6 h-6 text-[#1B4079]" />
+                  <span className="text-base font-medium">{item.label}</span>
                 </Link>
               ))}
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-all"
-              >
-                <LogOut className="w-5 h-5" />
-                <span className="font-medium">{t.nav.logout}</span>
-              </button>
+              <div className="border-t border-gray-100 pt-3 mt-3">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl text-red-600 hover:bg-red-50 transition-all"
+                >
+                  <LogOut className="w-6 h-6" />
+                  <span className="text-base font-medium">{t.nav.logout}</span>
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
