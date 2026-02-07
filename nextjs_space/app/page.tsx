@@ -1,5 +1,5 @@
 "use client";
-// Landing page - IA School v2.1
+// Landing page - IA School v2.2 - Feb 7 2026
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
