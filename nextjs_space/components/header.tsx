@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen, Mail, Globe, ShoppingBag, Image as ImageIcon, Clock, UsersRound } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen, Mail, Globe, ShoppingBag, Image as ImageIcon, Clock, UsersRound, PiggyBank } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertsCounter } from "@/components/academic-alerts";
@@ -111,6 +111,9 @@ export function Header({ user }: HeaderProps) {
     if (isVocal) {
       return [
         ...baseItems,
+        { href: "/vocal", label: "Panel Vocal", icon: PiggyBank },
+        { href: "/vocal/funds", label: "Colectas", icon: Wallet },
+        { href: "/vocal/announcements", label: "Avisos Grupo", icon: Bell },
         { href: "/chatbot", label: t.nav.chatbot, icon: Bot },
         { href: "/attendance", label: t.nav.attendance, icon: Users },
         { href: "/store", label: t.nav.store, icon: ShoppingBag },
@@ -122,6 +125,7 @@ export function Header({ user }: HeaderProps) {
     // Padres
     return [
       ...baseItems,
+      { href: "/vocal", label: "Grupo", icon: PiggyBank },
       { href: "/appointments", label: t.nav.appointments, icon: CalendarCheck },
       { href: "/chatbot", label: t.nav.chatbot, icon: Bot },
       { href: "/attendance", label: t.nav.attendance, icon: Users },

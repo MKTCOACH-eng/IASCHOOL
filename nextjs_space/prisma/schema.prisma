@@ -201,6 +201,14 @@ model User {
   
   // Horarios (profesores)
   schedules            Schedule[]   @relation("TeacherSchedules")
+  
+  // Módulo Vocal de Grupo
+  groupVocals          GroupVocal[] @relation("UserGroupVocals")
+  fundsCreated         GroupFund[]  @relation("FundCreator")
+  contributionsRecorded GroupFundContribution[] @relation("ContributionRecorder")
+  expensesCreated      GroupExpense[] @relation("ExpenseCreator")
+  groupAnnouncementsCreated GroupAnnouncement[] @relation("GroupAnnouncementCreator")
+  groupAnnouncementReads GroupAnnouncementRead[]
 }
 
 model Invitation {
@@ -230,7 +238,7 @@ model Group {
   school       School    @relation(fields: [schoolId], references: [id])
   teacherId    String?   // Profesor titular
   teacher      User?     @relation("GroupTeacher", fields: [teacherId], references: [id])
-  vocalId      String?   @unique // Vocal de grupo (un padre)
+  vocalId      String?   @unique // Vocal de grupo (un padre) - mantener por retrocompatibilidad
   vocal        User?     @relation("GroupVocal", fields: [vocalId], references: [id])
   students     Student[]
   conversations Conversation[]
@@ -243,6 +251,15 @@ model Group {
   schedules    Schedule[]
   createdAt    DateTime  @default(now())
   isActive     Boolean   @default(true)
+  
+  // Sistema de múltiples vocales (hasta 2)
+  groupVocals       GroupVocal[]
+  
+  // Sistema de colectas y fondos
+  funds             GroupFund[]
+  
+  // Avisos específicos del grupo (por vocales)
+  groupAnnouncements GroupAnnouncement[]
 
   @@unique([name, schoolId])
 }
@@ -270,6 +287,7 @@ model Student {
   appointments Appointment[] @relation("StudentAppointments")
   speiReference SpeiReference?
   photoTags    PhotoTag[]
+  fundContributions GroupFundContribution[]
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -646,6 +664,9 @@ model Event {
   
   // Asistentes
   attendees      EventAttendee[]
+  
+  // Colecta vinculada (si aplica)
+  linkedFund     GroupFund?   @relation("FundEvent")
   
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
@@ -1536,4 +1557,180 @@ model PhotoTag {
 
   @@index([photoId])
   @@index([studentId])
+}
+
+// ==========================================
+// MÓDULO VOCAL DE GRUPO
+// ==========================================
+
+enum FundStatus {
+  ACTIVE       // Colecta activa
+  PAUSED       // Colecta pausada
+  COMPLETED    // Colecta completada (meta alcanzada o cerrada)
+  CANCELLED    // Colecta cancelada
+}
+
+enum ContributionStatus {
+  PENDING      // Pago pendiente
+  PAID         // Pago confirmado
+  EXEMPT       // Exento de pago
+}
+
+// Vocales de grupo (hasta 2 por grupo)
+model GroupVocal {
+  id           String   @id @default(cuid())
+  groupId      String
+  group        Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User     @relation("UserGroupVocals", fields: [userId], references: [id])
+  isPrimary    Boolean  @default(false)  // Vocal principal
+  isActive     Boolean  @default(true)
+  assignedAt   DateTime @default(now())
+  
+  @@unique([groupId, userId])
+  @@index([groupId])
+  @@index([userId])
+}
+
+// Colectas/Fondos del grupo
+model GroupFund {
+  id              String     @id @default(cuid())
+  groupId         String
+  group           Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdById     String     // Vocal que creó la colecta
+  createdBy       User       @relation("FundCreator", fields: [createdById], references: [id])
+  
+  title           String     // "Día de San Valentín", "Venta de Recreo"
+  description     String?    @db.Text
+  
+  // Montos
+  amountPerStudent Float     // Monto por alumno
+  goalAmount      Float?     // Meta total (opcional)
+  totalCollected  Float      @default(0) // Total recaudado
+  
+  // Fechas
+  dueDate         DateTime?  // Fecha límite de pago
+  eventDate       DateTime?  // Fecha del evento asociado
+  
+  // Estado
+  status          FundStatus @default(ACTIVE)
+  
+  // Vinculación con actividad/evento
+  linkedEventId   String?    @unique
+  linkedEvent     Event?     @relation("FundEvent", fields: [linkedEventId], references: [id])
+  
+  contributions   GroupFundContribution[]
+  expenses        GroupExpense[]
+  announcements   GroupAnnouncement[]
+  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  @@index([groupId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+// Contribuciones/Pagos a colectas
+model GroupFundContribution {
+  id              String             @id @default(cuid())
+  fundId          String
+  fund            GroupFund          @relation(fields: [fundId], references: [id], onDelete: Cascade)
+  studentId       String
+  student         Student            @relation(fields: [studentId], references: [id])
+  
+  amount          Float              // Monto pagado
+  status          ContributionStatus @default(PENDING)
+  
+  // Detalles del pago
+  paidAt          DateTime?
+  paymentMethod   String?            // "efectivo", "transferencia"
+  paymentReference String?           // Referencia de pago
+  
+  // Recibo
+  receiptUrl      String?
+  receiptPath     String?
+  
+  // Quién registró el pago
+  recordedById    String?
+  recordedBy      User?              @relation("ContributionRecorder", fields: [recordedById], references: [id])
+  
+  notes           String?
+  
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  
+  @@unique([fundId, studentId])
+  @@index([fundId])
+  @@index([studentId])
+  @@index([status])
+}
+
+// Gastos del fondo (transparencia)
+model GroupExpense {
+  id              String     @id @default(cuid())
+  fundId          String
+  fund            GroupFund  @relation(fields: [fundId], references: [id], onDelete: Cascade)
+  createdById     String     // Vocal que registró el gasto
+  createdBy       User       @relation("ExpenseCreator", fields: [createdById], references: [id])
+  
+  concept         String     // "Compra de dulces", "Decoraciones"
+  amount          Float
+  
+  // Comprobante
+  receiptUrl      String?
+  receiptPath     String?
+  
+  expenseDate     DateTime   @default(now())
+  notes           String?
+  
+  createdAt       DateTime   @default(now())
+  
+  @@index([fundId])
+  @@index([expenseDate])
+}
+
+// Avisos específicos del grupo (por vocales)
+model GroupAnnouncement {
+  id           String   @id @default(cuid())
+  groupId      String
+  group        Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdById  String   // Vocal que creó el aviso
+  createdBy    User     @relation("GroupAnnouncementCreator", fields: [createdById], references: [id])
+  
+  title        String
+  content      String   @db.Text
+  
+  // Archivos adjuntos
+  attachmentUrl  String?
+  attachmentName String?
+  
+  // Vinculación con colecta (opcional)
+  linkedFundId String?
+  linkedFund   GroupFund? @relation(fields: [linkedFundId], references: [id])
+  
+  isPinned     Boolean  @default(false)
+  isActive     Boolean  @default(true)
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  reads        GroupAnnouncementRead[]
+  
+  @@index([groupId])
+  @@index([createdAt])
+}
+
+// Lectura de avisos de grupo
+model GroupAnnouncementRead {
+  id             String            @id @default(cuid())
+  announcementId String
+  announcement   GroupAnnouncement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User              @relation(fields: [userId], references: [id])
+  readAt         DateTime          @default(now())
+  
+  @@unique([announcementId, userId])
+  @@index([announcementId])
+  @@index([userId])
 }
