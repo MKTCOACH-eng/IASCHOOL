@@ -1,3 +1,4 @@
+// CSP updated 2026-02-07 - Cloudflare Insights allowed
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 import { checkRateLimit, getClientIdentifier, RATE_LIMITS } from "@/lib/rate-limiter";
