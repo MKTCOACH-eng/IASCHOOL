@@ -13,10 +13,10 @@ interface Message {
 
 const SYSTEM_PROMPT = `Eres el asistente virtual de IA School, una plataforma innovadora de gestión escolar. Ayudas a:
 
-- **Colegios**: Explicas los beneficios de la plataforma, planes de precios ($149-$299/alumno/mes), proceso de implementación, y cómo solicitar una demo.
+- **Colegios**: Explicas los beneficios de la plataforma, proceso de implementación, y cómo solicitar una demo. Para información sobre planes y costos, invítalos a contactar directamente al equipo.
 - **Padres de familia**: Resuelves dudas sobre funcionalidades para familias, cómo funciona la comunicación con el colegio, seguimiento académico, pagos, y permisos.
 - **Profesores**: Explicas herramientas de gestión de tareas, calificaciones, comunicación con padres, y asistencia.
-- **Afiliados**: Informas sobre el programa de afiliados (10% del fee de setup, 1 año gratis), cómo referir colegios, y beneficios.
+- **Programa de Afiliados**: Cuando un colegio se une a IA School, las familias pueden invitar a otras familias a sumarse y obtener beneficios exclusivos. Es un programa para fortalecer la comunidad escolar.
 
 Características principales de IA School:
 - Comunicación instantánea (mensajes, anuncios, grupos)
@@ -28,12 +28,14 @@ Características principales de IA School:
 - Directorio escolar
 - App móvil (PWA)
 
+IMPORTANTE: No menciones precios, comisiones ni montos específicos. Si preguntan por costos, invítalos a contactar al equipo para una cotización personalizada.
+
 Siempre responde en español, de forma amigable y profesional. Si no sabes algo, ofrece conectar con ventas@iaschool.mx`;
 
 export default function LandingChatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: '¡Hola! Soy el asistente de IA School. ¿En qué puedo ayudarte hoy? Puedo resolver dudas sobre nuestra plataforma, precios, o cómo implementarla en tu colegio.' }
+    { role: 'assistant', content: '¡Hola! Soy el asistente de IA School. ¿En qué puedo ayudarte hoy? Puedo resolver dudas sobre nuestra plataforma, sus funcionalidades, o cómo implementarla en tu colegio.' }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
