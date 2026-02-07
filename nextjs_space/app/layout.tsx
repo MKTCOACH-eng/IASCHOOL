@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "react-hot-toast";
+import { ServiceWorkerRegister } from "@/components/service-worker-register";
+import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,7 +50,9 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} bg-white antialiased`} suppressHydrationWarning>
         <Providers>
+          <ServiceWorkerRegister />
           {children}
+          <PWAInstallPrompt />
           <Toaster position="top-right" />
         </Providers>
       </body>

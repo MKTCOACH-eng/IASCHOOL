@@ -237,6 +237,9 @@ model User {
   disciplineRecords       DisciplineRecord[] @relation("DisciplineRecorder")
   nurseVisits             NurseVisit[]       @relation("NurseRecorder")
   bulkImportJobs          BulkImportJob[]    @relation("ImportCreator")
+  
+  // Push Notifications
+  pushSubscriptions       PushSubscription[] @relation("UserPushSubscriptions")
 }
 
 model Invitation {
@@ -2303,4 +2306,27 @@ model BulkImportJob {
   
   @@index([schoolId])
   @@index([status])
+}
+
+// Push Notifications
+model PushSubscription {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation("UserPushSubscriptions", fields: [userId], references: [id], onDelete: Cascade)
+  
+  endpoint     String   @unique
+  p256dh       String   @db.Text
+  auth         String
+  
+  // Device info
+  userAgent    String?
+  deviceType   String?  // mobile, desktop, tablet
+  
+  isActive     Boolean  @default(true)
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([isActive])
 }
