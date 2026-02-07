@@ -7,6 +7,7 @@ import { Bell, Users, Plus, ArrowRight, TrendingUp } from "lucide-react";
 import { StatCard } from "@/components/stat-card";
 import { AnnouncementCard } from "@/components/announcement-card";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { useLanguage } from "@/contexts/language-context";
 
 interface AdminDashboardProps {
   userId: string;
@@ -31,6 +32,7 @@ interface Announcement {
 }
 
 export function AdminDashboard({ userId, schoolId, userName }: AdminDashboardProps) {
+  const { t } = useLanguage();
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentAnnouncements, setRecentAnnouncements] = useState<Announcement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,30 +77,30 @@ export function AdminDashboard({ userId, schoolId, userName }: AdminDashboardPro
         animate={{ opacity: 1, y: 0 }}
         className="bg-gradient-to-r from-[#1B4079] to-[#4D7C8A] rounded-2xl p-6 sm:p-8 text-white"
       >
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Hola, {userName ?? "Administrador"} 👋</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t.dashboard.welcome}, {userName ?? t.roles.admin} 👋</h1>
         <p className="text-white/80 mb-6">
-          Bienvenido al panel de administración. Aquí puedes gestionar los anuncios del colegio.
+          {t.dashboard.welcomeAdmin}
         </p>
         <Link
           href="/announcements/new"
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#1B4079] font-semibold rounded-lg hover:bg-[#CBDF90] transition-all"
         >
           <Plus className="w-5 h-5" />
-          Publicar nuevo anuncio
+          {t.dashboard.publishAnnouncement}
         </Link>
       </motion.div>
 
       {/* Stats */}
       <div className="grid sm:grid-cols-2 gap-4">
         <StatCard
-          title="Total de anuncios"
+          title={t.dashboard.totalAnnouncements}
           value={stats?.totalAnnouncements ?? 0}
           icon={Bell}
           color="#1B4079"
           delay={0.1}
         />
         <StatCard
-          title="Padres registrados"
+          title={t.dashboard.registeredParents}
           value={stats?.totalParents ?? 0}
           icon={Users}
           color="#4D7C8A"
@@ -111,13 +113,13 @@ export function AdminDashboard({ userId, schoolId, userName }: AdminDashboardPro
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-[#1B4079]" />
-            Últimos anuncios
+            {t.dashboard.recentAnnouncements}
           </h2>
           <Link
             href="/announcements"
             className="text-sm text-[#1B4079] hover:text-[#4D7C8A] font-medium flex items-center gap-1"
           >
-            Ver todos
+            {t.common.viewAll}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

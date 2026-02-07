@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/language-context";
 
 interface Participant {
   id: string;
@@ -64,6 +65,7 @@ interface GroupInfo {
 export default function MessagesPage() {
   const { data: session } = useSession() || {};
   const router = useRouter();
+  const { t } = useLanguage();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

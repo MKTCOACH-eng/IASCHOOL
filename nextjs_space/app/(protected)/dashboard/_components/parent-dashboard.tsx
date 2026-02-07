@@ -9,6 +9,7 @@ import { AnnouncementCard } from "@/components/announcement-card";
 import { AcademicAlerts } from "@/components/academic-alerts";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/contexts/language-context";
 
 interface ParentDashboardProps {
   userId: string;
@@ -28,6 +29,7 @@ interface Announcement {
 
 export function ParentDashboard({ userId, schoolId, userName }: ParentDashboardProps) {
   const router = useRouter();
+  const { t } = useLanguage();
   const [unreadCount, setUnreadCount] = useState(0);
   const [recentAnnouncements, setRecentAnnouncements] = useState<Announcement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -83,16 +85,16 @@ export function ParentDashboard({ userId, schoolId, userName }: ParentDashboardP
         animate={{ opacity: 1, y: 0 }}
         className="bg-gradient-to-r from-[#1B4079] to-[#4D7C8A] rounded-2xl p-6 sm:p-8 text-white"
       >
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Hola, {userName ?? "Padre"} 👋</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t.dashboard.welcome}, {userName ?? t.roles.parent} 👋</h1>
         <p className="text-white/80">
-          Mantente al día con todos los anuncios importantes del colegio.
+          {t.dashboard.welcomeParent}
         </p>
       </motion.div>
 
       {/* Stats Cards */}
       <div className="grid sm:grid-cols-2 gap-4">
         <StatCard
-          title="Anuncios sin leer"
+          title={t.dashboard.unreadAnnouncements}
           value={unreadCount ?? 0}
           icon={unreadCount > 0 ? BellRing : Bell}
           color={unreadCount > 0 ? "#E53E3E" : "#1B4079"}
@@ -100,8 +102,8 @@ export function ParentDashboard({ userId, schoolId, userName }: ParentDashboardP
         />
         <Link href="/tasks">
           <StatCard
-            title="Tareas"
-            value="Ver todas"
+            title={t.nav.tasks}
+            value={t.common.viewAll}
             icon={ClipboardList}
             color="#1B4079"
             delay={0.2}
@@ -123,19 +125,19 @@ export function ParentDashboard({ userId, schoolId, userName }: ParentDashboardP
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
             <Bell className="w-5 h-5 text-[#1B4079]" />
-            Últimos anuncios
+            {t.dashboard.recentAnnouncements}
           </h2>
           <Link
             href="/announcements"
             className="text-sm text-[#1B4079] hover:text-[#4D7C8A] font-medium flex items-center gap-1"
           >
-            Ver todos
+            {t.common.viewAll}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
         <div className="space-y-4">
           {(recentAnnouncements ?? [])?.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No hay anuncios recientes.</p>
+            <p className="text-gray-500 text-center py-8">{t.dashboard.noRecentAnnouncements}</p>
           ) : (
             (recentAnnouncements ?? [])?.map((announcement, index) => (
               <AnnouncementCard

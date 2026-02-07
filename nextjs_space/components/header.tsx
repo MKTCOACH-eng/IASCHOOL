@@ -21,7 +21,7 @@ interface HeaderProps {
 export function Header({ user }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
-  const { language, setLanguage, languageNames, languageFlags } = useLanguage();
+  const { language, setLanguage, languageNames, languageFlags, t } = useLanguage();
   
   const isSuperAdmin = user?.role === "SUPER_ADMIN";
   const isAdmin = user?.role === "ADMIN";
@@ -37,12 +37,12 @@ export function Header({ user }: HeaderProps) {
 
   const getRoleName = () => {
     switch (user?.role) {
-      case "SUPER_ADMIN": return "Super Admin";
-      case "ADMIN": return "Administrador";
-      case "PROFESOR": return "Profesor";
-      case "ALUMNO": return "Alumno";
-      case "VOCAL": return "Vocal de Grupo";
-      default: return "Padre de familia";
+      case "SUPER_ADMIN": return t.roles.superAdmin;
+      case "ADMIN": return t.roles.admin;
+      case "PROFESOR": return t.roles.teacher;
+      case "ALUMNO": return t.roles.student;
+      case "VOCAL": return t.roles.vocal;
+      default: return t.roles.parent;
     }
   };
 
@@ -50,74 +50,74 @@ export function Header({ user }: HeaderProps) {
     // Items para Super Admin (gestión global)
     if (isSuperAdmin) {
       return [
-        { href: "/super-admin", label: "Dashboard", icon: Home },
-        { href: "/super-admin/schools", label: "Escuelas", icon: Building2 },
-        { href: "/super-admin/config", label: "Configuración", icon: Settings },
-        { href: "/super-admin/audit", label: "Auditoría", icon: Activity },
+        { href: "/super-admin", label: t.nav.dashboard, icon: Home },
+        { href: "/super-admin/schools", label: t.superAdmin.schools, icon: Building2 },
+        { href: "/super-admin/config", label: t.common.settings, icon: Settings },
+        { href: "/super-admin/audit", label: t.superAdmin.auditLog, icon: Activity },
       ];
     }
 
     // Items para alumnos (vista simplificada)
     if (isStudent) {
       return [
-        { href: "/dashboard", label: "Inicio", icon: Home },
-        { href: "/tasks", label: "Tareas", icon: ClipboardList },
-        { href: "/calendar", label: "Calendario", icon: Calendar },
-        { href: "/messages", label: "Mensajes", icon: MessageSquare },
-        { href: "/attendance", label: "Asistencia", icon: Users },
-        { href: "/documents", label: "Documentos", icon: FileSignature },
-        { href: "/announcements", label: "Anuncios", icon: Bell },
+        { href: "/dashboard", label: t.nav.home, icon: Home },
+        { href: "/tasks", label: t.nav.tasks, icon: ClipboardList },
+        { href: "/calendar", label: t.nav.calendar, icon: Calendar },
+        { href: "/messages", label: t.nav.messages, icon: MessageSquare },
+        { href: "/attendance", label: t.nav.attendance, icon: Users },
+        { href: "/documents", label: t.nav.documents, icon: FileSignature },
+        { href: "/announcements", label: t.nav.announcements, icon: Bell },
       ];
     }
 
     const baseItems = [
-      { href: "/dashboard", label: "Inicio", icon: Home },
-      { href: "/messages", label: "Mensajes", icon: MessageSquare },
-      { href: "/tasks", label: "Tareas", icon: ClipboardList },
-      { href: "/academic", label: "Progreso", icon: BarChart3 },
-      { href: "/calendar", label: "Calendario", icon: Calendar },
-      { href: "/payments", label: "Pagos", icon: Wallet },
-      { href: "/documents", label: "Documentos", icon: FileSignature },
-      { href: "/announcements", label: "Anuncios", icon: Bell },
+      { href: "/dashboard", label: t.nav.home, icon: Home },
+      { href: "/messages", label: t.nav.messages, icon: MessageSquare },
+      { href: "/tasks", label: t.nav.tasks, icon: ClipboardList },
+      { href: "/academic", label: t.nav.academic, icon: BarChart3 },
+      { href: "/calendar", label: t.nav.calendar, icon: Calendar },
+      { href: "/payments", label: t.nav.payments, icon: Wallet },
+      { href: "/documents", label: t.nav.documents, icon: FileSignature },
+      { href: "/announcements", label: t.nav.announcements, icon: Bell },
     ];
 
     if (isAdmin) {
       return [
         ...baseItems,
-        { href: "/chatbot", label: "Asistente IA", icon: Bot },
-        { href: "/attendance", label: "Asistencia", icon: Users },
-        { href: "/directory", label: "Directorio", icon: BookOpen },
-        { href: "/crm", label: "CRM", icon: Mail },
-        { href: "/polls", label: "Encuestas", icon: Vote },
-        { href: "/invitations", label: "Invitaciones", icon: UserPlus },
+        { href: "/chatbot", label: t.nav.chatbot, icon: Bot },
+        { href: "/attendance", label: t.nav.attendance, icon: Users },
+        { href: "/directory", label: t.nav.directory, icon: BookOpen },
+        { href: "/crm", label: t.nav.crm, icon: Mail },
+        { href: "/polls", label: t.nav.polls, icon: Vote },
+        { href: "/invitations", label: t.nav.invitations, icon: UserPlus },
       ];
     }
 
     if (isTeacher) {
       return [
         ...baseItems,
-        { href: "/appointments", label: "Citas", icon: CalendarCheck },
-        { href: "/attendance", label: "Asistencia", icon: Users },
-        { href: "/tasks/new", label: "Nueva Tarea", icon: Plus },
+        { href: "/appointments", label: t.nav.appointments, icon: CalendarCheck },
+        { href: "/attendance", label: t.nav.attendance, icon: Users },
+        { href: "/tasks/new", label: t.tasks.newTask, icon: Plus },
       ];
     }
 
     if (isVocal) {
       return [
         ...baseItems,
-        { href: "/chatbot", label: "Asistente IA", icon: Bot },
-        { href: "/attendance", label: "Asistencia", icon: Users },
-        { href: "/polls", label: "Encuestas", icon: Vote },
+        { href: "/chatbot", label: t.nav.chatbot, icon: Bot },
+        { href: "/attendance", label: t.nav.attendance, icon: Users },
+        { href: "/polls", label: t.nav.polls, icon: Vote },
       ];
     }
 
     // Padres
     return [
       ...baseItems,
-      { href: "/appointments", label: "Citas", icon: CalendarCheck },
-      { href: "/chatbot", label: "Asistente IA", icon: Bot },
-      { href: "/attendance", label: "Asistencia", icon: Users },
-      { href: "/polls", label: "Encuestas", icon: Vote },
+      { href: "/appointments", label: t.nav.appointments, icon: CalendarCheck },
+      { href: "/chatbot", label: t.nav.chatbot, icon: Bot },
+      { href: "/attendance", label: t.nav.attendance, icon: Users },
+      { href: "/polls", label: t.nav.polls, icon: Vote },
     ];
   };
 
@@ -219,7 +219,7 @@ export function Header({ user }: HeaderProps) {
               className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all"
             >
               <LogOut className="w-4 h-4" />
-              <span className="text-sm">Salir</span>
+              <span className="text-sm">{t.nav.logout}</span>
             </button>
 
             {/* Mobile Menu Button */}
@@ -259,7 +259,7 @@ export function Header({ user }: HeaderProps) {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-all"
               >
                 <LogOut className="w-5 h-5" />
-                <span className="font-medium">Cerrar sesión</span>
+                <span className="font-medium">{t.nav.logout}</span>
               </button>
             </div>
           </motion.div>
