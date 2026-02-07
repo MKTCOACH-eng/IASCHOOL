@@ -499,19 +499,118 @@
 
 ---
 
-## 🛠️ CREDENCIALES DE PRUEBA
+## 🛠️ CREDENCIALES DE PRUEBA COMPLETAS
 
-### Administrador
-- **Email:** `admin@vermont.edu.mx`
-- **Password:** `admin123`
+### Super Administrador (Plataforma Global)
+| Email | Contraseña |
+|-------|------------|
+| `superadmin@iaschool.edu` | `superadmin123` |
 
-### Profesor
-- **Email:** `profesor@vermont.edu.mx`
-- **Password:** `profesor123`
+### Administradores
+| Rol/Área | Email | Contraseña |
+|----------|-------|------------|
+| **Admin Principal** | `admin@vermontschool.edu` | `admin123` |
+| **Cuenta de Prueba** | `john@doe.com` | `johndoe123` |
+| Caja/Tesorería | `caja@vermontschool.edu` | `admin123` |
+| Enfermería | `enfermeria@vermontschool.edu` | `admin123` |
+| Psicología | `psicologia@vermontschool.edu` | `admin123` |
+| Consejo Técnico | `consejo@vermontschool.edu` | `admin123` |
+| Coordinación | `coordinacion@vermontschool.edu` | `admin123` |
+| Recepción | `recepcion@vermontschool.edu` | `admin123` |
+| Sistemas | `sistemas@vermontschool.edu` | `admin123` |
+| Subdirección | `subdirector@vermontschool.edu` | `admin123` |
 
-### Padre
-- **Email:** `padre@vermont.edu.mx`
-- **Password:** `padre123`
+### Profesores
+| Nombre | Email | Contraseña |
+|--------|-------|------------|
+| Laura Sánchez | `prof.sanchez@vermontschool.edu` | `profesor123` |
+| Carlos Ramírez | `prof.ramirez@vermontschool.edu` | `profesor123` |
+
+### Padres de Familia
+| Nombre | Email | Contraseña |
+|--------|-------|------------|
+| María López | `maria.lopez@email.com` | `padre123` |
+| Juan Martínez | `juan.martinez@email.com` | `padre123` |
+| Ana Rodríguez | `ana.rodriguez@email.com` | `padre123` |
+
+### Vocal de Grupo
+| Email | Contraseña |
+|-------|------------|
+| `vocal@email.com` | `vocal123` |
+
+### Estudiante
+| Nombre | Email | Contraseña |
+|--------|-------|------------|
+| Sofía López | `sofia.lopez@vermontschool.edu` | `alumno123` |
+
+---
+
+## 🎨 LISTA DE AYUDAS Y APOYOS VISUALES REQUERIDOS
+
+### Videos Tutoriales (14 Videos Recomendados)
+
+| # | Título | Duración | Audiencia |
+|---|--------|----------|-----------|
+| 1 | Bienvenida y Tour General de IA School | 3-5 min | Todos |
+| 2 | Proceso de Registro (Enrollment) con QR | 2-3 min | Nuevos usuarios |
+| 3 | Dashboard para Padres de Familia | 3-4 min | Padres |
+| 4 | Cómo revisar y pagar colegiaturas | 2-3 min | Padres |
+| 5 | Comunicación: Mensajes y Anuncios | 3 min | Padres/Profesores |
+| 6 | Dashboard para Profesores | 3-4 min | Profesores |
+| 7 | Registro de Asistencia y Calificaciones | 4-5 min | Profesores |
+| 8 | Creación y Gestión de Tareas | 3-4 min | Profesores |
+| 9 | Panel de Administración Completo | 5-7 min | Admins |
+| 10 | Gestión de Becas y Descuentos | 3 min | Admins |
+| 11 | Sistema de Invitaciones con QR | 2 min | Admins |
+| 12 | Módulo de Enfermería | 2-3 min | Enfermería |
+| 13 | Rol de Vocal de Grupo | 3 min | Vocales |
+| 14 | Instalación PWA en Móvil (iOS/Android) | 1-2 min | Todos |
+
+### Imágenes e Infografías Necesarias
+
+| # | Recurso | Formato | Uso |
+|---|---------|---------|-----|
+| 1 | Diagrama de roles y permisos | PNG/SVG | Documentación técnica |
+| 2 | Flujo de enrollment con QR | PNG | Manual de usuario |
+| 3 | Infografía de funciones por rol | PNG | Material de capacitación |
+| 4 | Guía rápida de pagos SPEI | PDF/PNG | Material para padres |
+| 5 | Checklist de inicio de ciclo escolar | PDF | Material para admins |
+| 6 | Mapa del sistema (sitemap visual) | PNG/SVG | Documentación |
+| 7 | Capturas de pantalla de cada módulo | PNG | Manuales |
+| 8 | Iconos de los 6 roles del sistema | SVG | UI/Documentación |
+
+### Estrategia de Traducción de Videos
+
+| Idioma | Estrategia Recomendada | Prioridad |
+|--------|------------------------|-----------|
+| Español (México) | Producción original | Base |
+| Inglés | Subtítulos + Voice-over IA | Alta |
+| Portugués | Subtítulos + Voice-over IA | Media |
+| Alemán | Solo subtítulos | Baja |
+| Francés | Solo subtítulos | Baja |
+| Japonés | Solo subtítulos | Baja |
+
+### Herramientas Recomendadas para Producción
+
+| Tipo | Herramienta | Uso |
+|------|-------------|-----|
+| Grabación de Pantalla | Loom / OBS Studio | Videos tutoriales |
+| Edición de Video | Capcut / DaVinci Resolve | Post-producción |
+| Voice-over IA | ElevenLabs / Murf.ai | Doblaje multilingüe |
+| Subtítulos | Subtitle Edit / YouTube | Traducción de videos |
+| Diseño Gráfico | Canva / Figma | Infografías |
+| Diagramas | Lucidchart / Miro | Flujos y diagramas |
+
+---
+
+## 📄 DOCUMENTOS RELACIONADOS
+
+| Documento | Ubicación | Descripción |
+|-----------|-----------|-------------|
+| `MANUAL_PRUEBAS_COMPLETO.md` | `/iaschool_app/` | Checklist completo de pruebas |
+| `PROCESO_ENROLLMENT_PWA.md` | `/iaschool_app/` | Flujo de registro con QR |
+| `LISTA_NECESIDADES_VISUALES.md` | `/iaschool_app/` | Recursos visuales detallados |
+| `ANALISIS_RIESGOS_SISTEMA.md` | `/iaschool_app/` | Análisis de seguridad |
 
 ---
 

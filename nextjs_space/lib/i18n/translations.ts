@@ -1273,6 +1273,74 @@ const frTranslations = {
     totalSchools: 'Total des écoles', activeSchools: 'Écoles actives', totalUsers: 'Total des utilisateurs',
     systemSettings: 'Paramètres système', maintenanceMode: 'Mode maintenance'
   },
+  scholarships: {
+    title: 'Bourses et Réductions', newScholarship: 'Nouvelle Bourse', editScholarship: 'Modifier la Bourse',
+    type: 'Type', academic: 'Académique', sports: 'Sportive', siblings: 'Réduction Fratrie',
+    earlyPayment: 'Paiement Anticipé', annual: 'Paiement Annuel', discountType: 'Type de Réduction',
+    percentage: 'Pourcentage', fixed: 'Montant Fixe', discountValue: 'Valeur', applyTo: 'Appliquer à',
+    tuition: 'Frais de Scolarité', enrollment: 'Inscription', materials: 'Matériels', all: 'Tous',
+    minGPA: 'Moyenne Minimum', maxBeneficiaries: 'Max. Bénéficiaires', validFrom: 'Valide depuis',
+    validUntil: 'Valide jusqu\'à', assign: 'Attribuer', beneficiaries: 'Bénéficiaires',
+    studentsWithScholarship: 'Élèves avec Bourse', noScholarships: 'Aucune bourse configurée'
+  },
+  cycles: {
+    title: 'Cycles Scolaires', newCycle: 'Nouveau Cycle', editCycle: 'Modifier le Cycle',
+    cycleName: 'Nom du Cycle', startDate: 'Date de Début', endDate: 'Date de Fin',
+    status: 'Statut', upcoming: 'À venir', active: 'Actif', completed: 'Terminé',
+    archived: 'Archivé', currentCycle: 'Cycle Actuel', activate: 'Activer',
+    inscriptionPeriod: 'Période d\'Inscription', classesPeriod: 'Période de Cours',
+    inscriptionFee: 'Frais d\'Inscription', monthlyTuition: 'Frais Mensuels',
+    materialsFee: 'Frais de Matériels', autoPromotion: 'Promotion Automatique',
+    promotionMinGPA: 'Moyenne Min. pour Promotion', enrollments: 'Inscriptions',
+    chargesGenerated: 'Charges Générées', noCycles: 'Aucun cycle configuré'
+  },
+  tutors: {
+    title: 'Multi-Tuteur', addTutor: 'Ajouter Tuteur', editPermissions: 'Modifier Permissions',
+    relationship: 'Relation', parent: 'Parent', stepparent: 'Beau-parent',
+    grandparent: 'Grand-parent', legalGuardian: 'Tuteur Légal', relative: 'Autre Famille',
+    other: 'Autre', custodyType: 'Type de Garde', fullCustody: 'Garde Complète',
+    sharedCustody: 'Garde Partagée', visitation: 'Visite Seulement', restricted: 'Restreint',
+    primaryContact: 'Contact Principal', fullAccess: 'Accès Complet',
+    canViewGrades: 'Voir Notes', canViewAttendance: 'Voir Présence',
+    canViewPayments: 'Voir Paiements', canMakePayments: 'Effectuer Paiements',
+    canPickup: 'Peut Récupérer', canCommunicate: 'Communiquer', canReceiveNotifications: 'Notifications',
+    canRequestPermissions: 'Demander Permissions', custodyNotes: 'Notes de Garde',
+    noTutors: 'Aucun tuteur configuré'
+  },
+  referrals: {
+    title: 'Programme Parrainage', recommendSchool: 'Recommandez Votre École',
+    myReferrals: 'Mes Parrainages', referralProgram: 'Programme de Parrainage',
+    referredName: 'Nom du Parrainé', referredPhone: 'Téléphone', referredEmail: 'Email',
+    childName: 'Nom de l\'Enfant', childGrade: 'Niveau d\'Intérêt', notes: 'Notes',
+    submitReferral: 'Envoyer Parrainage', pending: 'En attente', contacted: 'Contacté',
+    interested: 'Intéressé', enrolled: 'Inscrit', notInterested: 'Pas Intéressé',
+    alreadyReferred: 'Déjà Parrainé', reward: 'Récompense', rewardPending: 'Récompense en Attente',
+    rewardApplied: 'Récompense Appliquée', conversionRate: 'Taux de Conversion',
+    alreadyReferredError: 'Quelqu\'un a déjà parrainé cette personne, recommandez quelqu\'un d\'autre.',
+    noReferrals: 'Aucun parrainage encore'
+  },
+  gamification: {
+    title: 'Gamification', points: 'Points', badges: 'Badges', achievements: 'Réalisations',
+    level: 'Niveau', ranking: 'Classement', leaderboard: 'Tableau des Leaders',
+    earnedBadges: 'Badges Gagnés', progress: 'Progrès', streak: 'Série',
+    dailyChallenge: 'Défi Quotidien', weeklyChallenge: 'Défi Hebdomadaire',
+    pointsEarned: 'Points Gagnés', position: 'Position', topStudents: 'Meilleurs Élèves'
+  },
+  tips: {
+    title: 'Conseils et Astuces', newTip: 'Nouveau Conseil', category: 'Catégorie',
+    ageGroup: 'Groupe d\'Âge', forParents: 'Pour Parents', forTeachers: 'Pour Enseignants',
+    forStudents: 'Pour Élèves', academic: 'Académique', emotional: 'Émotionnel',
+    health: 'Santé', technology: 'Technologie', approve: 'Approuver', reject: 'Rejeter',
+    generateWithAI: 'Générer avec IA', aiGenerated: 'Généré par IA',
+    pendingApproval: 'Approbation en Attente'
+  },
+  biometric: {
+    title: 'Authentification Biométrique', enableBiometric: 'Activer Biométrie',
+    faceId: 'Face ID', touchId: 'Touch ID', fingerprint: 'Empreinte Digitale',
+    windowsHello: 'Windows Hello', setupBiometric: 'Configurer Biométrie',
+    useBiometric: 'Utiliser Biométrie', biometricEnabled: 'Biométrie Activée',
+    biometricDisabled: 'Biométrie Désactivée', securityKey: 'Clé de Sécurité'
+  },
   roles: { admin: 'Administrateur', teacher: 'Enseignant', parent: 'Parent', student: 'Élève', superAdmin: 'Super Admin', vocal: 'Délégué de Groupe' },
   time: { today: 'Aujourd\'hui', yesterday: 'Hier', daysAgo: 'il y a {n} jours', hoursAgo: 'il y a {n} heures', minutesAgo: 'il y a {n} minutes', justNow: 'À l\'instant', days: 'jours', hours: 'heures', minutes: 'minutes' },
   months: { january: 'Janvier', february: 'Février', march: 'Mars', april: 'Avril', may: 'Mai', june: 'Juin', july: 'Juillet', august: 'Août', september: 'Septembre', october: 'Octobre', november: 'Novembre', december: 'Décembre' },
@@ -1428,6 +1496,74 @@ const jaTranslations = {
     auditLog: '監査ログ', newSchool: '新しい学校', schoolDetails: '学校詳細',
     totalSchools: '学校総数', activeSchools: 'アクティブな学校', totalUsers: 'ユーザー総数',
     systemSettings: 'システム設定', maintenanceMode: 'メンテナンスモード'
+  },
+  scholarships: {
+    title: '奨学金と割引', newScholarship: '新しい奨学金', editScholarship: '奨学金を編集',
+    type: 'タイプ', academic: '学術', sports: 'スポーツ', siblings: '兄弟割引',
+    earlyPayment: '早期支払い', annual: '年払い', discountType: '割引タイプ',
+    percentage: 'パーセント', fixed: '固定金額', discountValue: '値', applyTo: '適用対象',
+    tuition: '授業料', enrollment: '入学金', materials: '教材', all: 'すべて',
+    minGPA: '最低平均', maxBeneficiaries: '最大受益者数', validFrom: '有効開始',
+    validUntil: '有効期限', assign: '割り当て', beneficiaries: '受益者',
+    studentsWithScholarship: '奨学金を持つ生徒', noScholarships: '奨学金が設定されていません'
+  },
+  cycles: {
+    title: '学校サイクル', newCycle: '新しいサイクル', editCycle: 'サイクルを編集',
+    cycleName: 'サイクル名', startDate: '開始日', endDate: '終了日',
+    status: 'ステータス', upcoming: '予定', active: 'アクティブ', completed: '完了',
+    archived: 'アーカイブ', currentCycle: '現在のサイクル', activate: 'アクティベート',
+    inscriptionPeriod: '入学期間', classesPeriod: '授業期間',
+    inscriptionFee: '入学金', monthlyTuition: '月額授業料',
+    materialsFee: '教材費', autoPromotion: '自動昇進',
+    promotionMinGPA: '昇進最低平均', enrollments: '入学者数',
+    chargesGenerated: '生成された料金', noCycles: 'サイクルが設定されていません'
+  },
+  tutors: {
+    title: 'マルチ保護者', addTutor: '保護者を追加', editPermissions: '権限を編集',
+    relationship: '関係', parent: '親', stepparent: '継親',
+    grandparent: '祖父母', legalGuardian: '法定後見人', relative: '親戚',
+    other: 'その他', custodyType: '監護権タイプ', fullCustody: '完全監護',
+    sharedCustody: '共同監護', visitation: '面会のみ', restricted: '制限付き',
+    primaryContact: '主要連絡先', fullAccess: '完全アクセス',
+    canViewGrades: '成績閲覧', canViewAttendance: '出席閲覧',
+    canViewPayments: '支払い閲覧', canMakePayments: '支払い実行',
+    canPickup: '迎え可', canCommunicate: '連絡可', canReceiveNotifications: '通知',
+    canRequestPermissions: '許可申請', custodyNotes: '監護メモ',
+    noTutors: '保護者が設定されていません'
+  },
+  referrals: {
+    title: '紹介プログラム', recommendSchool: '学校を推薦',
+    myReferrals: '私の紹介', referralProgram: '紹介プログラム',
+    referredName: '紹介者名', referredPhone: '電話番号', referredEmail: 'メール',
+    childName: 'お子様の名前', childGrade: '希望学年', notes: 'メモ',
+    submitReferral: '紹介を送信', pending: '保留中', contacted: '連絡済み',
+    interested: '興味あり', enrolled: '入学済み', notInterested: '興味なし',
+    alreadyReferred: '紹介済み', reward: '報酬', rewardPending: '報酬保留中',
+    rewardApplied: '報酬適用済み', conversionRate: 'コンバージョン率',
+    alreadyReferredError: 'この方は既に紹介されています。他の方を推薦してください。',
+    noReferrals: 'まだ紹介がありません'
+  },
+  gamification: {
+    title: 'ゲーミフィケーション', points: 'ポイント', badges: 'バッジ', achievements: '実績',
+    level: 'レベル', ranking: 'ランキング', leaderboard: 'リーダーボード',
+    earnedBadges: '獲得バッジ', progress: '進捗', streak: '連続',
+    dailyChallenge: 'デイリーチャレンジ', weeklyChallenge: 'ウィークリーチャレンジ',
+    pointsEarned: '獲得ポイント', position: '順位', topStudents: 'トップ生徒'
+  },
+  tips: {
+    title: 'ヒントとアドバイス', newTip: '新しいヒント', category: 'カテゴリ',
+    ageGroup: '年齢層', forParents: '保護者向け', forTeachers: '教師向け',
+    forStudents: '生徒向け', academic: '学術', emotional: '感情',
+    health: '健康', technology: 'テクノロジー', approve: '承認', reject: '却下',
+    generateWithAI: 'AIで生成', aiGenerated: 'AI生成',
+    pendingApproval: '承認待ち'
+  },
+  biometric: {
+    title: '生体認証', enableBiometric: '生体認証を有効にする',
+    faceId: 'Face ID', touchId: 'Touch ID', fingerprint: '指紋',
+    windowsHello: 'Windows Hello', setupBiometric: '生体認証を設定',
+    useBiometric: '生体認証を使用', biometricEnabled: '生体認証有効',
+    biometricDisabled: '生体認証無効', securityKey: 'セキュリティキー'
   },
   roles: { admin: '管理者', teacher: '教師', parent: '保護者', student: '生徒', superAdmin: 'スーパー管理者', vocal: 'グループ代表' },
   time: { today: '今日', yesterday: '昨日', daysAgo: '{n}日前', hoursAgo: '{n}時間前', minutesAgo: '{n}分前', justNow: 'たった今', days: '日', hours: '時間', minutes: '分' },
