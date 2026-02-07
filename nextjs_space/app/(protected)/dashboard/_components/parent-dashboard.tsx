@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Bell, BellRing, ArrowRight, ClipboardList } from "lucide-react";
+import { Bell, BellRing, ArrowRight, ClipboardList, FileText } from "lucide-react";
 import { StatCard } from "@/components/stat-card";
 import { AnnouncementCard } from "@/components/announcement-card";
 import { AcademicAlerts } from "@/components/academic-alerts";
@@ -92,7 +92,7 @@ export function ParentDashboard({ userId, schoolId, userName }: ParentDashboardP
       </motion.div>
 
       {/* Stats Cards */}
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-3 gap-4">
         <StatCard
           title={t.dashboard.unreadAnnouncements}
           value={unreadCount ?? 0}
@@ -107,6 +107,15 @@ export function ParentDashboard({ userId, schoolId, userName }: ParentDashboardP
             icon={ClipboardList}
             color="#1B4079"
             delay={0.2}
+          />
+        </Link>
+        <Link href="/dashboard/weekly-summary">
+          <StatCard
+            title="Resumen Semanal"
+            value="Ver Ahora"
+            icon={FileText}
+            color="#4D7C8A"
+            delay={0.3}
           />
         </Link>
       </div>

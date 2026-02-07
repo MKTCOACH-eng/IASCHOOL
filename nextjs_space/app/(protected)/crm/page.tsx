@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/language-context";
+import Link from "next/link";
 
 interface Stats {
   totalContacts: number;
@@ -423,6 +424,24 @@ export default function CRMPage() {
               </div>
             </div>
           </div>
+
+          {/* Sentiment Analysis Link */}
+          <Link href="/crm/sentiment">
+            <div className="bg-gradient-to-r from-[#1B4079] to-[#4D7C8A] rounded-xl p-5 text-white cursor-pointer hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center">
+                    <BarChart3 className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">Análisis de Sentimientos</h3>
+                    <p className="text-white/80 text-sm">Analiza el tono de las conversaciones con IA</p>
+                  </div>
+                </div>
+                <div className="text-white/60">&rarr;</div>
+              </div>
+            </div>
+          </Link>
 
           {/* Recent Campaigns */}
           <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
