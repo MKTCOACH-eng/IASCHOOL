@@ -18,6 +18,18 @@ enum Role {
   VOCAL
 }
 
+// Subroles para administradores (permisos específicos)
+enum AdminSubRole {
+  DIRECCION         // Director/Subdirector - acceso total
+  CAJA              // Caja/Tesorería - pagos, becas, cobranza
+  ENFERMERIA        // Enfermería - visitas médicas, historial médico
+  PSICOLOGIA        // Psicología - seguimiento emocional, alertas
+  CONSEJO_COMITE    // Consejo/Comité - disciplina, decisiones
+  COORDINACION      // Coordinación académica
+  RECEPCION         // Recepción - autorizados, permisos entrada/salida
+  SISTEMAS          // Sistemas - configuraciones técnicas
+}
+
 enum AttendanceStatus {
   PRESENTE
   AUSENTE
@@ -127,6 +139,12 @@ model School {
   disciplineRecords DisciplineRecord[] @relation("SchoolDiscipline")
   nurseVisits      NurseVisit[]      @relation("SchoolNurseVisits")
   bulkImportJobs   BulkImportJob[]   @relation("SchoolImports")
+  
+  // Becas y descuentos
+  scholarships     Scholarship[]     @relation("SchoolScholarships")
+  
+  // Módulo Psicoemocional
+  psychologicalRecords PsychologicalRecord[] @relation("SchoolPsychological")
 }
 
 model User {
@@ -136,6 +154,7 @@ model User {
   name               String
   phone              String?
   role               Role     @default(PADRE)
+  adminSubRoles      AdminSubRole[] @default([])  // Subroles para ADMIN (múltiples permitidos)
   schoolId           String?
   school             School?  @relation(fields: [schoolId], references: [id])
   mustChangePassword Boolean  @default(false)
@@ -240,6 +259,12 @@ model User {
   
   // Push Notifications
   pushSubscriptions       PushSubscription[] @relation("UserPushSubscriptions")
+  
+  // Módulo Psicoemocional
+  psychologicalRecords    PsychologicalRecord[] @relation("PsychologistRecords")
+  
+  // Becas creadas (admin con subrol CAJA o DIRECCION)
+  scholarshipsCreated     Scholarship[] @relation("ScholarshipCreator")
 }
 
 model Invitation {
@@ -327,6 +352,15 @@ model Student {
   disciplineRecords DisciplineRecord[] @relation("StudentDiscipline")
   nurseVisits      NurseVisit[]      @relation("StudentNurseVisits")
   medicalInfo      StudentMedicalInfo? @relation("StudentMedicalInfo")
+  
+  // Módulo Psicoemocional
+  psychologicalRecords PsychologicalRecord[] @relation("StudentPsychological")
+  
+  // Becas asignadas al estudiante
+  scholarships     StudentScholarship[] @relation("StudentScholarships")
+  
+  // Personas y vehículos autorizados para recoger
+  authorizedPickups AuthorizedPickup[] @relation("StudentAuthorizedPickups")
   
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
@@ -2329,4 +2363,297 @@ model PushSubscription {
   
   @@index([userId])
   @@index([isActive])
+}
+
+// ==========================================
+// MÓDULO DE BECAS Y DESCUENTOS
+// ==========================================
+
+enum ScholarshipType {
+  BECA_ACADEMICA      // Por excelencia académica
+  BECA_DEPORTIVA      // Por logros deportivos
+  BECA_NECESIDAD      // Por necesidad económica
+  DESCUENTO_HERMANOS  // Descuento por hermanos
+  DESCUENTO_PRONTO_PAGO // Descuento por pago anticipado
+  DESCUENTO_ANUAL     // Descuento por pago anual
+  BECA_EMPLEADO       // Para hijos de empleados
+  CONVENIO            // Por convenio empresarial
+  OTRO
+}
+
+enum ScholarshipStatus {
+  ACTIVA
+  SUSPENDIDA
+  VENCIDA
+  CANCELADA
+}
+
+enum DiscountApplyTo {
+  COLEGIATURA       // Solo mensualidades
+  INSCRIPCION       // Solo inscripción
+  AMBOS             // Colegiatura e inscripción
+  TODO              // Todos los conceptos
+}
+
+// Tipos de becas/descuentos disponibles en la escuela
+model Scholarship {
+  id           String             @id @default(cuid())
+  schoolId     String
+  school       School             @relation("SchoolScholarships", fields: [schoolId], references: [id])
+  
+  name         String             // Nombre de la beca
+  type         ScholarshipType
+  description  String?            @db.Text
+  
+  // Configuración del descuento
+  discountType String             @default("PERCENTAGE") // PERCENTAGE o FIXED
+  discountValue Float             // Porcentaje (0-100) o monto fijo
+  applyTo      DiscountApplyTo    @default(COLEGIATURA)
+  
+  // Requisitos
+  minGPA       Float?             // Promedio mínimo requerido
+  requirements String?            @db.Text
+  
+  // Vigencia
+  isActive     Boolean            @default(true)
+  validFrom    DateTime?
+  validUntil   DateTime?
+  
+  // Límites
+  maxBeneficiaries Int?           // Máximo de estudiantes con esta beca
+  currentBeneficiaries Int        @default(0)
+  
+  // Creado por (solo ADMIN con subrol CAJA o DIRECCION)
+  createdById  String
+  createdBy    User               @relation("ScholarshipCreator", fields: [createdById], references: [id])
+  
+  // Estudiantes con esta beca
+  students     StudentScholarship[]
+  
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  
+  @@index([schoolId])
+  @@index([type])
+  @@index([isActive])
+}
+
+// Becas asignadas a estudiantes específicos
+model StudentScholarship {
+  id             String            @id @default(cuid())
+  studentId      String
+  student        Student           @relation("StudentScholarships", fields: [studentId], references: [id])
+  scholarshipId  String
+  scholarship    Scholarship       @relation(fields: [scholarshipId], references: [id])
+  
+  status         ScholarshipStatus @default(ACTIVA)
+  
+  // Personalización (puede sobreescribir el % de la beca)
+  customDiscountValue Float?
+  
+  // Periodo de aplicación
+  validFrom      DateTime
+  validUntil     DateTime?
+  
+  // Documentos de soporte
+  supportingDocUrl String?
+  
+  // Notas/Observaciones
+  notes          String?           @db.Text
+  
+  // Auditoría
+  approvedAt     DateTime?
+  approvedBy     String?           // ID del admin que aprobó
+  
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  
+  @@unique([studentId, scholarshipId])
+  @@index([studentId])
+  @@index([scholarshipId])
+  @@index([status])
+}
+
+// ==========================================
+// MÓDULO PSICOEMOCIONAL
+// ==========================================
+
+enum PsychologicalRecordType {
+  SESION_INDIVIDUAL     // Sesión individual con el alumno
+  SESION_FAMILIAR       // Sesión con padres/familia
+  OBSERVACION_AULA      // Observación en clase
+  EVALUACION            // Evaluación psicológica
+  INTERVENCION_CRISIS   // Intervención en crisis
+  SEGUIMIENTO           // Seguimiento de caso
+  CANALIZACION          // Canalización externa
+  REPORTE_DOCENTE       // Reporte de profesor
+  ALERTA_ACADEMICA      // Alerta por bajo rendimiento
+  OTRO
+}
+
+enum PsychologicalAlertLevel {
+  BAJO            // Seguimiento rutinario
+  MEDIO           // Requiere atención
+  ALTO            // Prioridad alta
+  URGENTE         // Atención inmediata
+}
+
+enum EmotionalState {
+  ESTABLE
+  ANSIOSO
+  DEPRIMIDO
+  AGITADO
+  RETRAIDO
+  AGRESIVO
+  TEMEROSO
+  CONFUNDIDO
+  COOPERATIVO
+  RESISTENTE
+}
+
+model PsychologicalRecord {
+  id           String                    @id @default(cuid())
+  studentId    String
+  student      Student                   @relation("StudentPsychological", fields: [studentId], references: [id])
+  schoolId     String
+  school       School                    @relation("SchoolPsychological", fields: [schoolId], references: [id])
+  
+  type         PsychologicalRecordType
+  alertLevel   PsychologicalAlertLevel   @default(BAJO)
+  
+  // Fecha y duración
+  date         DateTime
+  duration     Int?                      // Minutos
+  
+  // Evaluación emocional
+  emotionalState EmotionalState?
+  
+  // Contenido de la sesión
+  reason       String                    // Motivo de consulta
+  description  String                    @db.Text
+  observations String?                   @db.Text
+  
+  // Plan de acción
+  actionPlan   String?                   @db.Text
+  recommendations String?                @db.Text
+  
+  // Seguimiento
+  followUpRequired Boolean               @default(false)
+  followUpDate DateTime?
+  followUpNotes String?                  @db.Text
+  
+  // Comunicación con padres
+  parentNotified Boolean                 @default(false)
+  parentNotifiedAt DateTime?
+  parentMeetingScheduled Boolean         @default(false)
+  parentMeetingDate DateTime?
+  
+  // Canalización externa
+  externalReferral Boolean               @default(false)
+  externalProvider String?               // Psicólogo/Psiquiatra externo
+  externalReferralReason String?         @db.Text
+  
+  // Confidencialidad
+  isConfidential Boolean                 @default(true)
+  visibleToTeachers Boolean              @default(false)
+  
+  // Documentos adjuntos
+  attachmentUrl String?
+  
+  // Registrado por (psicólogo escolar)
+  recordedById String
+  recordedBy   User                      @relation("PsychologistRecords", fields: [recordedById], references: [id])
+  
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  
+  @@index([studentId])
+  @@index([schoolId])
+  @@index([date])
+  @@index([alertLevel])
+  @@index([type])
+}
+
+// ==========================================
+// PERSONAS Y VEHÍCULOS AUTORIZADOS
+// ==========================================
+
+enum PickupRelationship {
+  PADRE
+  MADRE
+  ABUELO_A
+  TIO_A
+  HERMANO_A
+  CHOFER
+  NANA
+  VECINO
+  OTRO
+}
+
+model AuthorizedPickup {
+  id           String             @id @default(cuid())
+  studentId    String
+  student      Student            @relation("StudentAuthorizedPickups", fields: [studentId], references: [id])
+  
+  // Información de la persona
+  fullName     String
+  relationship PickupRelationship
+  relationshipOther String?       // Si es OTRO, especificar
+  phone        String
+  email        String?
+  
+  // Identificación
+  idType       String?            // INE, Pasaporte, etc.
+  idNumber     String?
+  photoUrl     String?            // Foto de la persona
+  idDocumentUrl String?           // Foto de la identificación
+  
+  // Vehículos asociados a esta persona
+  vehicles     AuthorizedVehicle[]
+  
+  // Permisos
+  canPickupAlone Boolean          @default(true)
+  requiresIdVerification Boolean  @default(true)
+  
+  // Estado
+  isActive     Boolean            @default(true)
+  activeFrom   DateTime           @default(now())
+  activeUntil  DateTime?          // Para autorizaciones temporales
+  
+  // Notas/Instrucciones especiales
+  notes        String?            @db.Text
+  
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  
+  @@index([studentId])
+  @@index([isActive])
+}
+
+model AuthorizedVehicle {
+  id                 String           @id @default(cuid())
+  authorizedPickupId String
+  authorizedPickup   AuthorizedPickup @relation(fields: [authorizedPickupId], references: [id], onDelete: Cascade)
+  
+  // Información del vehículo
+  make         String             // Marca
+  model        String             // Modelo
+  year         Int?
+  color        String
+  licensePlate String
+  
+  // Identificación visual
+  photoUrl     String?            // Foto del vehículo
+  
+  // Estado
+  isActive     Boolean            @default(true)
+  
+  // Notas
+  notes        String?
+  
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  
+  @@index([authorizedPickupId])
+  @@index([licensePlate])
 }

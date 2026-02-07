@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Priority } from "@prisma/client";
+import { PrismaClient, Role, Priority, AdminSubRole } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -29,6 +29,14 @@ async function main() {
   await prisma.message.deleteMany();
   await prisma.conversationParticipant.deleteMany();
   await prisma.conversation.deleteMany();
+  
+  // Nuevos módulos - Limpiar antes de estudiantes
+  await prisma.authorizedVehicle.deleteMany();
+  await prisma.authorizedPickup.deleteMany();
+  await prisma.psychologicalRecord.deleteMany();
+  await prisma.studentScholarship.deleteMany();
+  await prisma.scholarship.deleteMany();
+  
   await prisma.student.deleteMany();
   await prisma.group.deleteMany();
   await prisma.announcementRead.deleteMany();
@@ -106,19 +114,150 @@ async function main() {
     },
   });
 
-  // Create admin user
+  // Create admin user (Dirección)
   const admin = await prisma.user.create({
     data: {
       email: "admin@vermontschool.edu",
       password: adminPassword,
       name: "Director García",
       role: Role.ADMIN,
+      adminSubRoles: [AdminSubRole.DIRECCION],
       schoolId: school.id,
       mustChangePassword: false,
       profileCompleted: true,
     },
   });
-  console.log("Created admin:", admin.name);
+  console.log("Created admin (Dirección):", admin.name);
+
+  // ==================== ADMINS CON SUBROLES ====================
+  
+  // Admin - Caja/Tesorería
+  const adminCaja = await prisma.user.create({
+    data: {
+      email: "caja@vermontschool.edu",
+      password: adminPassword,
+      name: "Laura Mendoza",
+      phone: "5551234001",
+      role: Role.ADMIN,
+      adminSubRoles: [AdminSubRole.CAJA],
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+  console.log("Created admin (Caja):", adminCaja.name);
+
+  // Admin - Enfermería
+  const adminEnfermeria = await prisma.user.create({
+    data: {
+      email: "enfermeria@vermontschool.edu",
+      password: adminPassword,
+      name: "Dr. Roberto Salinas",
+      phone: "5551234002",
+      role: Role.ADMIN,
+      adminSubRoles: [AdminSubRole.ENFERMERIA],
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+  console.log("Created admin (Enfermería):", adminEnfermeria.name);
+
+  // Admin - Psicología
+  const adminPsicologia = await prisma.user.create({
+    data: {
+      email: "psicologia@vermontschool.edu",
+      password: adminPassword,
+      name: "Lic. Patricia Ruiz",
+      phone: "5551234003",
+      role: Role.ADMIN,
+      adminSubRoles: [AdminSubRole.PSICOLOGIA],
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+  console.log("Created admin (Psicología):", adminPsicologia.name);
+
+  // Admin - Consejo/Comité
+  const adminConsejo = await prisma.user.create({
+    data: {
+      email: "consejo@vermontschool.edu",
+      password: adminPassword,
+      name: "Mtro. Fernando Vega",
+      phone: "5551234004",
+      role: Role.ADMIN,
+      adminSubRoles: [AdminSubRole.CONSEJO_COMITE],
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+  console.log("Created admin (Consejo):", adminConsejo.name);
+
+  // Admin - Coordinación Académica
+  const adminCoordinacion = await prisma.user.create({
+    data: {
+      email: "coordinacion@vermontschool.edu",
+      password: adminPassword,
+      name: "Mtra. Gabriela Torres",
+      phone: "5551234005",
+      role: Role.ADMIN,
+      adminSubRoles: [AdminSubRole.COORDINACION],
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+  console.log("Created admin (Coordinación):", adminCoordinacion.name);
+
+  // Admin - Recepción
+  const adminRecepcion = await prisma.user.create({
+    data: {
+      email: "recepcion@vermontschool.edu",
+      password: adminPassword,
+      name: "Sandra Herrera",
+      phone: "5551234006",
+      role: Role.ADMIN,
+      adminSubRoles: [AdminSubRole.RECEPCION],
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+  console.log("Created admin (Recepción):", adminRecepcion.name);
+
+  // Admin - Sistemas
+  const adminSistemas = await prisma.user.create({
+    data: {
+      email: "sistemas@vermontschool.edu",
+      password: adminPassword,
+      name: "Ing. Carlos Ramírez",
+      phone: "5551234007",
+      role: Role.ADMIN,
+      adminSubRoles: [AdminSubRole.SISTEMAS],
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+  console.log("Created admin (Sistemas):", adminSistemas.name);
+
+  // Admin con múltiples subroles (Dirección + Caja)
+  const adminMultiple = await prisma.user.create({
+    data: {
+      email: "subdirector@vermontschool.edu",
+      password: adminPassword,
+      name: "Lic. Miguel Ángel Soto",
+      phone: "5551234008",
+      role: Role.ADMIN,
+      adminSubRoles: [AdminSubRole.DIRECCION, AdminSubRole.CAJA, AdminSubRole.COORDINACION],
+      schoolId: school.id,
+      mustChangePassword: false,
+      profileCompleted: true,
+    },
+  });
+  console.log("Created admin (Múltiple):", adminMultiple.name);
 
   // Create padre users
   const maria = await prisma.user.create({
@@ -1336,15 +1475,291 @@ async function main() {
   console.log("Created sample photo albums");
 
   console.log("\n=== CREDENCIALES DE PRUEBA ===");
-  console.log("Admin: john@doe.com / johndoe123");
-  console.log("Admin: admin@vermontschool.edu / admin123");
-  console.log("Profesor: prof.sanchez@vermontschool.edu / profesor123");
-  console.log("Profesor: prof.ramirez@vermontschool.edu / profesor123");
-  console.log("Padre: maria.lopez@email.com / padre123");
-  console.log("Padre: juan.martinez@email.com / padre123");
-  console.log("Padre: ana.rodriguez@email.com / padre123");
-  console.log("Alumno: sofia.lopez@vermontschool.edu / alumno123");
-  console.log("Vocal: vocal@email.com / vocal123");
+  // ==================== BECAS DE PRUEBA ====================
+  
+  // Crear tipos de becas
+  const becaAcademica = await prisma.scholarship.create({
+    data: {
+      schoolId: school.id,
+      name: "Beca Excelencia Académica",
+      type: "BECA_ACADEMICA",
+      description: "Beca para estudiantes con promedio superior a 9.5",
+      discountType: "PERCENTAGE",
+      discountValue: 25,
+      applyTo: "COLEGIATURA",
+      minGPA: 9.5,
+      requirements: "Mantener promedio mínimo de 9.5 durante el ciclo escolar",
+      isActive: true,
+      maxBeneficiaries: 20,
+      createdById: adminCaja.id,
+    },
+  });
+
+  const descuentoHermanos = await prisma.scholarship.create({
+    data: {
+      schoolId: school.id,
+      name: "Descuento por Hermanos",
+      type: "DESCUENTO_HERMANOS",
+      description: "15% de descuento para el segundo hijo inscrito, 20% para tercero",
+      discountType: "PERCENTAGE",
+      discountValue: 15,
+      applyTo: "COLEGIATURA",
+      isActive: true,
+      createdById: adminCaja.id,
+    },
+  });
+
+  const becaNecesidad = await prisma.scholarship.create({
+    data: {
+      schoolId: school.id,
+      name: "Beca Apoyo Económico",
+      type: "BECA_NECESIDAD",
+      description: "Beca para familias con necesidad económica comprobada",
+      discountType: "PERCENTAGE",
+      discountValue: 50,
+      applyTo: "AMBOS",
+      requirements: "Presentar estudio socioeconómico actualizado",
+      isActive: true,
+      maxBeneficiaries: 10,
+      createdById: admin.id,
+    },
+  });
+
+  const descuentoProntoPago = await prisma.scholarship.create({
+    data: {
+      schoolId: school.id,
+      name: "Descuento Pronto Pago",
+      type: "DESCUENTO_PRONTO_PAGO",
+      description: "5% de descuento por pago antes del día 5 de cada mes",
+      discountType: "PERCENTAGE",
+      discountValue: 5,
+      applyTo: "COLEGIATURA",
+      isActive: true,
+      createdById: adminCaja.id,
+    },
+  });
+
+  console.log("Created 4 scholarship types");
+
+  // Asignar beca a un estudiante
+  const students = await prisma.student.findMany({ take: 3 });
+  if (students.length > 0) {
+    await prisma.studentScholarship.create({
+      data: {
+        studentId: students[0].id,
+        scholarshipId: becaAcademica.id,
+        status: "ACTIVA",
+        validFrom: new Date("2026-01-01"),
+        validUntil: new Date("2026-12-31"),
+        notes: "Estudiante destacado con promedio 9.8",
+        approvedAt: new Date(),
+        approvedBy: admin.id,
+      },
+    });
+
+    if (students.length > 1) {
+      await prisma.studentScholarship.create({
+        data: {
+          studentId: students[1].id,
+          scholarshipId: descuentoHermanos.id,
+          status: "ACTIVA",
+          validFrom: new Date("2026-01-01"),
+          notes: "Hermano menor inscrito",
+          approvedAt: new Date(),
+          approvedBy: adminCaja.id,
+        },
+      });
+    }
+  }
+
+  console.log("Created student scholarships");
+
+  // ==================== REGISTROS PSICOEMOCIONALES ====================
+  
+  if (students.length > 0) {
+    await prisma.psychologicalRecord.create({
+      data: {
+        studentId: students[0].id,
+        schoolId: school.id,
+        type: "SESION_INDIVIDUAL",
+        alertLevel: "BAJO",
+        date: new Date("2026-01-15"),
+        duration: 45,
+        emotionalState: "ESTABLE",
+        reason: "Seguimiento rutinario de inicio de ciclo",
+        description: "Estudiante se muestra adaptado al nuevo ciclo escolar. Reporta buena relación con compañeros y profesores. No presenta dificultades emocionales significativas.",
+        observations: "Comunicación fluida y abierta durante la sesión",
+        actionPlan: "Continuar monitoreo trimestral",
+        followUpRequired: true,
+        followUpDate: new Date("2026-04-15"),
+        recordedById: adminPsicologia.id,
+      },
+    });
+
+    await prisma.psychologicalRecord.create({
+      data: {
+        studentId: students[0].id,
+        schoolId: school.id,
+        type: "OBSERVACION_AULA",
+        alertLevel: "BAJO",
+        date: new Date("2026-01-20"),
+        duration: 30,
+        reason: "Observación de conducta en clase",
+        description: "Se observó al estudiante durante clase de matemáticas. Muestra participación activa y buena interacción con pares.",
+        visibleToTeachers: true,
+        recordedById: adminPsicologia.id,
+      },
+    });
+
+    if (students.length > 1) {
+      await prisma.psychologicalRecord.create({
+        data: {
+          studentId: students[1].id,
+          schoolId: school.id,
+          type: "REPORTE_DOCENTE",
+          alertLevel: "MEDIO",
+          date: new Date("2026-01-25"),
+          emotionalState: "ANSIOSO",
+          reason: "Reporte de profesora por cambio de conducta",
+          description: "La profesora reporta que el estudiante ha mostrado signos de ansiedad en las últimas semanas, especialmente antes de exámenes.",
+          observations: "Se recomienda sesión individual y contacto con padres",
+          actionPlan: "1. Sesión individual la próxima semana\n2. Llamar a padres\n3. Estrategias de manejo de ansiedad",
+          followUpRequired: true,
+          followUpDate: new Date("2026-02-01"),
+          parentNotified: true,
+          parentNotifiedAt: new Date("2026-01-26"),
+          recordedById: adminPsicologia.id,
+        },
+      });
+    }
+  }
+
+  console.log("Created psychological records");
+
+  // ==================== PERSONAS Y VEHÍCULOS AUTORIZADOS ====================
+  
+  if (students.length > 0) {
+    // Persona autorizada 1 - Abuela
+    const authorized1 = await prisma.authorizedPickup.create({
+      data: {
+        studentId: students[0].id,
+        fullName: "Rosa María González",
+        relationship: "ABUELO_A",
+        phone: "5559876543",
+        email: "rosa.gonzalez@email.com",
+        idType: "INE",
+        idNumber: "GOGR600115HDFNNS09",
+        canPickupAlone: true,
+        requiresIdVerification: true,
+        isActive: true,
+        notes: "Abuela materna. Recoge los martes y jueves.",
+      },
+    });
+
+    // Agregar vehículo a la persona autorizada
+    await prisma.authorizedVehicle.create({
+      data: {
+        authorizedPickupId: authorized1.id,
+        make: "Toyota",
+        model: "Corolla",
+        year: 2020,
+        color: "Plata",
+        licensePlate: "ABC-123-A",
+        isActive: true,
+      },
+    });
+
+    // Persona autorizada 2 - Chofer
+    const authorized2 = await prisma.authorizedPickup.create({
+      data: {
+        studentId: students[0].id,
+        fullName: "Pedro Hernández",
+        relationship: "CHOFER",
+        phone: "5551112233",
+        idType: "INE",
+        idNumber: "HEPD850320HDFRRD08",
+        canPickupAlone: true,
+        requiresIdVerification: true,
+        isActive: true,
+        notes: "Chofer de la familia. Autorizado de lunes a viernes.",
+      },
+    });
+
+    await prisma.authorizedVehicle.create({
+      data: {
+        authorizedPickupId: authorized2.id,
+        make: "Honda",
+        model: "CR-V",
+        year: 2022,
+        color: "Negro",
+        licensePlate: "XYZ-789-B",
+        isActive: true,
+      },
+    });
+
+    // Persona autorizada 3 - Tía (para segundo estudiante)
+    if (students.length > 1) {
+      const authorized3 = await prisma.authorizedPickup.create({
+        data: {
+          studentId: students[1].id,
+          fullName: "Carmen Martínez López",
+          relationship: "TIO_A",
+          phone: "5553334455",
+          email: "carmen.martinez@email.com",
+          idType: "Pasaporte",
+          idNumber: "G12345678",
+          canPickupAlone: true,
+          requiresIdVerification: true,
+          isActive: true,
+          activeUntil: new Date("2026-06-30"),
+          notes: "Autorización temporal mientras padres viajan.",
+        },
+      });
+
+      await prisma.authorizedVehicle.create({
+        data: {
+          authorizedPickupId: authorized3.id,
+          make: "Volkswagen",
+          model: "Jetta",
+          year: 2021,
+          color: "Blanco",
+          licensePlate: "MNO-456-C",
+          isActive: true,
+        },
+      });
+    }
+  }
+
+  console.log("Created authorized pickups and vehicles");
+
+  console.log("\n==============================");
+  console.log("CREDENCIALES DE PRUEBA:");
+  console.log("==============================");
+  console.log("\n--- SUPER ADMIN ---");
+  console.log("superadmin@iaschool.edu / superadmin123");
+  console.log("\n--- ADMINS POR SUBROL ---");
+  console.log("Dirección: admin@vermontschool.edu / admin123");
+  console.log("Caja: caja@vermontschool.edu / admin123");
+  console.log("Enfermería: enfermeria@vermontschool.edu / admin123");
+  console.log("Psicología: psicologia@vermontschool.edu / admin123");
+  console.log("Consejo: consejo@vermontschool.edu / admin123");
+  console.log("Coordinación: coordinacion@vermontschool.edu / admin123");
+  console.log("Recepción: recepcion@vermontschool.edu / admin123");
+  console.log("Sistemas: sistemas@vermontschool.edu / admin123");
+  console.log("Subdirector (múltiple): subdirector@vermontschool.edu / admin123");
+  console.log("\n--- PROFESORES ---");
+  console.log("prof.sanchez@vermontschool.edu / profesor123");
+  console.log("prof.ramirez@vermontschool.edu / profesor123");
+  console.log("\n--- PADRES ---");
+  console.log("maria.lopez@email.com / padre123");
+  console.log("juan.martinez@email.com / padre123");
+  console.log("ana.rodriguez@email.com / padre123");
+  console.log("\n--- ALUMNO ---");
+  console.log("sofia.lopez@vermontschool.edu / alumno123");
+  console.log("\n--- VOCAL ---");
+  console.log("vocal@email.com / vocal123");
+  console.log("\n--- CUENTA DE PRUEBA ---");
+  console.log("john@doe.com / johndoe123");
   console.log("==============================\n");
 
   console.log("Seed completed successfully!");

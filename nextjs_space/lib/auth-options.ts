@@ -39,6 +39,7 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           role: user.role,
+          adminSubRoles: user.adminSubRoles || [],
           schoolId: user.schoolId,
           schoolName: user.school?.name,
           schoolLogo: user.school?.logoUrl,
@@ -55,6 +56,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
+        token.adminSubRoles = (user as any).adminSubRoles;
         token.schoolId = (user as any).schoolId;
         token.schoolName = (user as any).schoolName;
         token.schoolLogo = (user as any).schoolLogo;
@@ -66,6 +68,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         (session.user as any).id = token.id;
         (session.user as any).role = token.role;
+        (session.user as any).adminSubRoles = token.adminSubRoles;
         (session.user as any).schoolId = token.schoolId;
         (session.user as any).schoolName = token.schoolName;
         (session.user as any).schoolLogo = token.schoolLogo;
