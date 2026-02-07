@@ -22,7 +22,11 @@ import {
   ArrowRight,
   Star,
   Clock,
-  Smartphone
+  Smartphone,
+  Gift,
+  Percent,
+  Share2,
+  Wallet
 } from "lucide-react";
 import LandingChatbot from "@/components/landing-chatbot";
 import { useLanguage } from "@/contexts/language-context";
@@ -32,8 +36,8 @@ import { AnimatePresence, motion } from "framer-motion";
 export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
-  const [activeTab, setActiveTab] = useState<'colegios' | 'vocales'>('colegios');
-  const { language, setLanguage, t, languageNames, languageFlags } = useLanguage();
+  const [activeTab, setActiveTab] = useState<'colegios' | 'afiliados'>('colegios');
+  const { language, setLanguage, languageNames, languageFlags } = useLanguage();
   const availableLanguages: Language[] = ['es', 'en', 'pt', 'de', 'fr', 'ja'];
 
   useEffect(() => {
@@ -168,25 +172,26 @@ export default function LandingPage() {
                 
                 <p className="text-xl text-white/80 mb-10 leading-relaxed max-w-xl">
                   La plataforma integral que transforma la gestión escolar. 
-                  Colegios ganan <strong className="text-white">50% de cada suscripción</strong>. 
-                  Vocales generan ingresos por referidos.
+                  Colegios y afiliados generan ingresos mientras mejoran la comunicación con las familias.
                 </p>
 
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 mb-12">
                   <a
                     href="#para-colegios"
+                    onClick={() => setActiveTab('colegios')}
                     className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#1B4079] font-bold rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105"
                   >
                     <Building2 className="w-5 h-5" />
                     Soy Colegio
                   </a>
                   <a
-                    href="#para-vocales"
+                    href="#para-afiliados"
+                    onClick={() => setActiveTab('afiliados')}
                     className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/30"
                   >
-                    <UserCheck className="w-5 h-5" />
-                    Soy Vocal / Afiliado
+                    <Gift className="w-5 h-5" />
+                    Programa de Afiliados
                   </a>
                 </div>
 
@@ -227,10 +232,6 @@ export default function LandingPage() {
                 {/* Stats grid */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white/10 rounded-2xl p-4 text-center">
-                    <div className="text-3xl font-bold text-white">50%</div>
-                    <div className="text-white/60 text-sm">Comisión para colegios</div>
-                  </div>
-                  <div className="bg-white/10 rounded-2xl p-4 text-center">
                     <div className="text-3xl font-bold text-white">85%</div>
                     <div className="text-white/60 text-sm">Menos carga administrativa</div>
                   </div>
@@ -241,6 +242,10 @@ export default function LandingPage() {
                   <div className="bg-white/10 rounded-2xl p-4 text-center">
                     <div className="text-3xl font-bold text-white">6</div>
                     <div className="text-white/60 text-sm">Idiomas disponibles</div>
+                  </div>
+                  <div className="bg-white/10 rounded-2xl p-4 text-center">
+                    <div className="text-3xl font-bold text-white">+20</div>
+                    <div className="text-white/60 text-sm">Módulos integrados</div>
                   </div>
                 </div>
               </div>
@@ -261,7 +266,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Tabs: Colegios vs Vocales */}
+      {/* Tabs: Colegios vs Afiliados */}
       <section className="py-8 bg-gray-50 sticky top-20 z-40 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center">
@@ -278,15 +283,15 @@ export default function LandingPage() {
                 Para Colegios
               </button>
               <button
-                onClick={() => setActiveTab('vocales')}
+                onClick={() => setActiveTab('afiliados')}
                 className={`flex items-center gap-2 px-8 py-3 rounded-full font-semibold transition-all ${
-                  activeTab === 'vocales'
+                  activeTab === 'afiliados'
                     ? 'bg-[#1B4079] text-white shadow-md'
                     : 'text-gray-600 hover:text-[#1B4079]'
                 }`}
               >
-                <Users className="w-5 h-5" />
-                Para Vocales
+                <Gift className="w-5 h-5" />
+                Programa Afiliados
               </button>
             </div>
           </div>
@@ -303,10 +308,10 @@ export default function LandingPage() {
               <Building2 className="w-4 h-4" />
               Solución para Instituciones Educativas
             </div>
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Tu colegio, <span className="text-[#1B4079]">potenciado con IA</span>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white bg-[#1B4079] inline-block px-6 py-3 rounded-2xl mb-4">
+              Tu colegio, potenciado con IA
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mt-6">
               Digitaliza la comunicación, automatiza procesos y genera un nuevo flujo de ingresos. 
               Todo desde una sola plataforma.
             </p>
@@ -315,22 +320,13 @@ export default function LandingPage() {
           {/* Video explicativo para colegios */}
           <div className="mb-20">
             <div className="relative bg-gradient-to-br from-[#1B4079] to-[#0f2847] rounded-3xl overflow-hidden shadow-2xl">
-              <div className="aspect-video relative">
-                {/* Video placeholder con info */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8">
-                  <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 hover:bg-white/30 transition-all cursor-pointer group">
-                    <Play className="w-10 h-10 text-white ml-1 group-hover:scale-110 transition-transform" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">¿Qué es IA School?</h3>
-                  <p className="text-white/70 text-center max-w-md">Descubre cómo nuestra plataforma puede transformar la gestión de tu institución educativa</p>
+              <div className="aspect-video relative flex flex-col items-center justify-center text-white p-8">
+                <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 hover:bg-white/30 transition-all cursor-pointer group border-4 border-white/30">
+                  <Play className="w-12 h-12 text-white ml-1 group-hover:scale-110 transition-transform" fill="white" />
                 </div>
-                
-                {/* Overlay con logo */}
-                <div className="absolute bottom-6 right-6">
-                  <div className="relative w-16 h-16 opacity-50">
-                    <Image src="/iaschool-logo-new.png" alt="IA School" fill className="object-contain" />
-                  </div>
-                </div>
+                <h3 className="text-3xl font-bold mb-3 text-white">¿Qué es IA School?</h3>
+                <p className="text-white/80 text-center max-w-lg text-lg">Descubre cómo nuestra plataforma puede transformar la gestión de tu institución educativa</p>
+                <p className="text-white/50 text-sm mt-4">Video próximamente disponible</p>
               </div>
             </div>
           </div>
@@ -338,22 +334,22 @@ export default function LandingPage() {
           {/* Beneficios para colegios */}
           <div className="grid md:grid-cols-3 gap-8 mb-20">
             <div className="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all">
-              <div className="w-14 h-14 rounded-2xl bg-[#1B4079]/10 flex items-center justify-center mb-6">
-                <DollarSign className="w-7 h-7 text-[#1B4079]" />
+              <div className="w-14 h-14 rounded-2xl bg-[#1B4079] flex items-center justify-center mb-6">
+                <DollarSign className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Genera Ingresos</h3>
+              <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-3">Genera Ingresos</h3>
               <p className="text-gray-600 mb-4">
-                Recibe el <strong>50% de cada suscripción</strong> de tus familias. 
-                Un colegio de 500 alumnos puede generar más de $500,000 MXN anuales.
+                Recibe comisiones por cada familia que se suscribe a través de tu institución. 
+                Un nuevo flujo de ingresos sin inversión inicial.
               </p>
-              <div className="text-[#1B4079] font-semibold text-sm">Sin inversión inicial →</div>
+              <div className="text-[#1B4079] font-semibold text-sm">Contáctanos para conocer el modelo →</div>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all">
-              <div className="w-14 h-14 rounded-2xl bg-[#1B4079]/10 flex items-center justify-center mb-6">
-                <BarChart3 className="w-7 h-7 text-[#1B4079]" />
+              <div className="w-14 h-14 rounded-2xl bg-[#1B4079] flex items-center justify-center mb-6">
+                <BarChart3 className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Control Total</h3>
+              <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-3">Control Total</h3>
               <p className="text-gray-600 mb-4">
                 Dashboard administrativo con métricas en tiempo real. Cobranza, asistencia, 
                 comunicación y reportes en un solo lugar.
@@ -362,10 +358,10 @@ export default function LandingPage() {
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all">
-              <div className="w-14 h-14 rounded-2xl bg-[#1B4079]/10 flex items-center justify-center mb-6">
-                <MessageSquare className="w-7 h-7 text-[#1B4079]" />
+              <div className="w-14 h-14 rounded-2xl bg-[#1B4079] flex items-center justify-center mb-6">
+                <MessageSquare className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Comunicación Efectiva</h3>
+              <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-3">Comunicación Efectiva</h3>
               <p className="text-gray-600 mb-4">
                 Mensajes, anuncios, calendario y notificaciones push. 
                 Los padres siempre informados, el colegio siempre conectado.
@@ -376,7 +372,7 @@ export default function LandingPage() {
 
           {/* Módulos incluidos */}
           <div className="bg-[#1B4079] rounded-3xl p-10 text-white">
-            <h3 className="text-2xl font-bold mb-8 text-center">Módulos Incluidos</h3>
+            <h3 className="text-2xl font-bold mb-8 text-center text-white">Módulos Incluidos</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
               {[
                 { icon: MessageSquare, label: 'Mensajería' },
@@ -405,107 +401,145 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* SECCIÓN PARA VOCALES */}
-      <section id="para-vocales" className={`py-20 bg-white ${activeTab !== 'vocales' ? 'hidden' : ''}`}>
+      {/* SECCIÓN PARA AFILIADOS */}
+      <section id="para-afiliados" className={`py-20 bg-white ${activeTab !== 'afiliados' ? 'hidden' : ''}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Header */}
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1B4079]/10 rounded-full text-[#1B4079] text-sm font-medium mb-4">
-              <UserCheck className="w-4 h-4" />
-              Programa de Vocales y Afiliados
+              <Gift className="w-4 h-4" />
+              Programa de Afiliados IA School
             </div>
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Gana dinero <span className="text-[#1B4079]">ayudando a tu comunidad</span>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white bg-[#1B4079] inline-block px-6 py-3 rounded-2xl mb-4">
+              Gana dinero ayudando a tu comunidad
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Conviértete en Vocal de Grupo o Afiliado. Recomienda IA School a familias 
-              y gana comisiones por cada estudiante que se registre.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mt-6">
+              Conviértete en Afiliado de IA School. Recomienda nuestra plataforma a colegios y familias, 
+              y recibe comisiones recurrentes por cada referido activo.
             </p>
           </div>
 
-          {/* Video explicativo para vocales */}
+          {/* Video explicativo para afiliados */}
           <div className="mb-20">
             <div className="relative bg-gradient-to-br from-[#1B4079] to-[#0f2847] rounded-3xl overflow-hidden shadow-2xl">
-              <div className="aspect-video relative">
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8">
-                  <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 hover:bg-white/30 transition-all cursor-pointer group">
-                    <Play className="w-10 h-10 text-white ml-1 group-hover:scale-110 transition-transform" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">¿Cómo ser Vocal?</h3>
-                  <p className="text-white/70 text-center max-w-md">Conoce el proceso paso a paso para convertirte en Vocal y comenzar a generar ingresos</p>
+              <div className="aspect-video relative flex flex-col items-center justify-center text-white p-8">
+                <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 hover:bg-white/30 transition-all cursor-pointer group border-4 border-white/30">
+                  <Play className="w-12 h-12 text-white ml-1 group-hover:scale-110 transition-transform" fill="white" />
                 </div>
-                
-                <div className="absolute bottom-6 right-6">
-                  <div className="relative w-16 h-16 opacity-50">
-                    <Image src="/iaschool-logo-new.png" alt="IA School" fill className="object-contain" />
-                  </div>
-                </div>
+                <h3 className="text-3xl font-bold mb-3 text-white">¿Cómo funciona el Programa de Afiliados?</h3>
+                <p className="text-white/80 text-center max-w-lg text-lg">Conoce el proceso paso a paso para convertirte en afiliado y comenzar a generar ingresos pasivos</p>
+                <p className="text-white/50 text-sm mt-4">Video próximamente disponible</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ¿Qué es el programa de afiliados? */}
+          <div className="bg-gradient-to-r from-[#1B4079] to-[#0f2847] rounded-3xl p-10 text-white mb-16">
+            <h3 className="text-2xl font-bold mb-6 text-center text-white">¿Qué es el Programa de Afiliados?</h3>
+            <p className="text-white/90 text-center max-w-4xl mx-auto text-lg leading-relaxed mb-8">
+              Nuestro programa te permite ganar comisiones recurrentes por recomendar IA School. 
+              Ya seas padre de familia, educador, líder comunitario o emprendedor, puedes generar 
+              ingresos extras simplemente compartiendo los beneficios de nuestra plataforma con 
+              colegios y familias de tu red.
+            </p>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-white/10 rounded-2xl p-6 text-center">
+                <Share2 className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
+                <h4 className="font-bold text-white mb-2">Comparte tu enlace</h4>
+                <p className="text-white/70 text-sm">Recibe un código único de afiliado para compartir</p>
+              </div>
+              <div className="bg-white/10 rounded-2xl p-6 text-center">
+                <Users className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
+                <h4 className="font-bold text-white mb-2">Referidos se registran</h4>
+                <p className="text-white/70 text-sm">Colegios o familias se suscriben usando tu código</p>
+              </div>
+              <div className="bg-white/10 rounded-2xl p-6 text-center">
+                <Wallet className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
+                <h4 className="font-bold text-white mb-2">Gana comisiones</h4>
+                <p className="text-white/70 text-sm">Recibe pagos mensuales mientras tus referidos estén activos</p>
               </div>
             </div>
           </div>
 
           {/* Proceso paso a paso */}
           <div className="mb-20">
-            <h3 className="text-2xl font-bold text-center mb-12">Proceso en 4 pasos simples</h3>
-            <div className="grid md:grid-cols-4 gap-8">
-              {[
-                { step: '1', title: 'Regístrate', desc: 'Crea tu cuenta como Vocal o Afiliado en la plataforma' },
-                { step: '2', title: 'Obtén tu código', desc: 'Recibe tu código único de referido para compartir' },
-                { step: '3', title: 'Comparte', desc: 'Invita a familias del colegio a usar IA School' },
-                { step: '4', title: 'Gana', desc: 'Recibe comisiones por cada familia que se suscriba' },
-              ].map((item, i) => (
-                <div key={i} className="relative">
-                  <div className="bg-[#1B4079] text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mb-4">
-                    {item.step}
+            <h3 className="text-2xl font-bold text-center mb-12 text-white bg-[#1B4079] inline-block px-6 py-3 rounded-2xl mx-auto w-fit">Cómo comenzar en 4 pasos</h3>
+            <div className="flex justify-center">
+              <div className="grid md:grid-cols-4 gap-8 max-w-5xl">
+                {[
+                  { step: '1', title: 'Regístrate', desc: 'Crea tu cuenta gratuita como afiliado en nuestra plataforma', icon: UserCheck },
+                  { step: '2', title: 'Obtén tu código', desc: 'Recibe tu código y enlace único de afiliado para compartir', icon: Gift },
+                  { step: '3', title: 'Comparte', desc: 'Recomienda IA School a colegios y familias de tu red', icon: Share2 },
+                  { step: '4', title: 'Gana', desc: 'Recibe comisiones mensuales por cada referido activo', icon: Wallet },
+                ].map((item, i) => (
+                  <div key={i} className="relative text-center">
+                    <div className="bg-[#1B4079] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4 mx-auto shadow-lg">
+                      <item.icon className="w-7 h-7" />
+                    </div>
+                    <div className="bg-[#1B4079] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold absolute -top-2 -right-2 border-4 border-white">
+                      {item.step}
+                    </div>
+                    <h4 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h4>
+                    <p className="text-gray-600 text-sm">{item.desc}</p>
+                    {i < 3 && (
+                      <ArrowRight className="hidden md:block absolute top-8 -right-6 w-6 h-6 text-[#1B4079]" />
+                    )}
                   </div>
-                  <h4 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h4>
-                  <p className="text-gray-600">{item.desc}</p>
-                  {i < 3 && (
-                    <ArrowRight className="hidden md:block absolute top-6 -right-4 w-8 h-8 text-gray-300" />
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Beneficios para vocales */}
+          {/* Beneficios para afiliados */}
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <DollarSign className="w-6 h-6 text-[#1B4079]" />
-                Ganancias potenciales
+              <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-6">
+                <span className="flex items-center gap-2">
+                  <Percent className="w-5 h-5" />
+                  Tipos de Referidos
+                </span>
               </h3>
               <div className="space-y-4">
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-600">Por cada estudiante referido</span>
-                  <span className="font-bold text-[#1B4079]">$50 MXN/mes</span>
+                <div className="flex items-start gap-4 py-4 border-b border-gray-200">
+                  <div className="w-12 h-12 rounded-xl bg-[#1B4079]/10 flex items-center justify-center flex-shrink-0">
+                    <Building2 className="w-6 h-6 text-[#1B4079]" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900">Referir Colegios</h4>
+                    <p className="text-gray-600 text-sm">Conecta instituciones educativas con nuestra plataforma y gana comisiones por toda la institución</p>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-600">10 estudiantes referidos</span>
-                  <span className="font-bold text-[#1B4079]">$500 MXN/mes</span>
-                </div>
-                <div className="flex justify-between items-center py-3">
-                  <span className="text-gray-600">50 estudiantes referidos</span>
-                  <span className="font-bold text-[#1B4079]">$2,500 MXN/mes</span>
+                <div className="flex items-start gap-4 py-4">
+                  <div className="w-12 h-12 rounded-xl bg-[#1B4079]/10 flex items-center justify-center flex-shrink-0">
+                    <Users className="w-6 h-6 text-[#1B4079]" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900">Referir Familias</h4>
+                    <p className="text-gray-600 text-sm">Recomienda a familias individuales y gana comisiones por cada suscripción activa</p>
+                  </div>
                 </div>
               </div>
-              <p className="text-sm text-gray-500 mt-4">*Los montos son ilustrativos y pueden variar según el plan seleccionado</p>
+              <p className="text-sm text-gray-500 mt-6 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                <strong>¡Importante!</strong> Las comisiones exactas se detallan al registrarte como afiliado. Contacta a nuestro equipo para conocer el modelo completo.
+              </p>
             </div>
 
             <div className="bg-gradient-to-br from-[#1B4079] to-[#0f2847] rounded-2xl p-8 text-white">
-              <h3 className="text-xl font-bold mb-6 flex items-center gap-3">
+              <h3 className="text-xl font-bold mb-6 flex items-center gap-3 text-white">
                 <Star className="w-6 h-6" />
-                Beneficios exclusivos
+                Beneficios del Programa
               </h3>
               <ul className="space-y-4">
                 {[
+                  'Comisiones recurrentes mensuales',
                   'Panel de control para seguimiento de referidos',
                   'Materiales promocionales listos para usar',
                   'Soporte prioritario del equipo IA School',
                   'Bonos especiales por metas alcanzadas',
-                  'Herramientas de gestión de grupo',
-                  'Capacitación y webinars exclusivos'
+                  'Capacitación y webinars exclusivos',
+                  'Sin límite de referidos',
+                  'Pagos puntuales garantizados'
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
@@ -516,85 +550,24 @@ export default function LandingPage() {
             </div>
           </div>
 
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="precios" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Precios transparentes</h2>
-            <p className="text-xl text-gray-600">Planes flexibles que se adaptan a cualquier institución</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Plan Básico */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Básico</h3>
-              <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-4xl font-bold text-[#1B4079]">$149</span>
-                <span className="text-gray-500">MXN/alumno/mes</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                {['Comunicación', 'Tareas y calificaciones', 'Calendario', 'Asistencia', 'Pagos básicos'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-2 text-gray-600">
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/login" className="block w-full py-3 text-center bg-gray-100 text-[#1B4079] font-semibold rounded-xl hover:bg-gray-200 transition-all">
-                Comenzar
-              </Link>
-            </div>
-
-            {/* Plan Estándar */}
-            <div className="bg-[#1B4079] rounded-2xl p-8 shadow-xl relative transform md:scale-105">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-white text-[#1B4079] text-sm font-bold rounded-full shadow">
-                Más Popular
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Estándar</h3>
-              <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-4xl font-bold text-white">$199</span>
-                <span className="text-white/70">MXN/alumno/mes</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                {['Todo lo del Básico', 'Enfermería digital', 'Tienda escolar', 'Programa de referidos', 'Asistente IA', 'Reportes avanzados'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-2 text-white/90">
-                    <CheckCircle2 className="w-5 h-5 text-green-400" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/login" className="block w-full py-3 text-center bg-white text-[#1B4079] font-bold rounded-xl hover:bg-gray-100 transition-all">
-                Elegir Estándar
-              </Link>
-            </div>
-
-            {/* Plan Premium */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Premium</h3>
-              <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-4xl font-bold text-[#1B4079]">$299</span>
-                <span className="text-gray-500">MXN/alumno/mes</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                {['Todo lo del Estándar', 'Gamificación completa', 'Tips IA personalizados', 'Multi-vendor', 'CRM avanzado', 'Soporte 24/7'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-2 text-gray-600">
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/login" className="block w-full py-3 text-center bg-gray-100 text-[#1B4079] font-semibold rounded-xl hover:bg-gray-200 transition-all">
-                Elegir Premium
+          {/* CTA Afiliados */}
+          <div className="mt-16 text-center">
+            <div className="bg-gradient-to-r from-cyan-500 to-[#1B4079] rounded-3xl p-10">
+              <h3 className="text-3xl font-bold text-white mb-4">¿Listo para comenzar a ganar?</h3>
+              <p className="text-white/90 mb-8 max-w-2xl mx-auto">
+                Únete a nuestro programa de afiliados hoy y comienza a generar ingresos 
+                mientras ayudas a modernizar la educación en tu comunidad.
+              </p>
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-white text-[#1B4079] font-bold rounded-full hover:bg-gray-100 transition-all shadow-xl text-lg"
+              >
+                Registrarme como Afiliado
+                <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
           </div>
 
-          <p className="text-center text-gray-500 mt-8">
-            <strong>Tu colegio recibe el 50%</strong> de cada suscripción. Pago anual: 2 meses gratis.
-          </p>
         </div>
       </section>
 
