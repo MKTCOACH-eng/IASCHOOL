@@ -19,6 +19,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/language-context';
 
 interface Affiliate {
   id: string;
@@ -48,6 +49,7 @@ interface Lead {
 
 export default function AffiliateDashboardPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [affiliate, setAffiliate] = useState<Affiliate | null>(null);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -104,7 +106,7 @@ export default function AffiliateDashboardPage() {
     const link = `${window.location.origin}/ref/${affiliate.affiliateCode}`;
     navigator.clipboard.writeText(link);
     setCopiedLink(true);
-    toast.success('Link copiado al portapapeles');
+    toast.success(t.affiliate.copied);
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
@@ -122,10 +124,10 @@ export default function AffiliateDashboardPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Error al registrar colegio');
+        throw new Error(data.error || t.common.error);
       }
 
-      toast.success('¡Colegio registrado exitosamente!');
+      toast.success(t.common.success);
       setShowNewLead(false);
       setNewLead({
         schoolName: '',
@@ -138,7 +140,7 @@ export default function AffiliateDashboardPage() {
       });
       fetchData();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Error al registrar');
+      toast.error(error instanceof Error ? error.message : t.common.error);
     } finally {
       setSubmitting(false);
     }
@@ -196,12 +198,12 @@ export default function AffiliateDashboardPage() {
           <Link href="/" className="flex items-center gap-3">
             <Image src="/iaschool-logo-new.png" alt="IA School" width={40} height={40} className="rounded-lg" />
             <div>
-              <span className="font-semibold text-gray-900 block">Portal de Afiliados</span>
+              <span className="font-semibold text-gray-900 block">{t.affiliate.portal}</span>
               <span className="text-xs text-gray-500">IA School</span>
             </div>
           </Link>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">Hola, {affiliate.name}</span>
+            <span className="text-sm text-gray-600">{t.dashboard.welcome}, {affiliate.name}</span>
             <button
               onClick={handleLogout}
               className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors"
@@ -220,7 +222,7 @@ export default function AffiliateDashboardPage() {
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                 <School className="w-5 h-5 text-blue-600" />
               </div>
-              <span className="text-sm text-gray-500">Colegios Referidos</span>
+              <span className="text-sm text-gray-500">{t.affiliate.referredSchools}</span>
             </div>
             <p className="text-3xl font-bold text-gray-900">{affiliate.totalReferrals}</p>
           </div>
@@ -230,7 +232,7 @@ export default function AffiliateDashboardPage() {
               <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                 <CheckCircle className="w-5 h-5 text-green-600" />
               </div>
-              <span className="text-sm text-gray-500">Activados</span>
+              <span className="text-sm text-gray-500">{t.affiliate.activated}</span>
             </div>
             <p className="text-3xl font-bold text-gray-900">{affiliate.successfulReferrals}</p>
           </div>
@@ -240,7 +242,7 @@ export default function AffiliateDashboardPage() {
               <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                 <Gift className="w-5 h-5 text-purple-600" />
               </div>
-              <span className="text-sm text-gray-500">Total Ganado</span>
+              <span className="text-sm text-gray-500">{t.affiliate.totalEarned}</span>
             </div>
             <p className="text-3xl font-bold text-gray-900">${Number(affiliate.totalEarnings).toLocaleString()} <span className="text-sm font-normal text-gray-500">MXN</span></p>
           </div>
@@ -250,7 +252,7 @@ export default function AffiliateDashboardPage() {
               <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-5 h-5 text-amber-600" />
               </div>
-              <span className="text-sm text-gray-500">Pendiente</span>
+              <span className="text-sm text-gray-500">{t.affiliate.pending}</span>
             </div>
             <p className="text-3xl font-bold text-gray-900">${Number(affiliate.pendingEarnings).toLocaleString()} <span className="text-sm font-normal text-gray-500">MXN</span></p>
           </div>
@@ -258,8 +260,8 @@ export default function AffiliateDashboardPage() {
 
         {/* Referral Link */}
         <div className="bg-gradient-to-r from-[#1B4079] to-[#2d5a9e] rounded-xl p-6 mb-8 text-white">
-          <h3 className="font-semibold mb-2">Tu Link de Afiliado</h3>
-          <p className="text-white/70 text-sm mb-4">Comparte este link con colegios interesados en IA School</p>
+          <h3 className="font-semibold mb-2">{t.affiliate.yourLink}</h3>
+          <p className="text-white/70 text-sm mb-4">{t.affiliate.shareLink}</p>
           <div className="flex gap-2">
             <input
               type="text"
@@ -282,7 +284,7 @@ export default function AffiliateDashboardPage() {
           <div className="p-6 border-b border-gray-100 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-gray-900">Colegios Referidos</h2>
-              <p className="text-sm text-gray-500">Registra y da seguimiento a los colegios que refieres</p>
+              <p className="text-sm text-gray-500">{t.affiliate.trackSchools}</p>
             </div>
             <button
               onClick={() => setShowNewLead(true)}
@@ -296,8 +298,8 @@ export default function AffiliateDashboardPage() {
           {leads.length === 0 ? (
             <div className="p-12 text-center">
               <School className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="font-medium text-gray-900 mb-2">Aún no has referido colegios</h3>
-              <p className="text-gray-500 text-sm mb-4">Registra un colegio para comenzar a ganar comisiones</p>
+              <h3 className="font-medium text-gray-900 mb-2">{t.affiliate.noSchools}</h3>
+              <p className="text-gray-500 text-sm mb-4">{t.affiliate.registerFirst}</p>
               <button
                 onClick={() => setShowNewLead(true)}
                 className="text-[#1B4079] font-medium hover:underline"
@@ -339,13 +341,13 @@ export default function AffiliateDashboardPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-100">
-              <h2 className="text-xl font-semibold text-gray-900">Registrar Colegio</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{t.affiliate.registerSchool}</h2>
               <p className="text-sm text-gray-500">Ingresa los datos del colegio que deseas referir</p>
             </div>
             
             <form onSubmit={handleSubmitLead} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre del Colegio *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.schoolName} *</label>
                 <input
                   type="text"
                   required
@@ -357,7 +359,7 @@ export default function AffiliateDashboardPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre del Contacto *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.contactName} *</label>
                 <input
                   type="text"
                   required
@@ -369,7 +371,7 @@ export default function AffiliateDashboardPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email del Contacto *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.contactEmail} *</label>
                 <input
                   type="email"
                   required
@@ -392,7 +394,7 @@ export default function AffiliateDashboardPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.city}</label>
                   <input
                     type="text"
                     className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-[#1B4079] focus:ring-1 focus:ring-[#1B4079] outline-none"
@@ -404,7 +406,7 @@ export default function AffiliateDashboardPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Alumnos Estimados</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.estimatedStudents}</label>
                 <input
                   type="number"
                   className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-[#1B4079] focus:ring-1 focus:ring-[#1B4079] outline-none"
@@ -415,7 +417,7 @@ export default function AffiliateDashboardPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notas adicionales</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.additionalNotes}</label>
                 <textarea
                   className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-[#1B4079] focus:ring-1 focus:ring-[#1B4079] outline-none resize-none"
                   rows={3}

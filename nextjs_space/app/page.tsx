@@ -34,7 +34,7 @@ export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [activeTab, setActiveTab] = useState<'colegios' | 'afiliados'>('colegios');
-  const { language, setLanguage, languageNames, languageFlags } = useLanguage();
+  const { language, setLanguage, languageNames, languageFlags, t } = useLanguage();
   const availableLanguages: Language[] = ['es', 'en', 'pt', 'de', 'fr', 'ja'];
 
   useEffect(() => {
@@ -44,6 +44,33 @@ export default function LandingPage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Module icons mapping
+  const moduleIcons = [
+    { icon: MessageSquare, key: 'moduleMessaging' },
+    { icon: GraduationCap, key: 'moduleAcademic' },
+    { icon: CreditCard, key: 'modulePayments' },
+    { icon: Clock, key: 'moduleAttendance' },
+    { icon: Users, key: 'moduleDirectory' },
+    { icon: Heart, key: 'moduleNursery' },
+    { icon: Star, key: 'moduleGamification' },
+    { icon: BarChart3, key: 'moduleReports' },
+    { icon: Shield, key: 'moduleDiscipline' },
+    { icon: Smartphone, key: 'moduleApp' },
+    { icon: Zap, key: 'moduleAI' },
+    { icon: TrendingUp, key: 'moduleCRM' },
+  ];
+
+  const benefits = [
+    t.home.affiliates.benefit1,
+    t.home.affiliates.benefit2,
+    t.home.affiliates.benefit3,
+    t.home.affiliates.benefit4,
+    t.home.affiliates.benefit5,
+    t.home.affiliates.benefit6,
+    t.home.affiliates.benefit7,
+    t.home.affiliates.benefit8,
+  ];
 
   return (
     <main className="min-h-screen bg-white">
@@ -123,7 +150,7 @@ export default function LandingPage() {
                     : 'bg-white text-[#1B4079] hover:bg-gray-100'
                 }`}
               >
-                Iniciar Sesión
+                {t.home.nav.login}
               </Link>
             </div>
           </div>
@@ -156,20 +183,19 @@ export default function LandingPage() {
               >
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white/90 text-sm font-medium mb-8 border border-white/20">
                   <Zap className="w-4 h-4" />
-                  Plataforma Educativa con IA
+                  {t.home.hero.badge}
                 </div>
 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-                  Moderniza tu colegio.
+                  {t.home.hero.title1}
                   <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-300">
-                    Conecta con las familias.
+                    {t.home.hero.title2}
                   </span>
                 </h1>
                 
                 <p className="text-xl text-white/80 mb-10 leading-relaxed max-w-xl">
-                  La plataforma integral que transforma la gestión escolar. 
-                  Mejora la comunicación, automatiza procesos y fortalece la comunidad educativa.
+                  {t.home.hero.subtitle}
                 </p>
 
                 {/* CTA Buttons */}
@@ -180,7 +206,7 @@ export default function LandingPage() {
                     className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#1B4079] font-bold rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105"
                   >
                     <Building2 className="w-5 h-5" />
-                    Soy Colegio
+                    {t.home.hero.ctaSchool}
                   </a>
                   <a
                     href="#para-afiliados"
@@ -188,7 +214,7 @@ export default function LandingPage() {
                     className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/30"
                   >
                     <Gift className="w-5 h-5" />
-                    Programa de Afiliados
+                    {t.home.hero.ctaAffiliate}
                   </a>
                 </div>
 
@@ -196,11 +222,11 @@ export default function LandingPage() {
                 <div className="flex items-center gap-8 text-white/60 text-sm">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-green-400" />
-                    <span>Implementación rápida</span>
+                    <span>{t.home.hero.trustFast}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Shield className="w-5 h-5 text-blue-400" />
-                    <span>Datos 100% seguros</span>
+                    <span>{t.home.hero.trustSecure}</span>
                   </div>
                 </div>
               </motion.div>
@@ -230,26 +256,26 @@ export default function LandingPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white/10 rounded-2xl p-4 text-center">
                     <div className="text-3xl font-bold text-white">85%</div>
-                    <div className="text-white/60 text-sm">Menos carga administrativa</div>
+                    <div className="text-white/60 text-sm">{t.home.hero.statsAdmin}</div>
                   </div>
                   <div className="bg-white/10 rounded-2xl p-4 text-center">
                     <div className="text-3xl font-bold text-white">24/7</div>
-                    <div className="text-white/60 text-sm">Disponibilidad total</div>
+                    <div className="text-white/60 text-sm">{t.home.hero.statsAvailable}</div>
                   </div>
                   <div className="bg-white/10 rounded-2xl p-4 text-center">
                     <div className="text-3xl font-bold text-white">6</div>
-                    <div className="text-white/60 text-sm">Idiomas disponibles</div>
+                    <div className="text-white/60 text-sm">{t.home.hero.statsLanguages}</div>
                   </div>
                   <div className="bg-white/10 rounded-2xl p-4 text-center">
                     <div className="text-3xl font-bold text-white">+20</div>
-                    <div className="text-white/60 text-sm">Módulos integrados</div>
+                    <div className="text-white/60 text-sm">{t.home.hero.statsModules}</div>
                   </div>
                 </div>
               </div>
 
               {/* Floating badges */}
               <div className="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                ¡Nuevo!
+                {t.home.hero.badgeNew}
               </div>
             </motion.div>
           </div>
@@ -277,7 +303,7 @@ export default function LandingPage() {
                 }`}
               >
                 <Building2 className="w-5 h-5" />
-                Para Colegios
+                {t.home.tabs.schools}
               </button>
               <button
                 onClick={() => setActiveTab('afiliados')}
@@ -288,7 +314,7 @@ export default function LandingPage() {
                 }`}
               >
                 <Gift className="w-5 h-5" />
-                Programa Afiliados
+                {t.home.tabs.affiliates}
               </button>
             </div>
           </div>
@@ -303,14 +329,13 @@ export default function LandingPage() {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1B4079]/10 rounded-full text-[#1B4079] text-sm font-medium mb-4">
               <Building2 className="w-4 h-4" />
-              Solución para Instituciones Educativas
+              {t.home.schools.badge}
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-white bg-[#1B4079] inline-block px-6 py-3 rounded-2xl mb-4">
-              Tu colegio, potenciado con IA
+              {t.home.schools.title}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mt-6">
-              Digitaliza la comunicación, automatiza procesos y fortalece la comunidad educativa. 
-              Todo desde una sola plataforma.
+              {t.home.schools.subtitle}
             </p>
           </div>
 
@@ -321,9 +346,9 @@ export default function LandingPage() {
                 <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 hover:bg-white/30 transition-all cursor-pointer group border-4 border-white/30">
                   <Play className="w-12 h-12 text-white ml-1 group-hover:scale-110 transition-transform" fill="white" />
                 </div>
-                <h3 className="text-3xl font-bold mb-3 text-white">¿Qué es IA School?</h3>
-                <p className="text-white/80 text-center max-w-lg text-lg">Descubre cómo nuestra plataforma puede transformar la gestión de tu institución educativa</p>
-                <p className="text-white/50 text-sm mt-4">Video próximamente disponible</p>
+                <h3 className="text-3xl font-bold mb-3 text-white">{t.home.schools.videoTitle}</h3>
+                <p className="text-white/80 text-center max-w-lg text-lg">{t.home.schools.videoSubtitle}</p>
+                <p className="text-white/50 text-sm mt-4">{t.home.schools.videoSoon}</p>
               </div>
             </div>
           </div>
@@ -334,62 +359,46 @@ export default function LandingPage() {
               <div className="w-14 h-14 rounded-2xl bg-[#1B4079] flex items-center justify-center mb-6">
                 <Zap className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-3">Automatización Total</h3>
+              <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-3">{t.home.schools.benefit1Title}</h3>
               <p className="text-gray-600 mb-4">
-                Reduce el trabajo administrativo con procesos automatizados. 
-                Desde cobranza hasta reportes, todo en un solo lugar.
+                {t.home.schools.benefit1Desc}
               </p>
-              <div className="text-[#1B4079] font-semibold text-sm">Solicita una demo →</div>
+              <div className="text-[#1B4079] font-semibold text-sm">{t.home.schools.benefit1Cta}</div>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all">
               <div className="w-14 h-14 rounded-2xl bg-[#1B4079] flex items-center justify-center mb-6">
                 <BarChart3 className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-3">Control Total</h3>
+              <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-3">{t.home.schools.benefit2Title}</h3>
               <p className="text-gray-600 mb-4">
-                Dashboard administrativo con métricas en tiempo real. Cobranza, asistencia, 
-                comunicación y reportes en un solo lugar.
+                {t.home.schools.benefit2Desc}
               </p>
-              <div className="text-[#1B4079] font-semibold text-sm">85% menos papeleo →</div>
+              <div className="text-[#1B4079] font-semibold text-sm">{t.home.schools.benefit2Cta}</div>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all">
               <div className="w-14 h-14 rounded-2xl bg-[#1B4079] flex items-center justify-center mb-6">
                 <MessageSquare className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-3">Comunicación Efectiva</h3>
+              <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-3">{t.home.schools.benefit3Title}</h3>
               <p className="text-gray-600 mb-4">
-                Mensajes, anuncios, calendario y notificaciones push. 
-                Los padres siempre informados, el colegio siempre conectado.
+                {t.home.schools.benefit3Desc}
               </p>
-              <div className="text-[#1B4079] font-semibold text-sm">3x más engagement →</div>
+              <div className="text-[#1B4079] font-semibold text-sm">{t.home.schools.benefit3Cta}</div>
             </div>
           </div>
 
           {/* Módulos incluidos */}
           <div className="bg-[#1B4079] rounded-3xl p-10 text-white">
-            <h3 className="text-2xl font-bold mb-8 text-center text-white">Módulos Incluidos</h3>
+            <h3 className="text-2xl font-bold mb-8 text-center text-white">{t.home.schools.modulesTitle}</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-              {[
-                { icon: MessageSquare, label: 'Mensajería' },
-                { icon: GraduationCap, label: 'Académico' },
-                { icon: CreditCard, label: 'Pagos' },
-                { icon: Clock, label: 'Asistencia' },
-                { icon: Users, label: 'Directorio' },
-                { icon: Heart, label: 'Enfermería' },
-                { icon: Star, label: 'Gamificación' },
-                { icon: BarChart3, label: 'Reportes' },
-                { icon: Shield, label: 'Disciplina' },
-                { icon: Smartphone, label: 'App PWA' },
-                { icon: Zap, label: 'IA Assistant' },
-                { icon: TrendingUp, label: 'CRM' },
-              ].map((item, i) => (
+              {moduleIcons.map((item, i) => (
                 <div key={i} className="flex flex-col items-center text-center">
                   <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-2">
                     <item.icon className="w-6 h-6" />
                   </div>
-                  <span className="text-sm text-white/80">{item.label}</span>
+                  <span className="text-sm text-white/80">{t.home.schools[item.key as keyof typeof t.home.schools]}</span>
                 </div>
               ))}
             </div>
@@ -406,14 +415,13 @@ export default function LandingPage() {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1B4079]/10 rounded-full text-[#1B4079] text-sm font-medium mb-4">
               <Gift className="w-4 h-4" />
-              Programa de Afiliados IA School
+              {t.home.affiliates.badge}
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-white bg-[#1B4079] inline-block px-6 py-3 rounded-2xl mb-4">
-              Refiere un Colegio, Gana Beneficios
+              {t.home.affiliates.title}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mt-6">
-              ¿Conoces un colegio que podría beneficiarse de IA School? 
-              Refiere colegios y obtén recompensas exclusivas cuando se activen.
+              {t.home.affiliates.subtitle}
             </p>
           </div>
 
@@ -424,50 +432,48 @@ export default function LandingPage() {
                 <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 hover:bg-white/30 transition-all cursor-pointer group border-4 border-white/30">
                   <Play className="w-12 h-12 text-white ml-1 group-hover:scale-110 transition-transform" fill="white" />
                 </div>
-                <h3 className="text-3xl font-bold mb-3 text-white">¿Cómo funciona el Programa de Afiliados?</h3>
-                <p className="text-white/80 text-center max-w-lg text-lg">Descubre cómo puedes ganar beneficios al referir colegios a IA School</p>
-                <p className="text-white/50 text-sm mt-4">Video próximamente disponible</p>
+                <h3 className="text-3xl font-bold mb-3 text-white">{t.home.affiliates.videoTitle}</h3>
+                <p className="text-white/80 text-center max-w-lg text-lg">{t.home.affiliates.videoSubtitle}</p>
+                <p className="text-white/50 text-sm mt-4">{t.home.affiliates.videoSoon}</p>
               </div>
             </div>
           </div>
 
           {/* ¿Qué es el programa de afiliados? */}
           <div className="bg-gradient-to-r from-[#1B4079] to-[#0f2847] rounded-3xl p-10 text-white mb-16">
-            <h3 className="text-2xl font-bold mb-6 text-center text-white">¿Cómo funciona?</h3>
+            <h3 className="text-2xl font-bold mb-6 text-center text-white">{t.home.affiliates.howTitle}</h3>
             <p className="text-white/90 text-center max-w-4xl mx-auto text-lg leading-relaxed mb-8">
-              Si conoces un colegio que aún no usa IA School, puedes referirlo. 
-              Cuando el colegio se registre y active su cuenta, tú recibes beneficios exclusivos.
-              Es una forma de ayudar a más comunidades escolares mientras obtienes recompensas.
+              {t.home.affiliates.howDesc}
             </p>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white/10 rounded-2xl p-6 text-center">
                 <Share2 className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
-                <h4 className="font-bold text-white mb-2">Refiere un colegio</h4>
-                <p className="text-white/70 text-sm">Comparte IA School con colegios que conozcas</p>
+                <h4 className="font-bold text-white mb-2">{t.home.affiliates.step1Title}</h4>
+                <p className="text-white/70 text-sm">{t.home.affiliates.step1Desc}</p>
               </div>
               <div className="bg-white/10 rounded-2xl p-6 text-center">
                 <Building2 className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
-                <h4 className="font-bold text-white mb-2">El colegio se activa</h4>
-                <p className="text-white/70 text-sm">Tienen 30 días para registrarse y activar su cuenta</p>
+                <h4 className="font-bold text-white mb-2">{t.home.affiliates.step2Title}</h4>
+                <p className="text-white/70 text-sm">{t.home.affiliates.step2Desc}</p>
               </div>
               <div className="bg-white/10 rounded-2xl p-6 text-center">
                 <Gift className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
-                <h4 className="font-bold text-white mb-2">Obtienes beneficios</h4>
-                <p className="text-white/70 text-sm">Recibes tus recompensas automáticamente</p>
+                <h4 className="font-bold text-white mb-2">{t.home.affiliates.step3Title}</h4>
+                <p className="text-white/70 text-sm">{t.home.affiliates.step3Desc}</p>
               </div>
             </div>
           </div>
 
           {/* Proceso paso a paso */}
           <div className="mb-20">
-            <h3 className="text-2xl font-bold text-center mb-12 text-white bg-[#1B4079] inline-block px-6 py-3 rounded-2xl mx-auto w-fit">Así de fácil es participar</h3>
+            <h3 className="text-2xl font-bold text-center mb-12 text-white bg-[#1B4079] inline-block px-6 py-3 rounded-2xl mx-auto w-fit">{t.home.affiliates.processTitle}</h3>
             <div className="flex justify-center">
               <div className="grid md:grid-cols-4 gap-8 max-w-5xl">
                 {[
-                  { step: '1', title: 'Identifica un colegio', desc: 'Piensa en colegios que podrían beneficiarse de una gestión escolar moderna', icon: Building2 },
-                  { step: '2', title: 'Comparte IA School', desc: 'Recomiéndanos al colegio y proporciona tus datos de contacto como referidor', icon: Share2 },
-                  { step: '3', title: 'El colegio se activa', desc: 'El colegio tiene 30 días para registrarse y activar su cuenta en IA School', icon: CheckCircle2 },
-                  { step: '4', title: 'Recibes tu beneficio', desc: 'Cuando el colegio se active, obtienes 10% de la cuota de setup y 1 año gratis', icon: Star },
+                  { step: '1', title: t.home.affiliates.process1Title, desc: t.home.affiliates.process1Desc, icon: Building2 },
+                  { step: '2', title: t.home.affiliates.process2Title, desc: t.home.affiliates.process2Desc, icon: Share2 },
+                  { step: '3', title: t.home.affiliates.process3Title, desc: t.home.affiliates.process3Desc, icon: CheckCircle2 },
+                  { step: '4', title: t.home.affiliates.process4Title, desc: t.home.affiliates.process4Desc, icon: Star },
                 ].map((item, i) => (
                   <div key={i} className="relative text-center">
                     <div className="bg-[#1B4079] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4 mx-auto shadow-lg">
@@ -493,7 +499,7 @@ export default function LandingPage() {
               <h3 className="text-xl font-bold text-white bg-[#1B4079] inline-block px-4 py-2 rounded-lg mb-6">
                 <span className="flex items-center gap-2">
                   <Users className="w-5 h-5" />
-                  ¿Quién puede participar?
+                  {t.home.affiliates.whoTitle}
                 </span>
               </h3>
               <div className="space-y-4">
@@ -502,8 +508,8 @@ export default function LandingPage() {
                     <Heart className="w-6 h-6 text-[#1B4079]" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">Padres de Familia</h4>
-                    <p className="text-gray-600 text-sm">Si ya eres usuario de IA School o conoces colegios que podrían beneficiarse</p>
+                    <h4 className="font-bold text-gray-900">{t.home.affiliates.who1Title}</h4>
+                    <p className="text-gray-600 text-sm">{t.home.affiliates.who1Desc}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 py-4 border-b border-gray-200">
@@ -511,8 +517,8 @@ export default function LandingPage() {
                     <GraduationCap className="w-6 h-6 text-[#1B4079]" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">Profesores y Educadores</h4>
-                    <p className="text-gray-600 text-sm">Si conoces otros colegios que necesitan modernizar su gestión</p>
+                    <h4 className="font-bold text-gray-900">{t.home.affiliates.who2Title}</h4>
+                    <p className="text-gray-600 text-sm">{t.home.affiliates.who2Desc}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 py-4">
@@ -520,8 +526,8 @@ export default function LandingPage() {
                     <Users className="w-6 h-6 text-[#1B4079]" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">Cualquier persona</h4>
-                    <p className="text-gray-600 text-sm">Todos pueden referir colegios y obtener beneficios cuando se activen</p>
+                    <h4 className="font-bold text-gray-900">{t.home.affiliates.who3Title}</h4>
+                    <p className="text-gray-600 text-sm">{t.home.affiliates.who3Desc}</p>
                   </div>
                 </div>
               </div>
@@ -530,19 +536,10 @@ export default function LandingPage() {
             <div className="bg-gradient-to-br from-[#1B4079] to-[#0f2847] rounded-2xl p-8 text-white">
               <h3 className="text-xl font-bold mb-6 flex items-center gap-3 text-white">
                 <Star className="w-6 h-6" />
-                Beneficios por Colegio Referido
+                {t.home.affiliates.benefitsTitle}
               </h3>
               <ul className="space-y-4">
-                {[
-                  '10% de la cuota de setup del colegio',
-                  '1 año gratis de servicio para UN hijo*',
-                  'Ventana de 30 días para la activación',
-                  'Sin límite de colegios que puedes referir',
-                  'Panel para dar seguimiento a tus referidos',
-                  'Notificaciones cuando el colegio se active',
-                  'Beneficio acumulable por cada colegio',
-                  'Proceso 100% transparente'
-                ].map((item, i) => (
+                {benefits.map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
                     <span className="text-white/90">{item}</span>
@@ -550,7 +547,7 @@ export default function LandingPage() {
                 ))}
               </ul>
               <p className="text-white/60 text-xs mt-6">
-                *El año gratis aplica si tienes hijos inscritos en algún colegio con IA School activo.
+                {t.home.affiliates.benefitNote}
               </p>
             </div>
           </div>
@@ -558,20 +555,19 @@ export default function LandingPage() {
           {/* CTA Afiliados */}
           <div className="mt-16 text-center">
             <div className="bg-gradient-to-r from-cyan-500 to-[#1B4079] rounded-3xl p-10">
-              <h3 className="text-3xl font-bold text-white mb-4">¿Conoces un colegio que quiera modernizarse?</h3>
+              <h3 className="text-3xl font-bold text-white mb-4">{t.home.affiliates.ctaTitle}</h3>
               <p className="text-white/90 mb-8 max-w-2xl mx-auto">
-                Regístrate como afiliado, obtén tu link único y compártelo con colegios. 
-                Cuando activen, recibirás tus beneficios.
+                {t.home.affiliates.ctaDesc}
               </p>
               <Link
                 href="/affiliate/register"
                 className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-white text-[#1B4079] font-bold rounded-full hover:bg-gray-100 transition-all shadow-xl text-lg"
               >
-                Registrarme como Afiliado
+                {t.home.affiliates.ctaButton}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <p className="text-white/60 text-sm mt-4">
-                ¿Ya tienes cuenta? <Link href="/affiliate/login" className="text-white underline hover:no-underline">Inicia sesión</Link>
+                {t.home.affiliates.ctaLogin} <Link href="/affiliate/login" className="text-white underline hover:no-underline">{t.home.affiliates.ctaLoginLink}</Link>
               </p>
             </div>
           </div>
@@ -583,17 +579,17 @@ export default function LandingPage() {
       <section className="py-20 bg-[#1B4079]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-            ¿Listo para transformar tu colegio?
+            {t.home.finalCta.title}
           </h2>
           <p className="text-xl text-white/80 mb-10">
-            Únete a las instituciones que ya están modernizando su gestión educativa
+            {t.home.finalCta.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/login"
               className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-white text-[#1B4079] font-bold rounded-full hover:bg-gray-100 transition-all shadow-xl"
             >
-              Comenzar Ahora
+              {t.home.finalCta.button}
               <ChevronRight className="w-5 h-5" />
             </Link>
           </div>
@@ -611,11 +607,11 @@ export default function LandingPage() {
               <span className="text-white font-bold">IA School</span>
             </div>
             <p className="text-gray-400 text-sm text-center">
-              © 2026 IA School. Transformando la educación con tecnología.
+              {t.home.footer.copyright}
             </p>
             <div className="flex items-center gap-4 text-gray-400 text-sm">
-              <Link href="#" className="hover:text-white transition-colors">Soporte</Link>
-              <Link href="#" className="hover:text-white transition-colors">Contacto</Link>
+              <Link href="#" className="hover:text-white transition-colors">{t.home.footer.support}</Link>
+              <Link href="#" className="hover:text-white transition-colors">{t.home.footer.contact}</Link>
             </div>
           </div>
         </div>
