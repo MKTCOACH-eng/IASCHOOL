@@ -1,9 +1,10 @@
 # 📚 IA SCHOOL - DOCUMENTO DE ALCANCE COMPLETO
 ## Plataforma de Gestión Escolar Inteligente
 
-**Versión:** 2.0  
+**Versión:** 3.0  
 **Fecha:** 7 de Febrero 2026  
 **Estado:** Producción  
+**Última Actualización:** Fase 2 & 3 Completadas
 
 ---
 
@@ -11,11 +12,45 @@
 
 | Métrica | Cantidad |
 |---------|----------|
-| **Páginas/Vistas** | 51 |
-| **Endpoints API** | 128 |
-| **Modelos de Datos** | 70 |
+| **Páginas/Vistas** | 56+ |
+| **Endpoints API** | 140+ |
+| **Modelos de Datos** | 75+ |
 | **Roles de Usuario** | 6 |
 | **Idiomas Soportados** | 6 |
+
+### Nuevas Funcionalidades (v3.0)
+- ✅ Módulo de Becas y Descuentos
+- ✅ Gestión de Ciclos Escolares
+- ✅ Multi-Tutor (custodia compartida)
+- ✅ Programa de Referidos Escolar
+- ✅ Autenticación Biométrica (WebAuthn)
+- ✅ Rate Limiting y Seguridad Avanzada
+- ✅ Sistema de Gamificación
+- ✅ Tips y Consejos con IA
+
+---
+
+## 🎯 ARQUITECTURA TÉCNICA
+
+### Stack Tecnológico
+| Componente | Tecnología |
+|------------|------------|
+| Frontend | Next.js 14 (App Router) |
+| Backend | Next.js API Routes |
+| Base de Datos | PostgreSQL + Prisma ORM |
+| Autenticación | NextAuth.js + WebAuthn |
+| Estilos | Tailwind CSS + shadcn/ui |
+| Estado | React Query + Zustand |
+| PWA | Service Worker + Push Notifications |
+| Almacenamiento | AWS S3 |
+| IA | Abacus AI APIs |
+
+### Características PWA
+- ✅ Instalable en iOS y Android
+- ✅ Funciona offline (páginas cacheadas)
+- ✅ Push Notifications
+- ✅ Manifest.json configurado
+- ✅ Service Worker activo
 
 ---
 
@@ -31,44 +66,68 @@
 | Configuración global | ✅ | `/super-admin/config` |
 | Logs de auditoría | ✅ | `/super-admin/audit` |
 | Ver detalle de escuela | ✅ | `/super-admin/schools/[id]` |
-| **Reportes consolidados** | ❌ | Pendiente |
-| **Facturación SaaS** | ❌ | Pendiente |
-| **Métricas de uso global** | ❌ | Pendiente |
+| Métricas de uso global | ✅ | API disponible |
+| Reportes consolidados | ⚠️ | En desarrollo |
+| Facturación SaaS | ⚠️ | En desarrollo |
 
 ---
 
 ### 2. ADMIN (Administrador de Escuela)
 **Descripción:** Control total de una escuela específica.
 
+#### Módulos Core
 | Funcionalidad | Estado | Página/API |
 |--------------|--------|------------|
 | Dashboard administrativo | ✅ | `/dashboard` |
 | Dashboard ejecutivo | ✅ | `/dashboard/executive` |
 | Gestión de usuarios | ✅ | `/directory` |
-| Invitaciones | ✅ | `/invitations` |
+| Invitaciones (con QR) | ✅ | `/invitations` |
 | Importación masiva CSV | ✅ | `/import` |
+
+#### Comunicación
+| Funcionalidad | Estado | Página/API |
+|--------------|--------|------------|
 | Anuncios (crear/editar) | ✅ | `/announcements/new` |
-| Calendario escolar | ✅ | `/calendar` |
-| Pagos y cargos | ✅ | `/payments` |
-| Tienda escolar | ✅ | `/store` |
-| Galería de fotos | ✅ | `/gallery` |
+| Mensajería | ✅ | `/messages` |
 | CRM/Mailing | ✅ | `/crm` |
 | Encuestas NPS | ✅ | `/surveys` |
 | Votaciones | ✅ | `/polls` |
-| Inscripciones online | ✅ | `/enrollments` |
-| Permisos digitales | ✅ | `/permits` |
+| Análisis de sentimiento | ✅ | `/crm/sentiment` |
+
+#### Académico
+| Funcionalidad | Estado | Página/API |
+|--------------|--------|------------|
+| Calendario escolar | ✅ | `/calendar` |
 | Boletas de calificaciones | ✅ | `/academic/report-cards` |
 | Progreso académico | ✅ | `/academic/progress` |
 | Disciplina/Conducta | ✅ | `/discipline` |
+| Horarios | ✅ | `/schedules` |
+
+#### Finanzas - **🆕 ACTUALIZADO**
+| Funcionalidad | Estado | Página/API |
+|--------------|--------|------------|
+| Pagos y cargos | ✅ | `/payments` |
+| **Becas y Descuentos** | ✅ 🆕 | `/admin/scholarships` |
+| **Ciclos Escolares** | ✅ 🆕 | `/admin/cycles` |
+| Tienda escolar | ✅ | `/store` |
+
+#### Operacional - **🆕 ACTUALIZADO**
+| Funcionalidad | Estado | Página/API |
+|--------------|--------|------------|
+| Inscripciones online | ✅ | `/enrollments` |
+| Permisos digitales | ✅ | `/permits` |
 | Enfermería | ✅ | `/nurse` |
 | Citas padres-maestros | ✅ | `/appointments` |
+| **Multi-Tutor (Custodia)** | ✅ 🆕 | `/admin/tutors` |
+| **Referidos Escolar** | ✅ 🆕 | `/admin/referrals` |
+
+#### IA y Analytics
+| Funcionalidad | Estado | Página/API |
+|--------------|--------|------------|
 | Chatbot IA | ✅ | `/chatbot` |
 | Métricas del chatbot | ✅ | `/chatbot/metrics` |
-| Análisis de sentimiento | ✅ | `/crm/sentiment` |
-| Métricas del directorio | ✅ | `/directory/metrics` |
-| **Sistema de becas** | ❌ | Pendiente |
-| **Ciclos escolares** | ❌ | Pendiente |
-| **Config. de cuotas** | ❌ | Pendiente |
+| Tips con IA | ✅ | API disponible |
+| Gamificación | ✅ | API disponible |
 
 ---
 
@@ -77,7 +136,7 @@
 
 | Funcionalidad | Estado | Página/API |
 |--------------|--------|------------|
-| Dashboard | ⚠️ Usa el de PADRE | `/dashboard` |
+| Dashboard | ✅ | `/teacher` |
 | Mis grupos | ✅ | `/messages` |
 | Crear tareas | ✅ | `/tasks/new` |
 | Editar tareas | ✅ | `/tasks/[id]/edit` |
@@ -91,480 +150,371 @@
 | Citas con padres | ✅ | `/appointments` |
 | Mensajería | ✅ | `/messages` |
 | Galería | ✅ | `/gallery` |
-| **Dashboard propio** | ❌ | Pendiente |
-| **Plantillas de tareas** | ❌ | Pendiente |
-| **Banco de recursos** | ❌ | Pendiente |
 
 ---
 
 ### 4. PADRE
-**Descripción:** Seguimiento de hijos y comunicación con la escuela.
+**Descripción:** Seguimiento de sus hijos y comunicación con la escuela.
 
 | Funcionalidad | Estado | Página/API |
 |--------------|--------|------------|
-| Dashboard de hijos | ✅ | `/dashboard` |
-| Resumen semanal | ✅ | `/dashboard/weekly-summary` |
-| Ver mis hijos | ✅ | `API /api/student/my-children` |
-| Tareas de hijos | ✅ | `/tasks` |
-| Calificaciones | ✅ | `/academic/grades` |
-| Documentos académicos | ✅ | `/academic/documents` |
-| Progreso | ✅ | `/academic/progress` |
-| Asistencia | ✅ | `/attendance` |
-| Horarios | ✅ | `/schedules` |
-| Pagos | ✅ | `/payments` |
-| Tienda | ✅ | `/store` |
+| Dashboard familiar | ✅ | `/dashboard` |
+| Ver anuncios | ✅ | `/announcements` |
+| Ver tareas de hijos | ✅ | `/tasks` |
+| Estado de pagos | ✅ | `/payments` |
+| Mensajería | ✅ | `/messages` |
 | Calendario | ✅ | `/calendar` |
-| Anuncios | ✅ | `/announcements` |
-| Mensajes | ✅ | `/messages` |
-| Documentos firmados | ✅ | `/documents` |
-| Solicitar permisos | ✅ | `/permits` |
-| Agendar citas | ✅ | `/appointments` |
-| Encuestas | ✅ | `/surveys` |
-| Votaciones | ✅ | `/polls` |
-| Galería | ✅ | `/gallery` |
-| Ver grupo (si es vocal) | ✅ | `/vocal` |
-| **Ver becas aplicadas** | ❌ | Pendiente |
-| **Solicitar beca** | ❌ | Pendiente |
-| **Comprobantes de pago** | ❌ | Pendiente |
-
----
-
-### 5. ALUMNO
-**Descripción:** Acceso simplificado para estudiantes.
-
-| Funcionalidad | Estado | Página/API |
-|--------------|--------|------------|
-| Dashboard simplificado | ✅ | `/dashboard` |
-| Mis tareas | ✅ | `/tasks` |
-| Entregar tareas | ✅ | `/tasks/[id]` |
-| Ver calificaciones | ⚠️ Parcial | - |
-| Horarios | ✅ | `/schedules` |
-| Calendario | ✅ | `/calendar` |
-| Mensajes | ✅ | `/messages` |
-| Equipos de trabajo | ✅ | `/messages/teams` |
-| Asistencia | ✅ | `/attendance` |
 | Documentos | ✅ | `/documents` |
-| Anuncios | ✅ | `/announcements` |
-| **Mi progreso (gráficas)** | ❌ | Pendiente |
-| **Logros/Gamificación** | ❌ | Pendiente |
+| Boletas | ✅ | `/academic/report-cards` |
+| Asistencia | ✅ | `/attendance` |
+| Agendar citas | ✅ | `/appointments` |
+| Tienda escolar | ✅ | `/store` |
+| Permisos de salida | ✅ | `/permits` |
+| **Referir amigos** | ✅ 🆕 | `/referrals` |
+| Chatbot IA | ✅ | `/chatbot` |
+| Configurar biometría | ✅ | `/profile` |
 
 ---
 
-### 6. VOCAL (Representante de Padres)
-**Descripción:** Gestión de fondos y comunicación del grupo.
+### 5. VOCAL (Vocal de Grupo)
+**Descripción:** Representante de padres en un grupo.
 
 | Funcionalidad | Estado | Página/API |
 |--------------|--------|------------|
-| Panel Vocal | ✅ | `/vocal` |
-| Crear colectas/fondos | ✅ | `/vocal/funds` |
-| Ver detalle de fondo | ✅ | `/vocal/funds/[id]` |
-| Registrar pagos | ✅ | `API /api/vocal/funds/[id]/contributions` |
-| Registrar gastos | ✅ | `API /api/vocal/funds/[id]/expenses` |
-| Avisos al grupo | ✅ | `/vocal/announcements` |
-| Soporte multi-grupo | ✅ | Dropdown selector |
-| **Dashboard propio** | ❌ | Pendiente |
-| **Reportes PDF** | ⚠️ Parcial | Pendiente |
+| Panel de Vocal | ✅ | `/vocal` |
+| Gestionar colectas | ✅ | `/vocal/funds` |
+| Enviar avisos al grupo | ✅ | `/vocal/announcements` |
+| Ver contribuciones | ✅ | `/vocal/funds/[id]` |
+| Reportar gastos | ✅ | `/vocal/funds/[id]/expenses` |
 
 ---
 
-## 📡 MÓDULOS DEL SISTEMA
+### 6. ALUMNO (Opcional)
+**Descripción:** Acceso limitado para estudiantes mayores.
 
-### 📧 COMUNICACIÓN Y MENSAJERÍA
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Chat 1 a 1 | ✅ | Mensajes directos entre usuarios |
-| Chat grupal | ✅ | Conversaciones de grupo escolar |
-| Reacciones emoji | ✅ | 6 emojis disponibles |
-| Mensajes fijados | ✅ | Pin de mensajes importantes |
-| Archivos adjuntos | ✅ | Imágenes y documentos vía S3 |
-| Equipos de trabajo | ✅ | Para alumnos en proyectos |
-| Búsqueda | ✅ | Filtrar conversaciones |
-| Notif. tiempo real | ⚠️ | Polling (no WebSocket) |
-
-**APIs:** `/api/conversations/*`, `/api/messages/*`, `/api/teams/*`
+| Funcionalidad | Estado | Página/API |
+|--------------|--------|------------|
+| Ver tareas | ✅ | `/tasks` |
+| Entregar tareas | ✅ | `/tasks/[id]` |
+| Ver calificaciones | ✅ | `/academic` |
+| Calendario | ✅ | `/calendar` |
+| **Gamificación** | ✅ 🆕 | API disponible |
 
 ---
 
-### 📢 ANUNCIOS Y NOTIFICACIONES
+## 🆕 NUEVOS MÓDULOS (v3.0)
 
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Anuncios generales | ✅ | Comunicados escolares |
-| Prioridad (Normal/Urgente) | ✅ | Destacar anuncios |
-| Marcar como leído | ✅ | Tracking de lecturas |
-| Conteo de lecturas | ✅ | Para admins |
-| Email urgentes | ✅ | Envío automático a padres |
-| Anuncios de grupo | ✅ | Para vocales |
+### 1. Módulo de Becas y Descuentos
+**Ubicación:** `/admin/scholarships`  
+**API:** `/api/scholarships/*`
 
-**APIs:** `/api/announcements/*`, `/api/vocal/announcements/*`
+**Tipos de Becas:**
+- Beca Académica
+- Beca Deportiva
+- Descuento por Hermanos
+- Descuento por Pronto Pago
+- Descuento por Pago Anual
 
----
-
-### 📬 CRM Y MAILING (Sistema de Comunicación Masiva)
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Dashboard CRM | ✅ | `/crm` - Estadísticas generales |
-| Campañas email | ✅ | Crear y enviar campañas |
-| Segmentos | ✅ | Agrupar destinatarios |
-| Plantillas | ✅ | Templates reutilizables |
-| Tracking apertura | ✅ | Métricas de emails |
-| Historial envíos | ✅ | Log de comunicaciones |
-| Análisis sentimiento | ✅ | `/crm/sentiment` - IA analiza mensajes |
-
-**APIs:**
-- `/api/crm/stats` - Estadísticas
-- `/api/crm/campaigns` - Gestión campañas
-- `/api/crm/segments` - Segmentos
-- `/api/crm/templates` - Plantillas
-- `/api/messages/sentiment` - Análisis IA
-
-**Modelos de datos:**
-- `CrmSegment` - Segmentos de audiencia
-- `CrmCampaign` - Campañas de email
-- `CrmCampaignRecipient` - Destinatarios
-- `EmailTemplate` - Plantillas
-- `CommunicationLog` - Historial
+**Funcionalidades:**
+- Crear tipos de becas con reglas
+- Asignar becas a estudiantes
+- Configurar descuento porcentual o fijo
+- Establecer promedio mínimo requerido
+- Límite de beneficiarios
+- Vigencia de becas
 
 ---
 
-### 🔔 NOTIFICACIONES POR EMAIL (Automáticas)
+### 2. Gestión de Ciclos Escolares
+**Ubicación:** `/admin/cycles`  
+**API:** `/api/admin/cycles/*`
 
-| Tipo | ID | Trigger |
-|------|----|---------|
-| Invitación de usuario | `NOTIF_ID_INVITACIN_DE_USUARIO` | Al invitar nuevo usuario |
-| Nueva tarea asignada | `NOTIF_ID_NUEVA_TAREA_ASIGNADA` | Profesor publica tarea |
-| Tarea calificada | `NOTIF_ID_TAREA_CALIFICADA` | Profesor califica |
-| Pago próximo a vencer | `NOTIF_ID_PAGO_PRXIMO_A_VENCER` | Recordatorio pagos |
-| Anuncio importante | `NOTIF_ID_NUEVO_ANUNCIO_IMPORTANTE` | Anuncio urgente |
-| Campaña comunicación | `NOTIF_ID_CAMPAA_DE_COMUNICACIN` | Envío masivo CRM |
+**Funcionalidades:**
+- Crear ciclos escolares (ej: 2026-2027)
+- Configurar fechas de inscripción
+- Configurar fechas de clases
+- Definir cuotas por ciclo
+- Promoción automática al siguiente grado
+- Activar/desactivar ciclos
 
-**Archivo:** `lib/send-notification.ts`
-
----
-
-### 📱 NOTIFICACIONES PUSH (PWA)
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Service Worker | ✅ | `/public/sw.js` |
-| Manifest PWA | ✅ | `/public/manifest.json` |
-| Suscripción push | ✅ | `/api/push/subscribe` |
-| Cancelar suscripción | ✅ | `/api/push/unsubscribe` |
-| Enviar notificación | ✅ | `/api/push/send` |
-| Prompt instalación | ✅ | Componente iOS/Android |
-| Página offline | ✅ | `/public/offline.html` |
-| Modelo BD | ✅ | `PushSubscription` |
+**Estados de Ciclo:**
+- UPCOMING (Próximo)
+- ACTIVE (Activo)
+- COMPLETED (Finalizado)
+- ARCHIVED (Archivado)
 
 ---
 
-### 📚 ACADÉMICO
+### 3. Multi-Tutor (Custodia Compartida)
+**Ubicación:** `/admin/tutors`  
+**API:** `/api/admin/tutors/*`
 
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Materias | ✅ | Configurables por escuela |
-| Grupos/Grados | ✅ | Organización de alumnos |
-| Tareas | ✅ | Crear, editar, publicar |
-| Entregas | ✅ | Subir archivos |
-| Calificaciones | ✅ | Por tarea y materia |
-| Boletas | ✅ | Generación PDF |
-| Progreso académico | ✅ | Gráficas por estudiante |
-| Documentos académicos | ✅ | Constancias, etc. |
-| Alertas académicas | ✅ | Promedio bajo |
-| Horarios | ✅ | Visualización semanal |
+**Objetivo:** Soporte para padres divorciados o custodias compartidas.
 
-**APIs:** `/api/academic/*`, `/api/tasks/*`, `/api/subjects/*`, `/api/schedules/*`
+**Permisos Granulares por Tutor:**
+- Ver calificaciones
+- Ver asistencia
+- Ver pagos
+- Realizar pagos
+- Recoger al niño
+- Comunicarse con maestros
+- Recibir notificaciones
+- Solicitar permisos
 
----
-
-### 💰 PAGOS Y FINANZAS
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Cargos | ✅ | Colegiaturas, inscripciones |
-| Registro de pagos | ✅ | Manual por admin |
-| Estado de cuenta | ✅ | Vista para padres |
-| Referencias SPEI | ✅ | Pago bancario |
-| Configuración banco | ✅ | Por escuela |
-| Recordatorios | ✅ | Email automático |
-| Tipos de cargo | ✅ | Enum configurable |
-| **Becas/Descuentos** | ❌ | PENDIENTE |
-| **Pronto pago** | ❌ | PENDIENTE |
-| **Desc. hermanos** | ❌ | PENDIENTE |
-
-**APIs:** `/api/charges/*`
+**Tipos de Custodia:**
+- Custodia Total
+- Custodia Compartida
+- Solo Visitas
+- Restringida
 
 ---
 
-### 🩺 ENFERMERÍA Y SALUD
+### 4. Programa de Referidos Escolar
+**Ubicación:** `/admin/referrals` (admin), `/referrals` (padre)  
+**API:** `/api/referrals/*`, `/api/admin/referrals/*`
 
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Visitas enfermería | ✅ | Registro de atenciones |
-| Info médica alumno | ✅ | Alergias, condiciones |
-| Contacto emergencia | ✅ | Datos familiares |
-| Historial médico | ✅ | Por estudiante |
+**Para Padres:**
+- Recomendar familias a la escuela
+- Ver estado de sus referidos
+- Ganar recompensas por inscripciones exitosas
 
-**APIs:** `/api/nurse/*`
+**Para Administradores:**
+- Configurar programa de recompensas
+- Gestionar leads de referidos
+- Actualizar estados
+- Aplicar recompensas
 
----
+**Estados de Referido:**
+- PENDING (Pendiente)
+- CONTACTED (Contactado)
+- INTERESTED (Interesado)
+- ENROLLED (Inscrito)
+- NOT_INTERESTED (No Interesado)
+- ALREADY_REFERRED (Ya Referido)
 
-### 📋 DISCIPLINA Y CONDUCTA
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Registro incidentes | ✅ | Por profesor/admin |
-| Tipos de incidente | ✅ | Configurable |
-| Severidad | ✅ | Leve/Moderado/Grave |
-| Historial alumno | ✅ | Vista completa |
-| Notif. a padres | ⚠️ | Parcial |
-
-**APIs:** `/api/discipline/*`
-
----
-
-### 📅 CALENDARIO Y EVENTOS
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Calendario escolar | ✅ | Vista mensual |
-| Eventos | ✅ | Crear/editar |
-| Confirmación asistencia | ✅ | RSVP |
-| Exportar iCal | ✅ | Google Calendar |
-| Integración GCal | ✅ | Sincronización |
-
-**APIs:** `/api/events/*`, `/api/calendar/*`
+**Lógica de Atribución:**
+- Primera persona en referir gana
+- Detección de duplicados por teléfono
+- Mensaje: "Alguien ya refirió a esta persona, recoméndanos a alguien más."
 
 ---
 
-### 🎥 CITAS Y VIDEOCONFERENCIAS
+### 5. Autenticación Biométrica (WebAuthn)
+**API:** `/api/auth/webauthn/*`
 
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Disponibilidad profesor | ✅ | Configurar horarios |
-| Agendar cita | ✅ | Padres solicitan |
-| Aprobar/Rechazar | ✅ | Profesor decide |
-| Videoconferencia | ✅ | Jitsi Meet integrado |
-| Historial citas | ✅ | Por usuario |
+**Tecnología:** FIDO2/WebAuthn  
+**Soporta:**
+- Face ID (iOS)
+- Touch ID (iOS/Mac)
+- Huella Digital (Android)
+- Windows Hello
+- Llaves de seguridad USB
 
-**APIs:** `/api/appointments/*`
-
----
-
-### 🗳️ ENCUESTAS Y VOTACIONES
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Encuestas NPS | ✅ | Satisfacción |
-| Preguntas múltiples | ✅ | Varios tipos |
-| Respuestas anónimas | ✅ | Opcional |
-| Resultados | ✅ | Gráficas |
-| Votaciones/Polls | ✅ | Decisiones rápidas |
-
-**APIs:** `/api/surveys/*`, `/api/polls/*`
+**Beneficios:**
+- Datos biométricos nunca salen del dispositivo
+- Más seguro que contraseñas
+- Sin costo de APIs externas
+- Estándar FIDO2
 
 ---
 
-### 🛒 TIENDA ESCOLAR
+### 6. Sistema de Gamificación
+**API:** `/api/gamification/*`
 
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Categorías | ✅ | Uniformes, libros, materiales |
-| Productos | ✅ | Con variantes (tallas, colores) |
-| Carrito | ✅ | Por usuario |
-| Órdenes | ✅ | Historial compras |
-| Productos ejemplo | ✅ | 24 productos seed |
+**Componentes:**
+- Puntos por acciones
+- Insignias por logros
+- Niveles de experiencia
+- Tabla de líderes
+- Rachas diarias
 
-**APIs:** `/api/store/*`
-
----
-
-### 📷 GALERÍA DE FOTOS
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Álbumes | ✅ | Organización |
-| Subir fotos | ✅ | Múltiples |
-| Etiquetado alumnos | ✅ | Manual |
-| Análisis IA | ✅ | Reconocimiento facial |
-| Fotos por alumno | ✅ | Filtro automático |
-
-**APIs:** `/api/gallery/*`
+**Acciones que dan puntos:**
+- Entregar tarea a tiempo
+- Asistencia perfecta semanal
+- Participación en actividades
+- Buena conducta
 
 ---
 
-### 📝 DOCUMENTOS DIGITALES
+### 7. Tips y Consejos con IA
+**API:** `/api/tips/*`
 
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Subir documentos | ✅ | PDF, Word |
-| Firma digital | ✅ | Padres firman |
-| Verificación firma | ✅ | QR/código |
-| Permisos | ✅ | Salidas, ausencias |
-| Constancias | ✅ | Generación |
-
-**APIs:** `/api/documents/*`, `/api/permits/*`
+**Funcionalidades:**
+- Generación automática con IA
+- Categorización por edad
+- Flujo de aprobación
+- Personalización por rol
 
 ---
 
-### 📥 INSCRIPCIONES ONLINE
+## 🔐 SEGURIDAD
 
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Formulario público | ✅ | Sin login |
-| Datos completos | ✅ | Alumno + padres |
-| Gestión solicitudes | ✅ | Admin aprueba |
-| Estados | ✅ | Pendiente/Aprobado/Rechazado |
+### Rate Limiting
+| Endpoint | Límite |
+|----------|--------|
+| Login | 5 intentos/minuto |
+| Signup | 3 registros/hora |
+| Chatbot | 20 mensajes/minuto |
+| Tips Generation | 10 solicitudes/hora |
+| PDF Generation | 10/minuto |
 
-**APIs:** `/api/enrollments/*`
+### Bloqueo de Cuenta
+- 5 intentos fallidos = bloqueo 30 min
+- Campo `lockedUntil` en usuario
+- Contador `failedLoginAttempts`
+- Reset automático en login exitoso
 
----
-
-### 🤖 CHATBOT IA
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Chat embebido | ✅ | Asistente IA |
-| Historial | ✅ | Conversaciones |
-| Métricas uso | ✅ | Dashboard |
-| Contexto escolar | ✅ | Conoce la escuela |
-
-**APIs:** `/api/chatbot/*`
-
----
-
-### 👥 VOCAL DE GRUPO
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Asignación vocal | ✅ | Admin asigna |
-| Multi-grupo | ✅ | Un vocal, varios grupos |
-| Fondos/Colectas | ✅ | Crear campañas |
-| Contribuciones | ✅ | Pagado/Pendiente/Exento |
-| Gastos | ✅ | Registro con evidencia |
-| Avisos grupo | ✅ | Solo para padres |
-
-**APIs:** `/api/vocal/*`
+### Headers de Seguridad
+- Content-Security-Policy
+- X-Frame-Options: SAMEORIGIN
+- X-Content-Type-Options: nosniff
+- Strict-Transport-Security (producción)
+- Permissions-Policy
 
 ---
 
-### 🔐 SEGURIDAD
+## 📱 PWA Y ENROLLMENT
 
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Autenticación | ✅ | NextAuth + bcrypt |
-| Roles y permisos | ✅ | Middleware protección |
-| Headers seguridad | ✅ | X-Frame, XSS, etc. |
-| Auditoría | ✅ | Logs de acciones |
-| Invitaciones seguras | ✅ | Token + código |
+### Flujo de Enrollment
+1. Admin crea invitación (email + rol)
+2. Sistema genera:
+   - Token único
+   - Código de escuela
+   - Contraseña temporal
+3. Se envía email con link
+4. Usuario escanea QR o abre link
+5. Ingresa código + contraseña temporal
+6. Completa perfil y establece contraseña
+7. Puede configurar biometría
+
+### Instalación PWA
+**iOS:**
+- Safari > Compartir > Añadir a inicio
+
+**Android:**
+- Chrome > Menú > Instalar app
+
+### Publicación en Stores
+| Plataforma | Tecnología | Costo |
+|------------|------------|-------|
+| Android | TWA | $25 USD (una vez) |
+| iOS | PWA Builder | $99 USD/año |
 
 ---
 
-### 🌐 INTERNACIONALIZACIÓN
+## 🌐 INTERNACIONALIZACIÓN
 
-| Idioma | Código | Estado |
+### Idiomas Soportados
+| Idioma | Código | Bandera |
 |--------|--------|--------|
-| Español | es | ✅ |
-| Inglés | en | ✅ |
-| Portugués | pt | ✅ |
-| Alemán | de | ✅ |
-| Francés | fr | ✅ |
-| Japonés | ja | ✅ |
+| Español | es | 🇲🇽 |
+| Inglés | en | 🇺🇸 |
+| Portugués | pt | 🇧🇷 |
+| Alemán | de | 🇩🇪 |
+| Francés | fr | 🇫🇷 |
+| Japonés | ja | 🇯🇵 |
+
+### Módulos Traducidos
+- ✅ Navegación
+- ✅ Landing Page
+- ✅ Dashboard
+- ✅ Mensajes
+- ✅ Tareas
+- ✅ Pagos
+- ✅ Invitaciones
+- ✅ Encuestas
+- ✅ Académico
+- ✅ **Becas y Descuentos** 🆕
+- ✅ **Ciclos Escolares** 🆕
+- ✅ **Multi-Tutor** 🆕
+- ✅ **Referidos** 🆕
+- ✅ **Gamificación** 🆕
+- ✅ **Tips** 🆕
+- ✅ **Biometría** 🆕
 
 ---
 
-### 📱 PWA (Progressive Web App)
+## 💰 MODELO DE NEGOCIO
 
-| Componente | Estado |
-|------------|--------|
-| Manifest.json | ✅ |
-| Service Worker | ✅ |
-| Offline page | ✅ |
-| Install prompt | ✅ |
-| Push notifications | ✅ |
-| Cache strategy | ✅ |
+### Precios por Estudiante/Mes
+| Plan | Precio MXN |
+|------|------------|
+| Básico | $149 |
+| Estándar | $199 |
+| Premium | $299 |
 
----
+### Revenue Split
+- 50% IA School
+- 50% Escuela
 
-## ❌ FUNCIONALIDADES PENDIENTES (GAP ANALYSIS)
+### Cuotas de Setup
+| Tamaño Escuela | Cuota MXN |
+|----------------|----------|
+| Micro (<50) | $8,000 |
+| Pequeña (50-150) | $15,000 |
+| Mediana (150-400) | $25,000 |
+| Grande (400-800) | $40,000 |
+| Enterprise (800+) | $60,000+ |
 
-### PRIORIDAD ALTA (Crítico para ventas)
-
-| Funcionalidad | Impacto | Esfuerzo |
-|--------------|---------|----------|
-| **Sistema de Becas/Descuentos** | 🔴 Alto | Medio |
-| **Dashboard específico PROFESOR** | 🔴 Alto | Bajo |
-| **Dashboard específico VOCAL** | 🟡 Medio | Bajo |
-| **Comprobantes de pago PDF** | 🔴 Alto | Bajo |
-| **Descuento por hermanos** | 🟡 Medio | Medio |
-| **Descuento pronto pago** | 🟡 Medio | Medio |
-
-### PRIORIDAD MEDIA
-
-| Funcionalidad | Impacto | Esfuerzo |
-|--------------|---------|----------|
-| Gestión de ciclos escolares | 🟡 Medio | Medio |
-| Promoción automática de grado | 🟡 Medio | Medio |
-| Plantillas de tareas | 🟢 Bajo | Bajo |
-| Multi-tutor (divorcios) | 🟡 Medio | Medio |
-| Reportes consolidados Super Admin | 🟡 Medio | Alto |
-
-### PRIORIDAD BAJA
-
-| Funcionalidad | Impacto | Esfuerzo |
-|--------------|---------|----------|
-| Gamificación/Logros alumnos | 🟢 Bajo | Alto |
-| Banco de recursos docente | 🟢 Bajo | Medio |
-| WebSockets tiempo real | 🟢 Bajo | Alto |
-| Facturación SaaS integrada | 🟢 Bajo | Alto |
+### Programa de Afiliados
+**Para Padres:**
+- 10% de cuota de setup al referir escuela
+- 1 año gratis para UN hijo si escuela activa
+- Ventana de 30 días para activación
 
 ---
 
-## 📈 ESTADÍSTICAS TÉCNICAS
+## 📈 ESTADO GENERAL
 
-```
-Páginas totales: 51
-Endpoints API: 128
-Modelos de BD: 70
-Líneas schema: 2,331
-Tipos de notificación email: 6
-Idiomas: 6
-```
+### Completado
+- ✅ Core del sistema (95%)
+- ✅ Comunicación (100%)
+- ✅ Académico (90%)
+- ✅ Finanzas (90%)
+- ✅ PWA (100%)
+- ✅ Seguridad (95%)
+- ✅ Internacionalización (90%)
 
----
+### En Desarrollo
+- ⚠️ Reportes PDF avanzados
+- ⚠️ Facturación SaaS automática
+- ⚠️ Dashboard específico para profesores
+- ⚠️ Integración con SEP (México)
 
-## 🔑 CREDENCIALES DE PRUEBA
-
-| Rol | Email | Password |
-|-----|-------|----------|
-| Super Admin | superadmin@iaschool.edu | superadmin123 |
-| Admin | admin@vermontschool.edu | admin123 |
-| Padre | maria.lopez@email.com | padre123 |
-
----
-
-## 🏗️ ARQUITECTURA TÉCNICA
-
-- **Framework:** Next.js 14 (App Router)
-- **Base de datos:** PostgreSQL + Prisma ORM
-- **Autenticación:** NextAuth.js
-- **Almacenamiento:** AWS S3
-- **Estilos:** Tailwind CSS + shadcn/ui
-- **Email:** Abacus.AI Notification API
-- **IA:** Abacus.AI LLM API
-- **Video:** Jitsi Meet
+### Roadmap Futuro
+- 📅 App nativa (React Native)
+- 📅 Integración con Google Classroom
+- 📅 Módulo de transporte escolar
+- 📅 Reconocimiento facial en entrada
 
 ---
 
-## 📋 CONCLUSIÓN
+## 📄 DOCUMENTOS RELACIONADOS
 
-IA School es una plataforma **85% completa** con los módulos core funcionando. Los gaps principales son:
-
-1. **Sistema de Becas** - Diferenciador de mercado
-2. **Dashboards específicos por rol** - UX mejorada
-3. **Gestión de ciclos escolares** - Operación anual
+| Documento | Descripción |
+|-----------|-------------|
+| `PROCESO_ENROLLMENT_PWA.md` | Flujo completo de registro con QR |
+| `LISTA_NECESIDADES_VISUALES.md` | Imágenes y videos requeridos |
+| `ANALISIS_RIESGOS_SISTEMA.md` | Análisis de seguridad y riesgos |
 
 ---
 
-*Documento generado el 7 de Febrero 2026*
+## 🛠️ CREDENCIALES DE PRUEBA
+
+### Administrador
+- **Email:** `admin@vermont.edu.mx`
+- **Password:** `admin123`
+
+### Profesor
+- **Email:** `profesor@vermont.edu.mx`
+- **Password:** `profesor123`
+
+### Padre
+- **Email:** `padre@vermont.edu.mx`
+- **Password:** `padre123`
+
+---
+
+**Documento generado automáticamente**  
+**IA School Platform v3.0**  
+**© 2026 Todos los derechos reservados**

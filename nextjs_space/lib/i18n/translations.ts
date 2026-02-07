@@ -279,7 +279,74 @@ const esTranslations = {
   roles: { admin: 'Administrador', teacher: 'Profesor', parent: 'Padre/Madre', student: 'Alumno', superAdmin: 'Super Admin', vocal: 'Vocal de Grupo' },
   time: { today: 'Hoy', yesterday: 'Ayer', daysAgo: 'hace {n} días', hoursAgo: 'hace {n} horas', minutesAgo: 'hace {n} minutos', justNow: 'Justo ahora', days: 'días', hours: 'horas', minutes: 'minutos' },
   months: { january: 'Enero', february: 'Febrero', march: 'Marzo', april: 'Abril', may: 'Mayo', june: 'Junio', july: 'Julio', august: 'Agosto', september: 'Septiembre', october: 'Octubre', november: 'Noviembre', december: 'Diciembre' },
-  weekdays: { monday: 'Lunes', tuesday: 'Martes', wednesday: 'Miércoles', thursday: 'Jueves', friday: 'Viernes', saturday: 'Sábado', sunday: 'Domingo' }
+  weekdays: { monday: 'Lunes', tuesday: 'Martes', wednesday: 'Miércoles', thursday: 'Jueves', friday: 'Viernes', saturday: 'Sábado', sunday: 'Domingo' },
+  scholarships: {
+    title: 'Becas y Descuentos', newScholarship: 'Nueva Beca', editScholarship: 'Editar Beca',
+    type: 'Tipo', academic: 'Académica', sports: 'Deportiva', siblings: 'Descuento Hermanos',
+    earlyPayment: 'Pronto Pago', annual: 'Pago Anual', discountType: 'Tipo de Descuento',
+    percentage: 'Porcentaje', fixed: 'Monto Fijo', discountValue: 'Valor', applyTo: 'Aplica a',
+    tuition: 'Colegiatura', enrollment: 'Inscripción', materials: 'Materiales', all: 'Todo',
+    minGPA: 'Promedio Mínimo', maxBeneficiaries: 'Máx. Beneficiarios', validFrom: 'Válida desde',
+    validUntil: 'Válida hasta', assign: 'Asignar', beneficiaries: 'Beneficiarios',
+    studentsWithScholarship: 'Estudiantes con Beca', noScholarships: 'No hay becas configuradas'
+  },
+  cycles: {
+    title: 'Ciclos Escolares', newCycle: 'Nuevo Ciclo', editCycle: 'Editar Ciclo',
+    cycleName: 'Nombre del Ciclo', startDate: 'Fecha de Inicio', endDate: 'Fecha de Fin',
+    status: 'Estado', upcoming: 'Próximo', active: 'Activo', completed: 'Finalizado',
+    archived: 'Archivado', currentCycle: 'Ciclo Actual', activate: 'Activar',
+    inscriptionPeriod: 'Período de Inscripción', classesPeriod: 'Período de Clases',
+    inscriptionFee: 'Cuota de Inscripción', monthlyTuition: 'Colegiatura Mensual',
+    materialsFee: 'Cuota de Materiales', autoPromotion: 'Promoción Automática',
+    promotionMinGPA: 'Promedio Mínimo para Promoción', enrollments: 'Inscripciones',
+    chargesGenerated: 'Cargos Generados', noCycles: 'No hay ciclos configurados'
+  },
+  tutors: {
+    title: 'Multi-Tutor', addTutor: 'Agregar Tutor', editPermissions: 'Editar Permisos',
+    relationship: 'Relación', parent: 'Padre/Madre', stepparent: 'Padrastro/Madrastra',
+    grandparent: 'Abuelo/Abuela', legalGuardian: 'Tutor Legal', relative: 'Otro Familiar',
+    other: 'Otro', custodyType: 'Tipo de Custodia', fullCustody: 'Custodia Total',
+    sharedCustody: 'Custodia Compartida', visitation: 'Solo Visitas', restricted: 'Restringida',
+    primaryContact: 'Contacto Principal', fullAccess: 'Acceso Completo',
+    canViewGrades: 'Ver Calificaciones', canViewAttendance: 'Ver Asistencia',
+    canViewPayments: 'Ver Pagos', canMakePayments: 'Realizar Pagos',
+    canPickup: 'Puede Recoger', canCommunicate: 'Comunicarse', canReceiveNotifications: 'Notificaciones',
+    canRequestPermissions: 'Solicitar Permisos', custodyNotes: 'Notas de Custodia',
+    noTutors: 'No hay tutores configurados'
+  },
+  referrals: {
+    title: 'Programa de Referidos', recommendSchool: 'Recomienda tu Escuela',
+    myReferrals: 'Mis Referidos', referralProgram: 'Programa de Referidos',
+    referredName: 'Nombre del Referido', referredPhone: 'Teléfono', referredEmail: 'Email',
+    childName: 'Nombre del Niño', childGrade: 'Grado de Interés', notes: 'Notas',
+    submitReferral: 'Enviar Referido', pending: 'Pendiente', contacted: 'Contactado',
+    interested: 'Interesado', enrolled: 'Inscrito', notInterested: 'No Interesado',
+    alreadyReferred: 'Ya Referido', reward: 'Recompensa', rewardPending: 'Recompensa Pendiente',
+    rewardApplied: 'Recompensa Aplicada', conversionRate: 'Tasa de Conversión',
+    alreadyReferredError: 'Alguien ya refirió a esta persona, recomiéndanos a alguien más.'
+  },
+  gamification: {
+    title: 'Gamificación', points: 'Puntos', badges: 'Insignias', achievements: 'Logros',
+    level: 'Nivel', ranking: 'Ranking', leaderboard: 'Tabla de Líderes',
+    earnedBadges: 'Insignias Ganadas', progress: 'Progreso', streak: 'Racha',
+    dailyChallenge: 'Reto Diario', weeklyChallenge: 'Reto Semanal',
+    pointsEarned: 'Puntos Ganados', position: 'Posición', topStudents: 'Mejores Estudiantes'
+  },
+  tips: {
+    title: 'Tips y Consejos', newTip: 'Nuevo Tip', category: 'Categoría',
+    ageGroup: 'Grupo de Edad', forParents: 'Para Padres', forTeachers: 'Para Profesores',
+    forStudents: 'Para Estudiantes', academic: 'Académico', emotional: 'Emocional',
+    health: 'Salud', technology: 'Tecnología', approve: 'Aprobar', reject: 'Rechazar',
+    generateWithAI: 'Generar con IA', aiGenerated: 'Generado por IA',
+    pendingApproval: 'Pendiente de Aprobación'
+  },
+  biometric: {
+    title: 'Autenticación Biométrica', enableBiometric: 'Habilitar Biometría',
+    faceId: 'Face ID', touchId: 'Touch ID', fingerprint: 'Huella Digital',
+    windowsHello: 'Windows Hello', setupBiometric: 'Configurar Biometría',
+    useBiometric: 'Usar Biometría', biometricEnabled: 'Biometría Habilitada',
+    biometricDisabled: 'Biometría Deshabilitada', securityKey: 'Llave de Seguridad'
+  }
 };
 
 const enTranslations = {
@@ -540,7 +607,74 @@ const enTranslations = {
   roles: { admin: 'Administrator', teacher: 'Teacher', parent: 'Parent', student: 'Student', superAdmin: 'Super Admin', vocal: 'Group Representative' },
   time: { today: 'Today', yesterday: 'Yesterday', daysAgo: '{n} days ago', hoursAgo: '{n} hours ago', minutesAgo: '{n} minutes ago', justNow: 'Just now', days: 'days', hours: 'hours', minutes: 'minutes' },
   months: { january: 'January', february: 'February', march: 'March', april: 'April', may: 'May', june: 'June', july: 'July', august: 'August', september: 'September', october: 'October', november: 'November', december: 'December' },
-  weekdays: { monday: 'Monday', tuesday: 'Tuesday', wednesday: 'Wednesday', thursday: 'Thursday', friday: 'Friday', saturday: 'Saturday', sunday: 'Sunday' }
+  weekdays: { monday: 'Monday', tuesday: 'Tuesday', wednesday: 'Wednesday', thursday: 'Thursday', friday: 'Friday', saturday: 'Saturday', sunday: 'Sunday' },
+  scholarships: {
+    title: 'Scholarships & Discounts', newScholarship: 'New Scholarship', editScholarship: 'Edit Scholarship',
+    type: 'Type', academic: 'Academic', sports: 'Sports', siblings: 'Sibling Discount',
+    earlyPayment: 'Early Payment', annual: 'Annual Payment', discountType: 'Discount Type',
+    percentage: 'Percentage', fixed: 'Fixed Amount', discountValue: 'Value', applyTo: 'Apply to',
+    tuition: 'Tuition', enrollment: 'Enrollment', materials: 'Materials', all: 'All',
+    minGPA: 'Minimum GPA', maxBeneficiaries: 'Max Beneficiaries', validFrom: 'Valid from',
+    validUntil: 'Valid until', assign: 'Assign', beneficiaries: 'Beneficiaries',
+    studentsWithScholarship: 'Students with Scholarship', noScholarships: 'No scholarships configured'
+  },
+  cycles: {
+    title: 'School Cycles', newCycle: 'New Cycle', editCycle: 'Edit Cycle',
+    cycleName: 'Cycle Name', startDate: 'Start Date', endDate: 'End Date',
+    status: 'Status', upcoming: 'Upcoming', active: 'Active', completed: 'Completed',
+    archived: 'Archived', currentCycle: 'Current Cycle', activate: 'Activate',
+    inscriptionPeriod: 'Enrollment Period', classesPeriod: 'Classes Period',
+    inscriptionFee: 'Enrollment Fee', monthlyTuition: 'Monthly Tuition',
+    materialsFee: 'Materials Fee', autoPromotion: 'Auto Promotion',
+    promotionMinGPA: 'Minimum GPA for Promotion', enrollments: 'Enrollments',
+    chargesGenerated: 'Charges Generated', noCycles: 'No cycles configured'
+  },
+  tutors: {
+    title: 'Multi-Tutor', addTutor: 'Add Tutor', editPermissions: 'Edit Permissions',
+    relationship: 'Relationship', parent: 'Parent', stepparent: 'Stepparent',
+    grandparent: 'Grandparent', legalGuardian: 'Legal Guardian', relative: 'Other Relative',
+    other: 'Other', custodyType: 'Custody Type', fullCustody: 'Full Custody',
+    sharedCustody: 'Shared Custody', visitation: 'Visitation Only', restricted: 'Restricted',
+    primaryContact: 'Primary Contact', fullAccess: 'Full Access',
+    canViewGrades: 'View Grades', canViewAttendance: 'View Attendance',
+    canViewPayments: 'View Payments', canMakePayments: 'Make Payments',
+    canPickup: 'Can Pickup', canCommunicate: 'Communicate', canReceiveNotifications: 'Notifications',
+    canRequestPermissions: 'Request Permissions', custodyNotes: 'Custody Notes',
+    noTutors: 'No tutors configured'
+  },
+  referrals: {
+    title: 'Referral Program', recommendSchool: 'Recommend Your School',
+    myReferrals: 'My Referrals', referralProgram: 'Referral Program',
+    referredName: 'Referred Name', referredPhone: 'Phone', referredEmail: 'Email',
+    childName: 'Child Name', childGrade: 'Grade of Interest', notes: 'Notes',
+    submitReferral: 'Submit Referral', pending: 'Pending', contacted: 'Contacted',
+    interested: 'Interested', enrolled: 'Enrolled', notInterested: 'Not Interested',
+    alreadyReferred: 'Already Referred', reward: 'Reward', rewardPending: 'Reward Pending',
+    rewardApplied: 'Reward Applied', conversionRate: 'Conversion Rate',
+    alreadyReferredError: 'Someone already referred this person, please recommend someone else.'
+  },
+  gamification: {
+    title: 'Gamification', points: 'Points', badges: 'Badges', achievements: 'Achievements',
+    level: 'Level', ranking: 'Ranking', leaderboard: 'Leaderboard',
+    earnedBadges: 'Earned Badges', progress: 'Progress', streak: 'Streak',
+    dailyChallenge: 'Daily Challenge', weeklyChallenge: 'Weekly Challenge',
+    pointsEarned: 'Points Earned', position: 'Position', topStudents: 'Top Students'
+  },
+  tips: {
+    title: 'Tips & Advice', newTip: 'New Tip', category: 'Category',
+    ageGroup: 'Age Group', forParents: 'For Parents', forTeachers: 'For Teachers',
+    forStudents: 'For Students', academic: 'Academic', emotional: 'Emotional',
+    health: 'Health', technology: 'Technology', approve: 'Approve', reject: 'Reject',
+    generateWithAI: 'Generate with AI', aiGenerated: 'AI Generated',
+    pendingApproval: 'Pending Approval'
+  },
+  biometric: {
+    title: 'Biometric Authentication', enableBiometric: 'Enable Biometrics',
+    faceId: 'Face ID', touchId: 'Touch ID', fingerprint: 'Fingerprint',
+    windowsHello: 'Windows Hello', setupBiometric: 'Setup Biometrics',
+    useBiometric: 'Use Biometrics', biometricEnabled: 'Biometrics Enabled',
+    biometricDisabled: 'Biometrics Disabled', securityKey: 'Security Key'
+  }
 };
 
 const ptTranslations = {
@@ -696,7 +830,74 @@ const ptTranslations = {
   roles: { admin: 'Administrador', teacher: 'Professor', parent: 'Pai/Mãe', student: 'Aluno', superAdmin: 'Super Admin', vocal: 'Representante de Grupo' },
   time: { today: 'Hoje', yesterday: 'Ontem', daysAgo: 'há {n} dias', hoursAgo: 'há {n} horas', minutesAgo: 'há {n} minutos', justNow: 'Agora mesmo', days: 'dias', hours: 'horas', minutes: 'minutos' },
   months: { january: 'Janeiro', february: 'Fevereiro', march: 'Março', april: 'Abril', may: 'Maio', june: 'Junho', july: 'Julho', august: 'Agosto', september: 'Setembro', october: 'Outubro', november: 'Novembro', december: 'Dezembro' },
-  weekdays: { monday: 'Segunda', tuesday: 'Terça', wednesday: 'Quarta', thursday: 'Quinta', friday: 'Sexta', saturday: 'Sábado', sunday: 'Domingo' }
+  weekdays: { monday: 'Segunda', tuesday: 'Terça', wednesday: 'Quarta', thursday: 'Quinta', friday: 'Sexta', saturday: 'Sábado', sunday: 'Domingo' },
+  scholarships: {
+    title: 'Bolsas e Descontos', newScholarship: 'Nova Bolsa', editScholarship: 'Editar Bolsa',
+    type: 'Tipo', academic: 'Acadêmica', sports: 'Esportiva', siblings: 'Desconto Irmãos',
+    earlyPayment: 'Pagamento Antecipado', annual: 'Pagamento Anual', discountType: 'Tipo de Desconto',
+    percentage: 'Porcentagem', fixed: 'Valor Fixo', discountValue: 'Valor', applyTo: 'Aplicar a',
+    tuition: 'Mensalidade', enrollment: 'Matrícula', materials: 'Materiais', all: 'Todos',
+    minGPA: 'Média Mínima', maxBeneficiaries: 'Máx. Beneficiários', validFrom: 'Válida desde',
+    validUntil: 'Válida até', assign: 'Atribuir', beneficiaries: 'Beneficiários',
+    studentsWithScholarship: 'Alunos com Bolsa', noScholarships: 'Nenhuma bolsa configurada'
+  },
+  cycles: {
+    title: 'Ciclos Escolares', newCycle: 'Novo Ciclo', editCycle: 'Editar Ciclo',
+    cycleName: 'Nome do Ciclo', startDate: 'Data de Início', endDate: 'Data de Fim',
+    status: 'Status', upcoming: 'Próximo', active: 'Ativo', completed: 'Concluído',
+    archived: 'Arquivado', currentCycle: 'Ciclo Atual', activate: 'Ativar',
+    inscriptionPeriod: 'Período de Matrícula', classesPeriod: 'Período de Aulas',
+    inscriptionFee: 'Taxa de Matrícula', monthlyTuition: 'Mensalidade',
+    materialsFee: 'Taxa de Materiais', autoPromotion: 'Promoção Automática',
+    promotionMinGPA: 'Média Mínima para Promoção', enrollments: 'Matrículas',
+    chargesGenerated: 'Cobranças Geradas', noCycles: 'Nenhum ciclo configurado'
+  },
+  tutors: {
+    title: 'Multi-Tutor', addTutor: 'Adicionar Tutor', editPermissions: 'Editar Permissões',
+    relationship: 'Relacionamento', parent: 'Pai/Mãe', stepparent: 'Padrasto/Madrasta',
+    grandparent: 'Avô/Avó', legalGuardian: 'Tutor Legal', relative: 'Outro Familiar',
+    other: 'Outro', custodyType: 'Tipo de Custódia', fullCustody: 'Custódia Total',
+    sharedCustody: 'Custódia Compartilhada', visitation: 'Apenas Visitas', restricted: 'Restrita',
+    primaryContact: 'Contato Principal', fullAccess: 'Acesso Completo',
+    canViewGrades: 'Ver Notas', canViewAttendance: 'Ver Frequência',
+    canViewPayments: 'Ver Pagamentos', canMakePayments: 'Fazer Pagamentos',
+    canPickup: 'Pode Buscar', canCommunicate: 'Comunicar', canReceiveNotifications: 'Notificações',
+    canRequestPermissions: 'Solicitar Permissões', custodyNotes: 'Notas de Custódia',
+    noTutors: 'Nenhum tutor configurado'
+  },
+  referrals: {
+    title: 'Programa de Indicações', recommendSchool: 'Indique sua Escola',
+    myReferrals: 'Minhas Indicações', referralProgram: 'Programa de Indicações',
+    referredName: 'Nome do Indicado', referredPhone: 'Telefone', referredEmail: 'Email',
+    childName: 'Nome da Criança', childGrade: 'Série de Interesse', notes: 'Notas',
+    submitReferral: 'Enviar Indicação', pending: 'Pendente', contacted: 'Contactado',
+    interested: 'Interessado', enrolled: 'Matriculado', notInterested: 'Não Interessado',
+    alreadyReferred: 'Já Indicado', reward: 'Recompensa', rewardPending: 'Recompensa Pendente',
+    rewardApplied: 'Recompensa Aplicada', conversionRate: 'Taxa de Conversão',
+    alreadyReferredError: 'Alguém já indicou esta pessoa, por favor indique outra.'
+  },
+  gamification: {
+    title: 'Gamificação', points: 'Pontos', badges: 'Insígnias', achievements: 'Conquistas',
+    level: 'Nível', ranking: 'Ranking', leaderboard: 'Tabela de Líderes',
+    earnedBadges: 'Insígnias Ganhas', progress: 'Progresso', streak: 'Sequência',
+    dailyChallenge: 'Desafio Diário', weeklyChallenge: 'Desafio Semanal',
+    pointsEarned: 'Pontos Ganhos', position: 'Posição', topStudents: 'Melhores Alunos'
+  },
+  tips: {
+    title: 'Dicas e Conselhos', newTip: 'Nova Dica', category: 'Categoria',
+    ageGroup: 'Faixa Etária', forParents: 'Para Pais', forTeachers: 'Para Professores',
+    forStudents: 'Para Alunos', academic: 'Acadêmico', emotional: 'Emocional',
+    health: 'Saúde', technology: 'Tecnologia', approve: 'Aprovar', reject: 'Rejeitar',
+    generateWithAI: 'Gerar com IA', aiGenerated: 'Gerado por IA',
+    pendingApproval: 'Aprovação Pendente'
+  },
+  biometric: {
+    title: 'Autenticação Biométrica', enableBiometric: 'Habilitar Biometria',
+    faceId: 'Face ID', touchId: 'Touch ID', fingerprint: 'Impressão Digital',
+    windowsHello: 'Windows Hello', setupBiometric: 'Configurar Biometria',
+    useBiometric: 'Usar Biometria', biometricEnabled: 'Biometria Habilitada',
+    biometricDisabled: 'Biometria Desabilitada', securityKey: 'Chave de Segurança'
+  }
 };
 
 const deTranslations = {
@@ -852,7 +1053,74 @@ const deTranslations = {
   roles: { admin: 'Administrator', teacher: 'Lehrer', parent: 'Elternteil', student: 'Schüler', superAdmin: 'Super Admin', vocal: 'Gruppenvertreter' },
   time: { today: 'Heute', yesterday: 'Gestern', daysAgo: 'vor {n} Tagen', hoursAgo: 'vor {n} Stunden', minutesAgo: 'vor {n} Minuten', justNow: 'Gerade eben', days: 'Tage', hours: 'Stunden', minutes: 'Minuten' },
   months: { january: 'Januar', february: 'Februar', march: 'März', april: 'April', may: 'Mai', june: 'Juni', july: 'Juli', august: 'August', september: 'September', october: 'Oktober', november: 'November', december: 'Dezember' },
-  weekdays: { monday: 'Montag', tuesday: 'Dienstag', wednesday: 'Mittwoch', thursday: 'Donnerstag', friday: 'Freitag', saturday: 'Samstag', sunday: 'Sonntag' }
+  weekdays: { monday: 'Montag', tuesday: 'Dienstag', wednesday: 'Mittwoch', thursday: 'Donnerstag', friday: 'Freitag', saturday: 'Samstag', sunday: 'Sonntag' },
+  scholarships: {
+    title: 'Stipendien & Rabatte', newScholarship: 'Neues Stipendium', editScholarship: 'Stipendium bearbeiten',
+    type: 'Typ', academic: 'Akademisch', sports: 'Sport', siblings: 'Geschwisterrabatt',
+    earlyPayment: 'Frühzahlung', annual: 'Jahreszahlung', discountType: 'Rabattart',
+    percentage: 'Prozent', fixed: 'Festbetrag', discountValue: 'Wert', applyTo: 'Anwenden auf',
+    tuition: 'Schulgeld', enrollment: 'Einschreibung', materials: 'Materialien', all: 'Alle',
+    minGPA: 'Mindest-Durchschnitt', maxBeneficiaries: 'Max. Begünstigte', validFrom: 'Gültig ab',
+    validUntil: 'Gültig bis', assign: 'Zuweisen', beneficiaries: 'Begünstigte',
+    studentsWithScholarship: 'Schüler mit Stipendium', noScholarships: 'Keine Stipendien konfiguriert'
+  },
+  cycles: {
+    title: 'Schulzyklen', newCycle: 'Neuer Zyklus', editCycle: 'Zyklus bearbeiten',
+    cycleName: 'Zyklusname', startDate: 'Startdatum', endDate: 'Enddatum',
+    status: 'Status', upcoming: 'Kommend', active: 'Aktiv', completed: 'Abgeschlossen',
+    archived: 'Archiviert', currentCycle: 'Aktueller Zyklus', activate: 'Aktivieren',
+    inscriptionPeriod: 'Einschreibungszeitraum', classesPeriod: 'Unterrichtszeitraum',
+    inscriptionFee: 'Einschreibegebühr', monthlyTuition: 'Monatliches Schulgeld',
+    materialsFee: 'Materialgebühr', autoPromotion: 'Automatische Versetzung',
+    promotionMinGPA: 'Mindest-Durchschnitt für Versetzung', enrollments: 'Einschreibungen',
+    chargesGenerated: 'Generierte Gebühren', noCycles: 'Keine Zyklen konfiguriert'
+  },
+  tutors: {
+    title: 'Multi-Tutor', addTutor: 'Tutor hinzufügen', editPermissions: 'Berechtigungen bearbeiten',
+    relationship: 'Beziehung', parent: 'Elternteil', stepparent: 'Stiefelternteil',
+    grandparent: 'Großelternteil', legalGuardian: 'Vormund', relative: 'Anderer Verwandter',
+    other: 'Sonstige', custodyType: 'Sorgerechtstyp', fullCustody: 'Volles Sorgerecht',
+    sharedCustody: 'Gemeinsames Sorgerecht', visitation: 'Nur Besuch', restricted: 'Eingeschränkt',
+    primaryContact: 'Hauptkontakt', fullAccess: 'Vollzugriff',
+    canViewGrades: 'Noten einsehen', canViewAttendance: 'Anwesenheit einsehen',
+    canViewPayments: 'Zahlungen einsehen', canMakePayments: 'Zahlungen tätigen',
+    canPickup: 'Kann abholen', canCommunicate: 'Kommunizieren', canReceiveNotifications: 'Benachrichtigungen',
+    canRequestPermissions: 'Genehmigungen anfragen', custodyNotes: 'Sorgerechtsnotizen',
+    noTutors: 'Keine Tutoren konfiguriert'
+  },
+  referrals: {
+    title: 'Empfehlungsprogramm', recommendSchool: 'Schule empfehlen',
+    myReferrals: 'Meine Empfehlungen', referralProgram: 'Empfehlungsprogramm',
+    referredName: 'Name des Empfohlenen', referredPhone: 'Telefon', referredEmail: 'E-Mail',
+    childName: 'Name des Kindes', childGrade: 'Interessierte Klasse', notes: 'Notizen',
+    submitReferral: 'Empfehlung senden', pending: 'Ausstehend', contacted: 'Kontaktiert',
+    interested: 'Interessiert', enrolled: 'Eingeschrieben', notInterested: 'Nicht interessiert',
+    alreadyReferred: 'Bereits empfohlen', reward: 'Belohnung', rewardPending: 'Belohnung ausstehend',
+    rewardApplied: 'Belohnung angewendet', conversionRate: 'Konversionsrate',
+    alreadyReferredError: 'Jemand hat diese Person bereits empfohlen, bitte empfehlen Sie jemand anderen.'
+  },
+  gamification: {
+    title: 'Gamification', points: 'Punkte', badges: 'Abzeichen', achievements: 'Erfolge',
+    level: 'Level', ranking: 'Rangliste', leaderboard: 'Bestenliste',
+    earnedBadges: 'Verdiente Abzeichen', progress: 'Fortschritt', streak: 'Serie',
+    dailyChallenge: 'Tägliche Herausforderung', weeklyChallenge: 'Wöchentliche Herausforderung',
+    pointsEarned: 'Verdiente Punkte', position: 'Position', topStudents: 'Beste Schüler'
+  },
+  tips: {
+    title: 'Tipps & Ratschläge', newTip: 'Neuer Tipp', category: 'Kategorie',
+    ageGroup: 'Altersgruppe', forParents: 'Für Eltern', forTeachers: 'Für Lehrer',
+    forStudents: 'Für Schüler', academic: 'Akademisch', emotional: 'Emotional',
+    health: 'Gesundheit', technology: 'Technologie', approve: 'Genehmigen', reject: 'Ablehnen',
+    generateWithAI: 'Mit KI generieren', aiGenerated: 'KI-generiert',
+    pendingApproval: 'Genehmigung ausstehend'
+  },
+  biometric: {
+    title: 'Biometrische Authentifizierung', enableBiometric: 'Biometrie aktivieren',
+    faceId: 'Face ID', touchId: 'Touch ID', fingerprint: 'Fingerabdruck',
+    windowsHello: 'Windows Hello', setupBiometric: 'Biometrie einrichten',
+    useBiometric: 'Biometrie verwenden', biometricEnabled: 'Biometrie aktiviert',
+    biometricDisabled: 'Biometrie deaktiviert', securityKey: 'Sicherheitsschlüssel'
+  }
 };
 
 const frTranslations = {

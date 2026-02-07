@@ -186,6 +186,9 @@ model School {
   // Programa de Referidos Escolar
   referralProgram  SchoolReferralProgram? @relation("SchoolReferralProgram")
   schoolReferrals  SchoolReferral[]     @relation("SchoolReferralsReceived")
+  
+  // Ciclos Escolares
+  schoolCycles     SchoolCycle[]        @relation("SchoolCycles")
 }
 
 model User {
@@ -355,6 +358,10 @@ model User {
   // Programa de Referidos Escolar
   schoolReferralsMade     SchoolReferral[]      @relation("UserSchoolReferrals")
   schoolReferralsProcessed SchoolReferral[]     @relation("ProcessedSchoolReferrals")
+  
+  // Multi-tutor (para padres divorciados/separados)
+  tutorRelations          StudentTutor[]        @relation("TutorStudents")
+  tutorConfiguredBy       StudentTutor[]        @relation("TutorConfiguredBy")
   referralRewardsReceived ReferralReward[]      @relation("ReferralRewardsBeneficiary")
   referralRewardsApplied  ReferralReward[]      @relation("ReferralRewardsApplied")
   referredBySchoolReferral SchoolReferral?      @relation("ReferredBySchoolReferral")
@@ -460,6 +467,9 @@ model Student {
   
   // Pedidos de proveedores
   vendorOrders      VendorOrder[] @relation("VendorOrdersForStudent")
+  
+  // Multi-tutor (para padres divorciados/separados)
+  tutors            StudentTutor[]           @relation("StudentTutors")
   
   // ============================================
   // GAMIFICACIÓN
@@ -907,12 +917,17 @@ model Charge {
   // Descuentos de referidos aplicados
   referralRewards ReferralReward[] @relation("ReferralRewardCharge")
   
+  // Ciclo escolar
+  schoolCycleId   String?
+  schoolCycle     SchoolCycle?  @relation("CycleCharges", fields: [schoolCycleId], references: [id])
+  
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
   @@index([studentId])
   @@index([schoolId])
   @@index([status])
+  @@index([schoolCycleId])
   @@index([dueDate])
   @@index([type])
 }
@@ -2043,6 +2058,10 @@ model Enrollment {
   // Grado solicitado
   requestedGrade String         // "1ro Primaria", "Kinder 3", etc.
   requestedYear  Int            // Ciclo escolar: 2026, 2027, etc.
+  
+  // Ciclo escolar (referencia)
+  schoolCycleId  String?
+  schoolCycle    SchoolCycle?   @relation("CycleEnrollments", fields: [schoolCycleId], references: [id])
   
   // Información adicional
   siblings      String?         @db.Text // ¿Tiene hermanos en la escuela?
@@ -4618,4 +4637,124 @@ model ReferralReward {
   @@index([programId])
   @@index([beneficiaryId])
   @@index([isApplied])
+}
+
+// ============================================
+// CICLOS ESCOLARES
+// ============================================
+model SchoolCycle {
+  id              String   @id @default(cuid())
+  schoolId        String
+  school          School   @relation("SchoolCycles", fields: [schoolId], references: [id], onDelete: Cascade)
+  
+  name            String           // "2025-2026", "2026-2027"
+  startDate       DateTime
+  endDate         DateTime
+  
+  // Estado del ciclo
+  status          CycleStatus      @default(UPCOMING)
+  
+  // Configuración del ciclo
+  isCurrentCycle  Boolean          @default(false)
+  
+  // Fechas importantes
+  inscriptionStart DateTime?       // Inicio de inscripciones
+  inscriptionEnd   DateTime?       // Fin de inscripciones
+  classesStart     DateTime?       // Inicio de clases
+  classesEnd       DateTime?       // Fin de clases
+  
+  // Configuración de reinscripción
+  autoPromotionEnabled Boolean     @default(false)  // Promover automáticamente al siguiente grado
+  promotionMinGPA      Float?                        // Promedio mínimo para promoción automática
+  
+  // Configuración financiera del ciclo
+  inscriptionFee      Decimal?     @db.Decimal(10, 2)
+  monthlyTuition      Decimal?     @db.Decimal(10, 2)
+  materialsFee        Decimal?     @db.Decimal(10, 2)
+  
+  // Relaciones
+  enrollments         Enrollment[]     @relation("CycleEnrollments")
+  charges             Charge[]         @relation("CycleCharges")
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@unique([schoolId, name])
+  @@index([schoolId])
+  @@index([status])
+  @@index([isCurrentCycle])
+}
+
+enum CycleStatus {
+  UPCOMING      // Próximo ciclo
+  ACTIVE        // Ciclo activo actual
+  COMPLETED     // Ciclo finalizado
+  ARCHIVED      // Ciclo archivado
+}
+
+// ============================================
+// MULTI-TUTOR (Soporte para padres divorciados/separados)
+// ============================================
+model StudentTutor {
+  id              String   @id @default(cuid())
+  
+  studentId       String
+  student         Student  @relation("StudentTutors", fields: [studentId], references: [id], onDelete: Cascade)
+  
+  tutorId         String
+  tutor           User     @relation("TutorStudents", fields: [tutorId], references: [id], onDelete: Cascade)
+  
+  // Tipo de relación
+  relationship    TutorRelationship @default(PARENT)
+  relationshipDetail String?         // "Madre", "Padre", "Abuelo", "Tío", etc.
+  
+  // Permisos y configuración
+  isPrimaryContact    Boolean  @default(false)   // Contacto principal
+  hasFullAccess       Boolean  @default(true)    // Acceso completo a información
+  canViewGrades       Boolean  @default(true)    // Ver calificaciones
+  canViewAttendance   Boolean  @default(true)    // Ver asistencia
+  canViewPayments     Boolean  @default(true)    // Ver pagos/estados de cuenta
+  canMakePayments     Boolean  @default(true)    // Realizar pagos
+  canPickup           Boolean  @default(true)    // Autorizado para recoger
+  canCommunicate      Boolean  @default(true)    // Comunicarse con maestros
+  canReceiveNotifications Boolean @default(true) // Recibir notificaciones
+  canRequestPermissions Boolean @default(true)   // Solicitar permisos
+  
+  // Para custodia compartida
+  custodyType         CustodyType?               // Tipo de custodia
+  custodyNotes        String?      @db.Text      // Notas sobre custodia/acuerdos
+  
+  // Estado
+  isActive            Boolean  @default(true)
+  activatedAt         DateTime @default(now())
+  deactivatedAt       DateTime?
+  deactivatedReason   String?
+  
+  // Quién configuró esta relación
+  configuredById      String?
+  configuredBy        User?    @relation("TutorConfiguredBy", fields: [configuredById], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@unique([studentId, tutorId])
+  @@index([studentId])
+  @@index([tutorId])
+  @@index([isPrimaryContact])
+}
+
+enum TutorRelationship {
+  PARENT        // Padre/Madre biológico
+  STEPPARENT    // Padrastro/Madrastra
+  GRANDPARENT   // Abuelo/Abuela
+  LEGAL_GUARDIAN // Tutor legal
+  RELATIVE      // Otro familiar
+  OTHER         // Otro
+}
+
+enum CustodyType {
+  FULL          // Custodia total
+  SHARED        // Custodia compartida
+  VISITATION    // Solo visitas
+  RESTRICTED    // Restringida (por orden judicial)
 }
