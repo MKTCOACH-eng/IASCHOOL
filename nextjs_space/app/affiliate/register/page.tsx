@@ -85,7 +85,7 @@ export default function AffiliateRegisterPage() {
       <header className="bg-white/10 backdrop-blur-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <Image src="/iaschool-logo-new.png" alt="IA School" width={40} height={40} className="rounded-lg" />
+            <Image src="/iaschool-logo-white.png" alt="IA School" width={40} height={40} className="rounded-lg" />
             <span className="text-white font-semibold text-lg">IA School</span>
           </Link>
           <Link href="/affiliate/login" className="text-white/80 hover:text-white transition-colors">

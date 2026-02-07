@@ -48,7 +48,7 @@ export default function AffiliateLoginPage() {
       <header className="fixed top-0 left-0 right-0 bg-white/10 backdrop-blur-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <Image src="/iaschool-logo-new.png" alt="IA School" width={40} height={40} className="rounded-lg" />
+            <Image src="/iaschool-logo-white.png" alt="IA School" width={40} height={40} className="rounded-lg" />
             <span className="text-white font-semibold text-lg">IA School</span>
           </Link>
           <Link href="/affiliate/register" className="text-white/80 hover:text-white transition-colors">
@@ -60,7 +60,7 @@ export default function AffiliateLoginPage() {
       <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl mt-16">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-gradient-to-br from-[#1B4079] to-[#2d5a9e] rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Image src="/iaschool-logo-new.png" alt="IA School" width={40} height={40} className="rounded-lg" />
+            <Image src="/iaschool-logo-white.png" alt="IA School" width={40} height={40} className="rounded-lg" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">{t.affiliate.portal}</h1>
           <p className="text-gray-500 mt-1">{t.affiliate.loginAccess}</p>
