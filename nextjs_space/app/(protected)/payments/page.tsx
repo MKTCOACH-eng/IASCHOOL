@@ -9,6 +9,7 @@ import {
   isPast,
 } from "date-fns";
 import { es } from "date-fns/locale";
+import Image from "next/image";
 import {
   Wallet,
   Plus,
@@ -301,36 +302,47 @@ export default function PaymentsPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <Wallet className="h-7 w-7 text-[#1B4079]" />
-            {isAdmin ? "Gestión de Pagos" : "Estado de Cuenta"}
-          </h1>
-          <p className="text-gray-600 mt-1">
-            {isAdmin ? "Administra cargos y pagos de los alumnos" : "Consulta tus cargos y pagos pendientes"}
-          </p>
+      {/* Header with visual */}
+      <div className="relative overflow-hidden rounded-2xl mb-6">
+        <div className="absolute inset-0">
+          <Image
+            src="https://cdn.abacus.ai/images/97765e4f-e8b1-4e40-9239-8274e375e137.jpg"
+            alt=""
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B4079]/95 to-[#1B4079]/80" />
         </div>
-        {isAdmin && (
-          <div className="flex gap-2">
-            <Button
-              onClick={() => setShowBankConfigModal(true)}
-              variant="outline"
-              className="border-[#1B4079] text-[#1B4079]"
-            >
-              <Building2 className="h-4 w-4 mr-2" />
-              Config. SPEI
-            </Button>
-            <Button
-              onClick={() => setShowCreateModal(true)}
-              className="bg-[#1B4079] hover:bg-[#15325f] text-white"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Nuevo cargo
-            </Button>
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="text-white">
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              <Wallet className="h-7 w-7" />
+              {isAdmin ? "Gestión de Pagos" : "Estado de Cuenta"}
+            </h1>
+            <p className="text-white/80 mt-1">
+              {isAdmin ? "Administra cargos y pagos de los alumnos" : "Consulta tus cargos y pagos pendientes"}
+            </p>
           </div>
-        )}
+          {isAdmin && (
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setShowBankConfigModal(true)}
+                variant="outline"
+                className="border-white/50 text-white hover:bg-white/10 bg-transparent"
+              >
+                <Building2 className="h-4 w-4 mr-2" />
+                Config. SPEI
+              </Button>
+              <Button
+                onClick={() => setShowCreateModal(true)}
+                className="bg-white text-[#1B4079] hover:bg-gray-100"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Nuevo cargo
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Summary Cards */}

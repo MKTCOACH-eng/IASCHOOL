@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -245,23 +246,36 @@ export default function DocumentsPage() {
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Documentos</h1>
-          <p className="text-gray-600 mt-1">
-            {isAdmin ? 'Gestiona documentos institucionales' : 'Firma y consulta documentos'}
-          </p>
+      {/* Header with visual */}
+      <div className="relative overflow-hidden rounded-2xl mb-6">
+        <div className="absolute inset-0">
+          <Image
+            src="https://cdn.abacus.ai/images/4fd07481-84b1-4d5d-9799-8cd6d0707dbb.jpg"
+            alt=""
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B4079]/95 to-[#1B4079]/80" />
         </div>
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="text-white">
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              <FileText className="h-7 w-7" />
+              Documentos
+            </h1>
+            <p className="text-white/80 mt-1">
+              {isAdmin ? 'Gestiona documentos institucionales' : 'Firma y consulta documentos'}
+            </p>
+          </div>
 
-        {isAdmin && (
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-[#1B4079] hover:bg-[#143156]">
-                <Plus className="h-4 w-4 mr-2" />
-                Nuevo Documento
-              </Button>
-            </DialogTrigger>
+          {isAdmin && (
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-white text-[#1B4079] hover:bg-gray-100">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nuevo Documento
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Crear Nuevo Documento</DialogTitle>
@@ -390,7 +404,8 @@ export default function DocumentsPage() {
               </div>
             </DialogContent>
           </Dialog>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Tabs */}

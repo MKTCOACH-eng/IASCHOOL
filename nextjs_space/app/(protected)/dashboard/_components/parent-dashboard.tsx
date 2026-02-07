@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Bell, BellRing, ArrowRight, ClipboardList, FileText } from "lucide-react";
 import { StatCard } from "@/components/stat-card";
@@ -83,12 +84,25 @@ export function ParentDashboard({ userId, schoolId, userName }: ParentDashboardP
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-[#1B4079] to-[#4D7C8A] rounded-2xl p-6 sm:p-8 text-white"
+        className="relative overflow-hidden rounded-2xl p-6 sm:p-8 text-white"
       >
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t.dashboard.welcome}, {userName ?? t.roles.parent} 👋</h1>
-        <p className="text-white/80">
-          {t.dashboard.welcomeParent}
-        </p>
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="https://cdn.abacus.ai/images/7d6234c5-6667-407b-b59d-fe8fe2bad088.png"
+            alt=""
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B4079]/95 to-[#4D7C8A]/85" />
+        </div>
+        
+        <div className="relative z-10">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t.dashboard.welcome}, {userName ?? t.roles.parent} 👋</h1>
+          <p className="text-white/80">
+            {t.dashboard.welcomeParent}
+          </p>
+        </div>
       </motion.div>
 
       {/* Stats Cards */}

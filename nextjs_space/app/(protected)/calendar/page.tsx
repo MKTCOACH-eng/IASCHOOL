@@ -18,6 +18,7 @@ import {
   parseISO,
 } from "date-fns";
 import { es } from "date-fns/locale";
+import Image from "next/image";
 import {
   ChevronLeft,
   ChevronRight,
@@ -199,24 +200,35 @@ export default function CalendarPage() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <CalendarIcon className="h-7 w-7 text-[#1B4079]" />
-            Calendario
-          </h1>
-          <p className="text-gray-600 mt-1">Eventos y fechas importantes</p>
+      {/* Header with visual */}
+      <div className="relative overflow-hidden rounded-2xl mb-6">
+        <div className="absolute inset-0">
+          <Image
+            src="https://cdn.abacus.ai/images/5abe7ef7-1af9-406c-b536-28a441433309.jpg"
+            alt=""
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B4079]/95 to-[#1B4079]/80" />
         </div>
-        {canCreateEvent && (
-          <Button
-            onClick={() => setShowCreateModal(true)}
-            className="bg-[#1B4079] hover:bg-[#15325f] text-white"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Nuevo evento
-          </Button>
-        )}
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="text-white">
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              <CalendarIcon className="h-7 w-7" />
+              Calendario
+            </h1>
+            <p className="text-white/80 mt-1">Eventos y fechas importantes</p>
+          </div>
+          {canCreateEvent && (
+            <Button
+              onClick={() => setShowCreateModal(true)}
+              className="bg-white text-[#1B4079] hover:bg-gray-100"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Nuevo evento
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Controls */}

@@ -30,6 +30,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Student {
   id: string;
@@ -202,32 +203,47 @@ export default function DirectoryPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Directorio Escolar</h1>
-          <p className="text-gray-600">Consulta y exporta información de contacto</p>
+      {/* Header with visual */}
+      <div className="relative overflow-hidden rounded-2xl mb-6">
+        <div className="absolute inset-0">
+          <Image
+            src="https://cdn.abacus.ai/images/ac747400-813d-4ed9-a4e5-9967b3ee2c88.jpg"
+            alt=""
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B4079]/95 to-[#1B4079]/80" />
         </div>
-        <div className="flex items-center gap-2">
-          {user?.role === "ADMIN" && (
-            <>
-              <Link href="/directory/metrics">
-                <Button variant="outline" className="gap-2">
-                  <BarChart3 className="h-4 w-4" />
-                  Métricas
-                </Button>
-              </Link>
-              <Link href="/directory/import">
-                <Button variant="outline" className="gap-2">
-                  <Upload className="h-4 w-4" />
-                  Importar CSV
-                </Button>
-              </Link>
-            </>
-          )}
-          <Button onClick={handleExport} variant="outline" className="gap-2">
-            <Download className="h-4 w-4" />
-            Exportar
-          </Button>
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="text-white">
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              <Users className="h-7 w-7" />
+              Directorio Escolar
+            </h1>
+            <p className="text-white/80">Consulta y exporta información de contacto</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {user?.role === "ADMIN" && (
+              <>
+                <Link href="/directory/metrics">
+                  <Button variant="outline" className="gap-2 border-white/50 text-white hover:bg-white/10 bg-transparent">
+                    <BarChart3 className="h-4 w-4" />
+                    Métricas
+                  </Button>
+                </Link>
+                <Link href="/directory/import">
+                  <Button variant="outline" className="gap-2 border-white/50 text-white hover:bg-white/10 bg-transparent">
+                    <Upload className="h-4 w-4" />
+                    Importar CSV
+                  </Button>
+                </Link>
+              </>
+            )}
+            <Button onClick={handleExport} className="gap-2 bg-white text-[#1B4079] hover:bg-gray-100">
+              <Download className="h-4 w-4" />
+              Exportar
+            </Button>
+          </div>
         </div>
       </div>
 

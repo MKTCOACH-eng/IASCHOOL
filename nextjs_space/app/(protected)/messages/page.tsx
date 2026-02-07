@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   MessageSquare,
   Users,
@@ -261,24 +262,38 @@ export default function MessagesPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mensajes</h1>
-          <p className="text-gray-500 text-sm">
-            Comunicación centralizada con profesores y el colegio
-          </p>
+      {/* Header with visual */}
+      <div className="relative overflow-hidden rounded-2xl mb-6">
+        <div className="absolute inset-0">
+          <Image
+            src="https://cdn.abacus.ai/images/6aaea341-7da5-4b5d-bb74-20fc6475f8fa.jpg"
+            alt=""
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B4079]/95 to-[#1B4079]/80" />
         </div>
-        <Button
-          onClick={() => {
-            setShowNewChat(!showNewChat);
-            if (!showNewChat) fetchAvailableUsers();
-          }}
-          className="bg-[#1B4079] hover:bg-[#1B4079]/90"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Nueva conversación
-        </Button>
+        <div className="relative z-10 p-6 flex items-center justify-between">
+          <div className="text-white">
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              <MessageSquare className="w-7 h-7" />
+              Mensajes
+            </h1>
+            <p className="text-white/80 text-sm">
+              Comunicación centralizada con profesores y el colegio
+            </p>
+          </div>
+          <Button
+            onClick={() => {
+              setShowNewChat(!showNewChat);
+              if (!showNewChat) fetchAvailableUsers();
+            }}
+            className="bg-white text-[#1B4079] hover:bg-gray-100"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Nueva conversación
+          </Button>
+        </div>
       </div>
 
       {/* Search */}

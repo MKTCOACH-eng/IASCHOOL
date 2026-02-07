@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -168,56 +169,69 @@ export default function AcademicProgressPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <BarChart3 className="w-7 h-7 text-[#1B4079]" />
-            Progreso Académico
-          </h1>
-          <p className="text-gray-600">
-            {isParent
-              ? "Seguimiento del rendimiento de tus hijos"
-              : "Resumen del desempeño académico"}
-          </p>
+      {/* Header with visual */}
+      <div className="relative overflow-hidden rounded-2xl mb-8">
+        <div className="absolute inset-0">
+          <Image
+            src="https://cdn.abacus.ai/images/884266ec-1e7f-418b-95bb-20017de43d36.jpg"
+            alt=""
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B4079]/95 to-[#1B4079]/80" />
         </div>
-        
-        <div className="flex flex-wrap gap-2">
-          <Link href="/academic/report-cards">
-            <Button className="gap-2 bg-gradient-to-r from-[#1B4079] to-[#2563EB] text-white hover:from-[#153360] hover:to-[#1D4ED8]">
-              <Download className="w-4 h-4" />
-              Generar Boleta PDF
-            </Button>
-          </Link>
-          <Link href="/academic/grades">
-            <Button variant="outline" className="gap-2">
-              <FileText className="w-4 h-4" />
-              Reporte de Calificaciones
-            </Button>
-          </Link>
-          <Link href="/academic/documents">
-            <Button variant="outline" className="gap-2">
-              <FileText className="w-4 h-4" />
-              Boletas y Documentos
-            </Button>
-          </Link>
-        </div>
+        <div className="relative z-10 p-6 sm:p-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="text-white">
+              <h1 className="text-2xl font-bold flex items-center gap-2">
+                <BarChart3 className="w-7 h-7" />
+                Progreso Académico
+              </h1>
+              <p className="text-white/80">
+                {isParent
+                  ? "Seguimiento del rendimiento de tus hijos"
+                  : "Resumen del desempeño académico"}
+              </p>
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
+              <Link href="/academic/report-cards">
+                <Button className="gap-2 bg-white text-[#1B4079] hover:bg-gray-100">
+                  <Download className="w-4 h-4" />
+                  Generar Boleta PDF
+                </Button>
+              </Link>
+              <Link href="/academic/grades">
+                <Button variant="outline" className="gap-2 border-white/50 text-white hover:bg-white/10 bg-transparent">
+                  <FileText className="w-4 h-4" />
+                  Reporte de Calificaciones
+                </Button>
+              </Link>
+              <Link href="/academic/documents">
+                <Button variant="outline" className="gap-2 border-white/50 text-white hover:bg-white/10 bg-transparent">
+                  <FileText className="w-4 h-4" />
+                  Boletas y Documentos
+                </Button>
+              </Link>
+            </div>
 
-        {stats.students.length > 1 && (
-          <Select value={selectedStudent} onValueChange={setSelectedStudent}>
-            <SelectTrigger className="w-[250px]">
-              <SelectValue placeholder="Seleccionar estudiante" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos los estudiantes</SelectItem>
-              {stats.students.map((student) => (
-                <SelectItem key={student.id} value={student.id}>
-                  {student.firstName} {student.lastName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
+            {stats.students.length > 1 && (
+              <Select value={selectedStudent} onValueChange={setSelectedStudent}>
+                <SelectTrigger className="w-[250px] bg-white text-gray-900">
+                  <SelectValue placeholder="Seleccionar estudiante" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos los estudiantes</SelectItem>
+                  {stats.students.map((student) => (
+                    <SelectItem key={student.id} value={student.id}>
+                      {student.firstName} {student.lastName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Summary Cards */}
