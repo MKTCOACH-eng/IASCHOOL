@@ -1,6 +1,19 @@
 import { NextResponse } from "next/server";
-import { db as prisma } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { sendBirthdayNotification } from "@/lib/send-notification";
+import { Prisma } from "@prisma/client";
+
+type StudentWithBirthday = Prisma.StudentGetPayload<{
+  include: {
+    school: true;
+    parents: { select: { id: true; name: true; email: true } };
+    tutors: {
+      where: { isActive: true; canReceiveNotifications: true };
+      include: { tutor: { select: { id: true; name: true; email: true } } };
+    };
+    user: { select: { id: true; name: true; email: true } };
+  };
+}>;
 
 // API para enviar notificaciones de cumpleaños
 // Se ejecuta diariamente mediante un scheduled task
@@ -61,7 +74,7 @@ export async function POST(request: Request) {
     });
 
     // Filtrar solo los que cumplen años hoy
-    const birthdayStudents = studentsWithBirthday.filter((student) => {
+    const birthdayStudents = studentsWithBirthday.filter((student: StudentWithBirthday) => {
       if (!student.birthDate) return false;
       const birthDate = new Date(student.birthDate);
       return (
@@ -193,7 +206,7 @@ export async function GET(request: Request) {
     });
 
     const birthdayStudents = studentsWithBirthday
-      .filter((student) => {
+      .filter((student: typeof studentsWithBirthday[number]) => {
         if (!student.birthDate) return false;
         const birthDate = new Date(student.birthDate);
         return (
@@ -201,7 +214,7 @@ export async function GET(request: Request) {
           birthDate.getDate() === currentDay
         );
       })
-      .map((student) => {
+      .map((student: typeof studentsWithBirthday[number]) => {
         const birthYear = new Date(student.birthDate!).getFullYear();
         const age = targetDate.getFullYear() - birthYear;
         return {
