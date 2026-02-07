@@ -6,9 +6,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Eye, EyeOff, Loader2, CheckCircle, School, Gift, Users, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/language-context';
 
 export default function AffiliateRegisterPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -69,8 +71,8 @@ export default function AffiliateRegisterPage() {
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-8 h-8 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">¡Registro Exitoso!</h2>
-          <p className="text-gray-600 mb-6">Tu cuenta de afiliado ha sido creada. Redirigiendo al login...</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t.affiliate.registerSuccess}</h2>
+          <p className="text-gray-600 mb-6">{t.affiliate.accountCreated}</p>
           <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#1B4079]" />
         </div>
       </div>
@@ -87,7 +89,7 @@ export default function AffiliateRegisterPage() {
             <span className="text-white font-semibold text-lg">IA School</span>
           </Link>
           <Link href="/affiliate/login" className="text-white/80 hover:text-white transition-colors">
-            ¿Ya tienes cuenta? Inicia sesión
+            {t.affiliate.haveAccount} {t.affiliate.login}
           </Link>
         </div>
       </header>
@@ -95,10 +97,10 @@ export default function AffiliateRegisterPage() {
       <main className="max-w-6xl mx-auto px-4 py-12">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Benefits Section */}
-          <div className="text-white">
-            <h1 className="text-4xl font-bold mb-4">Programa de Afiliados</h1>
+          <div>
+            <h1 className="text-4xl font-bold mb-4 text-white">{t.affiliate.program}</h1>
             <p className="text-xl text-white/80 mb-8">
-              Refiere colegios a IA School y obtén beneficios exclusivos
+              {t.affiliate.referSchools}
             </p>
 
             <div className="space-y-6">
@@ -107,8 +109,8 @@ export default function AffiliateRegisterPage() {
                   <School className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-1">Refiere Colegios</h3>
-                  <p className="text-white/70">Identifica colegios que quieran modernizar su gestión escolar</p>
+                  <h3 className="font-semibold text-lg mb-1 text-white">{t.affiliate.referTitle}</h3>
+                  <p className="text-white/70">{t.affiliate.referDesc}</p>
                 </div>
               </div>
 
@@ -117,8 +119,8 @@ export default function AffiliateRegisterPage() {
                   <Gift className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-1">10% del Setup</h3>
-                  <p className="text-white/70">Recibe el 10% de la cuota de setup cuando el colegio active</p>
+                  <h3 className="font-semibold text-lg mb-1 text-white">{t.affiliate.setupFee}</h3>
+                  <p className="text-white/70">{t.affiliate.setupFeeDesc}</p>
                 </div>
               </div>
 
@@ -127,41 +129,45 @@ export default function AffiliateRegisterPage() {
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-1">1 Año Gratis</h3>
-                  <p className="text-white/70">Si tienes hijos en un colegio con IA School, recibe 1 año gratis para uno de ellos</p>
+                  <h3 className="font-semibold text-lg mb-1 text-white">{t.affiliate.freeYear}</h3>
+                  <p className="text-white/70">{t.affiliate.freeYearDesc}</p>
                 </div>
               </div>
             </div>
 
             <div className="mt-8 p-4 bg-white/10 rounded-xl border border-white/20">
               <p className="text-sm text-white/80">
-                <strong className="text-white">Ventana de activación:</strong> El colegio tiene 30 días desde su registro para activar y que recibas tus beneficios.
+                <strong className="text-white">{t.affiliate.activationWindow}:</strong> {t.affiliate.activationDesc}
               </p>
             </div>
           </div>
 
           {/* Registration Form */}
           <div className="bg-white rounded-2xl p-8 shadow-2xl">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Crear Cuenta de Afiliado</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t.affiliate.createAccount}</h2>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.fullName}</label>
                 <input
                   type="text"
                   required
+                  name="name"
+                  id="affiliate-name"
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#1B4079] focus:ring-1 focus:ring-[#1B4079] outline-none transition-colors"
-                  placeholder="Tu nombre"
+                  placeholder={t.affiliate.fullName}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.email}</label>
                 <input
                   type="email"
                   required
+                  name="email"
+                  id="affiliate-email"
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#1B4079] focus:ring-1 focus:ring-[#1B4079] outline-none transition-colors"
                   placeholder="tu@email.com"
                   value={formData.email}
@@ -170,9 +176,11 @@ export default function AffiliateRegisterPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono (opcional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.phone}</label>
                 <input
                   type="tel"
+                  name="phone"
+                  id="affiliate-phone"
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#1B4079] focus:ring-1 focus:ring-[#1B4079] outline-none transition-colors"
                   placeholder="+52 55 1234 5678"
                   value={formData.phone}
@@ -181,14 +189,16 @@ export default function AffiliateRegisterPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.password}</label>
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
                     minLength={6}
+                    name="password"
+                    id="affiliate-password"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#1B4079] focus:ring-1 focus:ring-[#1B4079] outline-none transition-colors pr-12"
-                    placeholder="Mínimo 6 caracteres"
+                    placeholder={t.affiliate.minChars}
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   />
@@ -203,12 +213,14 @@ export default function AffiliateRegisterPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar contraseña</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.affiliate.confirmPassword}</label>
                 <input
                   type="password"
                   required
+                  name="confirmPassword"
+                  id="affiliate-confirm-password"
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#1B4079] focus:ring-1 focus:ring-[#1B4079] outline-none transition-colors"
-                  placeholder="Repite tu contraseña"
+                  placeholder={t.affiliate.repeatPassword}
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 />
@@ -218,12 +230,13 @@ export default function AffiliateRegisterPage() {
                 <input
                   type="checkbox"
                   id="terms"
+                  name="terms"
                   className="mt-1 w-4 h-4 text-[#1B4079] border-gray-300 rounded focus:ring-[#1B4079]"
                   checked={formData.termsAccepted}
                   onChange={(e) => setFormData({ ...formData, termsAccepted: e.target.checked })}
                 />
                 <label htmlFor="terms" className="text-sm text-gray-600">
-                  Acepto los <a href="#" className="text-[#1B4079] hover:underline">términos y condiciones</a> del Programa de Afiliados de IA School
+                  {t.affiliate.acceptTerms} <a href="#" className="text-[#1B4079] hover:underline">{t.affiliate.termsLink}</a> {t.affiliate.termsProgram}
                 </label>
               </div>
 
@@ -236,16 +249,16 @@ export default function AffiliateRegisterPage() {
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    Crear Cuenta <ArrowRight className="w-5 h-5" />
+                    {t.affiliate.createBtn} <ArrowRight className="w-5 h-5" />
                   </>
                 )}
               </button>
             </form>
 
             <p className="text-center text-sm text-gray-500 mt-6">
-              ¿Ya tienes cuenta?{' '}
+              {t.affiliate.haveAccount}{' '}
               <Link href="/affiliate/login" className="text-[#1B4079] hover:underline font-medium">
-                Inicia sesión
+                {t.affiliate.login}
               </Link>
             </p>
           </div>
