@@ -545,9 +545,9 @@ export default function FundDetailPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="PAID">Pagado</SelectItem>
                   <SelectItem value="PENDING">Pendiente</SelectItem>
                   <SelectItem value="EXEMPT">Exento</SelectItem>
+                  <SelectItem value="PAID">Pagado</SelectItem>
                 </SelectContent>
               </Select>
             </div>

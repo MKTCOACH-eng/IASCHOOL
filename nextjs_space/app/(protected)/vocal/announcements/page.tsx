@@ -85,7 +85,7 @@ export default function GroupAnnouncementsPage() {
     groupId: initialGroupId || "",
     title: "",
     content: "",
-    linkedFundId: "",
+    linkedFundId: "none",
     isPinned: false
   });
 
@@ -146,10 +146,14 @@ export default function GroupAnnouncementsPage() {
         : "/api/vocal/announcements";
       const method = editingAnnouncement ? "PUT" : "POST";
 
+      const submitData = {
+        ...formData,
+        linkedFundId: formData.linkedFundId === "none" ? null : formData.linkedFundId || null
+      };
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(submitData)
       });
 
       if (res.ok) {
@@ -203,7 +207,7 @@ export default function GroupAnnouncementsPage() {
       groupId: announcement.group.id,
       title: announcement.title,
       content: announcement.content,
-      linkedFundId: announcement.linkedFund?.id || "",
+      linkedFundId: announcement.linkedFund?.id || "none",
       isPinned: announcement.isPinned
     });
     setShowModal(true);
@@ -215,7 +219,7 @@ export default function GroupAnnouncementsPage() {
       groupId: initialGroupId || "",
       title: "",
       content: "",
-      linkedFundId: "",
+      linkedFundId: "none",
       isPinned: false
     });
   };
@@ -466,7 +470,7 @@ export default function GroupAnnouncementsPage() {
                   <SelectValue placeholder="Selecciona una colecta" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Ninguna</SelectItem>
+                  <SelectItem value="none">Ninguna</SelectItem>
                   {funds
                     .filter(f => f.group.id === formData.groupId || !formData.groupId)
                     .map(fund => (
