@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen, Mail, Globe } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen, Mail, Globe, ShoppingBag, Image as ImageIcon } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertsCounter } from "@/components/academic-alerts";
@@ -87,6 +87,8 @@ export function Header({ user }: HeaderProps) {
         { href: "/chatbot", label: t.nav.chatbot, icon: Bot },
         { href: "/attendance", label: t.nav.attendance, icon: Users },
         { href: "/directory", label: t.nav.directory, icon: BookOpen },
+        { href: "/store", label: t.nav.store, icon: ShoppingBag },
+        { href: "/gallery", label: t.nav.gallery, icon: ImageIcon },
         { href: "/crm", label: t.nav.crm, icon: Mail },
         { href: "/polls", label: t.nav.polls, icon: Vote },
         { href: "/invitations", label: t.nav.invitations, icon: UserPlus },
@@ -98,6 +100,7 @@ export function Header({ user }: HeaderProps) {
         ...baseItems,
         { href: "/appointments", label: t.nav.appointments, icon: CalendarCheck },
         { href: "/attendance", label: t.nav.attendance, icon: Users },
+        { href: "/gallery", label: t.nav.gallery, icon: ImageIcon },
         { href: "/tasks/new", label: t.tasks.newTask, icon: Plus },
       ];
     }
@@ -107,6 +110,8 @@ export function Header({ user }: HeaderProps) {
         ...baseItems,
         { href: "/chatbot", label: t.nav.chatbot, icon: Bot },
         { href: "/attendance", label: t.nav.attendance, icon: Users },
+        { href: "/store", label: t.nav.store, icon: ShoppingBag },
+        { href: "/gallery", label: t.nav.gallery, icon: ImageIcon },
         { href: "/polls", label: t.nav.polls, icon: Vote },
       ];
     }
@@ -117,6 +122,8 @@ export function Header({ user }: HeaderProps) {
       { href: "/appointments", label: t.nav.appointments, icon: CalendarCheck },
       { href: "/chatbot", label: t.nav.chatbot, icon: Bot },
       { href: "/attendance", label: t.nav.attendance, icon: Users },
+      { href: "/store", label: t.nav.store, icon: ShoppingBag },
+      { href: "/gallery", label: t.nav.gallery, icon: ImageIcon },
       { href: "/polls", label: t.nav.polls, icon: Vote },
     ];
   };

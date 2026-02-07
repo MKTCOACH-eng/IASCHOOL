@@ -111,6 +111,12 @@ model School {
   communicationLogs CommunicationLog[]
   metricsSnapshots SchoolMetricsSnapshot[]
   importLogs       ImportLog[]
+  
+  // Fase 4C: Tienda y Galería
+  storeCategories  StoreCategory[]
+  storeProducts    StoreProduct[]
+  orders           Order[]
+  photoAlbums      PhotoAlbum[]
 }
 
 model User {
@@ -186,6 +192,11 @@ model User {
   campaignsCreated     CrmCampaign[]
   campaignRecipients   CrmCampaignRecipient[]
   communicationLogs    CommunicationLog[]
+  
+  // Fase 4C: Tienda y Galería
+  cartItems            CartItem[]
+  orders               Order[]
+  albumsCreated        PhotoAlbum[]
 }
 
 model Invitation {
@@ -224,6 +235,7 @@ model Group {
   attendances  Attendance[]
   polls        Poll[]
   documents    Document[]
+  photoAlbums  PhotoAlbum[]
   createdAt    DateTime  @default(now())
   isActive     Boolean   @default(true)
 
@@ -251,6 +263,7 @@ model Student {
   attendances  Attendance[]
   appointments Appointment[] @relation("StudentAppointments")
   speiReference SpeiReference?
+  photoTags    PhotoTag[]
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -1293,4 +1306,203 @@ model CommunicationLog {
   @@index([schoolId])
   @@index([userId])
   @@index([sentAt])
+}
+
+
+// ==========================================
+// FASE 4C: COMERCIO Y MEDIOS
+// ==========================================
+
+// ---------- TIENDA ESCOLAR ----------
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+}
+
+enum OrderStatus {
+  PENDING      // Pedido creado, esperando pago
+  PAID         // Pago confirmado
+  PROCESSING   // En preparación
+  READY        // Listo para entrega
+  DELIVERED    // Entregado
+  CANCELLED    // Cancelado
+}
+
+// Categorías de productos
+model StoreCategory {
+  id          String   @id @default(cuid())
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  imageUrl    String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  products    StoreProduct[]
+
+  @@index([schoolId])
+}
+
+// Productos de la tienda
+model StoreProduct {
+  id          String        @id @default(cuid())
+  schoolId    String
+  school      School        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  categoryId  String
+  category    StoreCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name        String
+  description String?       @db.Text
+  price       Float
+  imageUrl    String?
+  sku         String?       // Código de producto
+  stock       Int           @default(0)
+  status      ProductStatus @default(ACTIVE)
+  sizes       String[]      @default([]) // Tallas disponibles: ["XS", "S", "M", "L", "XL"]
+  colors      String[]      @default([]) // Colores disponibles
+  isRequired  Boolean       @default(false) // Si es uniforme obligatorio
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+
+  @@index([schoolId])
+  @@index([categoryId])
+  @@index([status])
+}
+
+// Carrito de compras
+model CartItem {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   StoreProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int          @default(1)
+  size      String?      // Talla seleccionada
+  color     String?      // Color seleccionado
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@unique([userId, productId, size, color])
+  @@index([userId])
+}
+
+// Órdenes/Pedidos
+model Order {
+  id           String      @id @default(cuid())
+  orderNumber  String      @unique // Número de pedido legible
+  userId       String
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schoolId     String
+  school       School      @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  subtotal     Float
+  discount     Float       @default(0)
+  total        Float
+  status       OrderStatus @default(PENDING)
+  paymentMethod String?    // spei, card, cash
+  paymentReference String? // Referencia de pago
+  paidAt       DateTime?
+  notes        String?     @db.Text
+  deliveryDate DateTime?   // Fecha estimada de entrega
+  deliveredAt  DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  items        OrderItem[]
+
+  @@index([userId])
+  @@index([schoolId])
+  @@index([status])
+  @@index([orderNumber])
+}
+
+// Items de una orden
+model OrderItem {
+  id         String       @id @default(cuid())
+  orderId    String
+  order      Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    StoreProduct @relation(fields: [productId], references: [id])
+  quantity   Int
+  unitPrice  Float
+  size       String?
+  color      String?
+  createdAt  DateTime     @default(now())
+
+  @@index([orderId])
+}
+
+// ---------- GALERÍA DE FOTOS ----------
+
+enum AlbumVisibility {
+  PUBLIC       // Visible para todos los padres de la escuela
+  GROUP_ONLY   // Solo para padres del grupo específico
+  PRIVATE      // Solo admins
+}
+
+// Álbumes de fotos
+model PhotoAlbum {
+  id          String          @id @default(cuid())
+  schoolId    String
+  school      School          @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  groupId     String?         // Opcional: álbum de un grupo específico
+  group       Group?          @relation(fields: [groupId], references: [id])
+  title       String
+  description String?         @db.Text
+  coverUrl    String?         // Imagen de portada
+  eventDate   DateTime?       // Fecha del evento
+  visibility  AlbumVisibility @default(PUBLIC)
+  photoCount  Int             @default(0)
+  isActive    Boolean         @default(true)
+  createdById String
+  createdBy   User            @relation(fields: [createdById], references: [id])
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  photos      Photo[]
+
+  @@index([schoolId])
+  @@index([groupId])
+  @@index([eventDate])
+}
+
+// Fotos individuales
+model Photo {
+  id           String      @id @default(cuid())
+  albumId      String
+  album        PhotoAlbum  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  url          String      // URL de la imagen
+  thumbnailUrl String?     // Miniatura
+  caption      String?
+  takenAt      DateTime?   // Fecha en que se tomó la foto
+  width        Int?
+  height       Int?
+  fileSize     Int?        // Tamaño en bytes
+  order        Int         @default(0)
+  isProcessed  Boolean     @default(false) // Si ya se procesó para reconocimiento facial
+  createdAt    DateTime    @default(now())
+  tags         PhotoTag[]
+
+  @@index([albumId])
+}
+
+// Etiquetas de fotos (reconocimiento facial)
+model PhotoTag {
+  id         String   @id @default(cuid())
+  photoId    String
+  photo      Photo    @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  studentId  String?  // Si se identificó a un estudiante
+  student    Student? @relation(fields: [studentId], references: [id])
+  x          Float?   // Coordenada X del rostro (porcentaje)
+  y          Float?   // Coordenada Y del rostro
+  width      Float?   // Ancho del área (porcentaje)
+  height     Float?   // Alto del área
+  confidence Float?   // Confianza del reconocimiento (0-1)
+  isManual   Boolean  @default(false) // Si fue etiquetado manualmente
+  createdAt  DateTime @default(now())
+
+  @@index([photoId])
+  @@index([studentId])
 }

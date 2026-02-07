@@ -1012,6 +1012,146 @@ async function main() {
 
   console.log("Created sample documents with signatures");
 
+  // ========== FASE 4C: TIENDA Y GALERÍA ==========
+  console.log("Creating store categories and products...");
+
+  // Crear categorías de tienda
+  const uniformes = await prisma.storeCategory.create({
+    data: {
+      schoolId: school.id,
+      name: "Uniformes",
+      description: "Uniformes escolares oficiales",
+      order: 1,
+    },
+  });
+
+  const libros = await prisma.storeCategory.create({
+    data: {
+      schoolId: school.id,
+      name: "Libros",
+      description: "Libros de texto y material de lectura",
+      order: 2,
+    },
+  });
+
+  const materiales = await prisma.storeCategory.create({
+    data: {
+      schoolId: school.id,
+      name: "Materiales",
+      description: "Útiles escolares y materiales didácticos",
+      order: 3,
+    },
+  });
+
+  // Crear productos
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: uniformes.id,
+      name: "Playera Polo Blanca",
+      description: "Playera polo de algodón con logo bordado de Vermont School",
+      price: 350,
+      stock: 50,
+      sizes: ["XS", "S", "M", "L", "XL"],
+      colors: ["Blanco"],
+      isRequired: true,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: uniformes.id,
+      name: "Pantalón Escolar Azul",
+      description: "Pantalón de vestir azul marino, tela gabardina",
+      price: 450,
+      stock: 30,
+      sizes: ["4", "6", "8", "10", "12", "14", "16"],
+      colors: ["Azul Marino"],
+      isRequired: true,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: uniformes.id,
+      name: "Sudadera Deportiva",
+      description: "Sudadera con cierre y capucha, logo bordado",
+      price: 650,
+      stock: 25,
+      sizes: ["S", "M", "L", "XL"],
+      colors: ["Azul Marino", "Gris"],
+      isRequired: false,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: libros.id,
+      name: "Libro Matemáticas 3°",
+      description: "Libro de texto oficial de Matemáticas para tercer grado",
+      price: 280,
+      stock: 40,
+      isRequired: true,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: libros.id,
+      name: "Libro Español 3°",
+      description: "Libro de texto oficial de Español para tercer grado",
+      price: 250,
+      stock: 35,
+      isRequired: true,
+    },
+  });
+
+  await prisma.storeProduct.create({
+    data: {
+      schoolId: school.id,
+      categoryId: materiales.id,
+      name: "Paquete de Útiles Básicos",
+      description: "Incluye: 5 cuadernos, lápices, colores, pegamento y tijeras",
+      price: 320,
+      stock: 60,
+      isRequired: false,
+    },
+  });
+
+  console.log("Created store categories and products");
+
+  // Crear álbum de fotos de ejemplo
+  console.log("Creating sample photo albums...");
+
+  await prisma.photoAlbum.create({
+    data: {
+      schoolId: school.id,
+      title: "Día del Niño 2026",
+      description: "Celebración del Día del Niño con actividades y juegos",
+      eventDate: new Date("2026-04-30"),
+      visibility: "PUBLIC",
+      createdById: admin.id,
+    },
+  });
+
+  await prisma.photoAlbum.create({
+    data: {
+      schoolId: school.id,
+      groupId: group3A.id,
+      title: "Clase de Ciencias - Experimentos",
+      description: "Los alumnos de 3A realizando experimentos de química",
+      eventDate: new Date("2026-02-15"),
+      visibility: "GROUP_ONLY",
+      createdById: profesorMath.id,
+    },
+  });
+
+  console.log("Created sample photo albums");
+
   console.log("\n=== CREDENCIALES DE PRUEBA ===");
   console.log("Admin: john@doe.com / johndoe123");
   console.log("Admin: admin@vermontschool.edu / admin123");
