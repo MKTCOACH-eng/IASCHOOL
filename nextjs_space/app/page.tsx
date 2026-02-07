@@ -409,11 +409,11 @@ export default function LandingPage() {
               Programa de Afiliados IA School
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-white bg-[#1B4079] inline-block px-6 py-3 rounded-2xl mb-4">
-              Mamás que invitan, mamás que ganan
+              Refiere un Colegio, Gana Beneficios
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mt-6">
-              Cuando tu colegio se une a IA School, las familias que inviten a otras familias 
-              a sumarse obtienen beneficios exclusivos. ¡Construye comunidad y gana!
+              ¿Conoces un colegio que podría beneficiarse de IA School? 
+              Refiere colegios y obtén recompensas exclusivas cuando se activen.
             </p>
           </div>
 
@@ -425,7 +425,7 @@ export default function LandingPage() {
                   <Play className="w-12 h-12 text-white ml-1 group-hover:scale-110 transition-transform" fill="white" />
                 </div>
                 <h3 className="text-3xl font-bold mb-3 text-white">¿Cómo funciona el Programa de Afiliados?</h3>
-                <p className="text-white/80 text-center max-w-lg text-lg">Conoce cómo las familias de tu colegio pueden obtener beneficios al invitar a otras familias</p>
+                <p className="text-white/80 text-center max-w-lg text-lg">Descubre cómo puedes ganar beneficios al referir colegios a IA School</p>
                 <p className="text-white/50 text-sm mt-4">Video próximamente disponible</p>
               </div>
             </div>
@@ -435,26 +435,25 @@ export default function LandingPage() {
           <div className="bg-gradient-to-r from-[#1B4079] to-[#0f2847] rounded-3xl p-10 text-white mb-16">
             <h3 className="text-2xl font-bold mb-6 text-center text-white">¿Cómo funciona?</h3>
             <p className="text-white/90 text-center max-w-4xl mx-auto text-lg leading-relaxed mb-8">
-              Cuando tu colegio se registra en IA School, cada familia recibe un código único. 
-              Al compartirlo con otras familias del colegio e invitarlas a sumarse a la plataforma, 
-              obtienen beneficios especiales. Es una forma de fortalecer la comunidad escolar 
-              mientras todos se benefician.
+              Si conoces un colegio que aún no usa IA School, puedes referirlo. 
+              Cuando el colegio se registre y active su cuenta, tú recibes beneficios exclusivos.
+              Es una forma de ayudar a más comunidades escolares mientras obtienes recompensas.
             </p>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white/10 rounded-2xl p-6 text-center">
-                <Building2 className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
-                <h4 className="font-bold text-white mb-2">Tu colegio se une</h4>
-                <p className="text-white/70 text-sm">El colegio se registra en IA School y activa el programa</p>
+                <Share2 className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
+                <h4 className="font-bold text-white mb-2">Refiere un colegio</h4>
+                <p className="text-white/70 text-sm">Comparte IA School con colegios que conozcas</p>
               </div>
               <div className="bg-white/10 rounded-2xl p-6 text-center">
-                <Share2 className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
-                <h4 className="font-bold text-white mb-2">Invitas familias</h4>
-                <p className="text-white/70 text-sm">Compartes tu código con otras familias del colegio</p>
+                <Building2 className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
+                <h4 className="font-bold text-white mb-2">El colegio se activa</h4>
+                <p className="text-white/70 text-sm">Tienen 30 días para registrarse y activar su cuenta</p>
               </div>
               <div className="bg-white/10 rounded-2xl p-6 text-center">
                 <Gift className="w-10 h-10 mx-auto mb-3 text-cyan-300" />
-                <h4 className="font-bold text-white mb-2">Todos ganan</h4>
-                <p className="text-white/70 text-sm">Tú y las familias que invites reciben beneficios</p>
+                <h4 className="font-bold text-white mb-2">Obtienes beneficios</h4>
+                <p className="text-white/70 text-sm">Recibes tus recompensas automáticamente</p>
               </div>
             </div>
           </div>
@@ -465,10 +464,10 @@ export default function LandingPage() {
             <div className="flex justify-center">
               <div className="grid md:grid-cols-4 gap-8 max-w-5xl">
                 {[
-                  { step: '1', title: 'Tu colegio se afilia', desc: 'El colegio se registra en IA School y activa el programa de afiliados', icon: Building2 },
-                  { step: '2', title: 'Recibes tu código', desc: 'Como familia del colegio, obtienes un código único para compartir', icon: Gift },
-                  { step: '3', title: 'Invitas familias', desc: 'Comparte tu código con otras familias del colegio para que se unan', icon: Share2 },
-                  { step: '4', title: 'Ganas beneficios', desc: 'Por cada familia que se sume usando tu código, obtienes recompensas', icon: Star },
+                  { step: '1', title: 'Identifica un colegio', desc: 'Piensa en colegios que podrían beneficiarse de una gestión escolar moderna', icon: Building2 },
+                  { step: '2', title: 'Comparte IA School', desc: 'Recomiéndanos al colegio y proporciona tus datos de contacto como referidor', icon: Share2 },
+                  { step: '3', title: 'El colegio se activa', desc: 'El colegio tiene 30 días para registrarse y activar su cuenta en IA School', icon: CheckCircle2 },
+                  { step: '4', title: 'Recibes tu beneficio', desc: 'Cuando el colegio se active, obtienes 10% de la cuota de setup y 1 año gratis', icon: Star },
                 ].map((item, i) => (
                   <div key={i} className="relative text-center">
                     <div className="bg-[#1B4079] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4 mx-auto shadow-lg">
@@ -503,40 +502,46 @@ export default function LandingPage() {
                     <Heart className="w-6 h-6 text-[#1B4079]" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">Mamás y Papás</h4>
-                    <p className="text-gray-600 text-sm">Toda familia registrada en un colegio afiliado puede participar y obtener beneficios</p>
+                    <h4 className="font-bold text-gray-900">Padres de Familia</h4>
+                    <p className="text-gray-600 text-sm">Si ya eres usuario de IA School o conoces colegios que podrían beneficiarse</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4 py-4 border-b border-gray-200">
+                  <div className="w-12 h-12 rounded-xl bg-[#1B4079]/10 flex items-center justify-center flex-shrink-0">
+                    <GraduationCap className="w-6 h-6 text-[#1B4079]" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900">Profesores y Educadores</h4>
+                    <p className="text-gray-600 text-sm">Si conoces otros colegios que necesitan modernizar su gestión</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 py-4">
                   <div className="w-12 h-12 rounded-xl bg-[#1B4079]/10 flex items-center justify-center flex-shrink-0">
-                    <Building2 className="w-6 h-6 text-[#1B4079]" />
+                    <Users className="w-6 h-6 text-[#1B4079]" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">Colegios Interesados</h4>
-                    <p className="text-gray-600 text-sm">Si tu colegio aún no está en IA School, puedes recomendarnos y también obtener beneficios</p>
+                    <h4 className="font-bold text-gray-900">Cualquier persona</h4>
+                    <p className="text-gray-600 text-sm">Todos pueden referir colegios y obtener beneficios cuando se activen</p>
                   </div>
                 </div>
               </div>
-              <p className="text-sm text-gray-500 mt-6 bg-blue-50 p-3 rounded-lg border border-blue-200">
-                <strong>¿Tu colegio no está afiliado?</strong> Contáctanos para conocer cómo pueden unirse y activar el programa.
-              </p>
             </div>
 
             <div className="bg-gradient-to-br from-[#1B4079] to-[#0f2847] rounded-2xl p-8 text-white">
               <h3 className="text-xl font-bold mb-6 flex items-center gap-3 text-white">
                 <Star className="w-6 h-6" />
-                Beneficios del Programa
+                Beneficios por Colegio Referido
               </h3>
               <ul className="space-y-4">
                 {[
-                  'Beneficios exclusivos por cada familia invitada',
-                  'Descuentos especiales en la plataforma',
-                  'Reconocimiento dentro de la comunidad escolar',
-                  'Acceso prioritario a nuevas funcionalidades',
-                  'Recompensas por metas alcanzadas',
-                  'Fortalece los lazos con otras familias',
-                  'Sin límite de invitaciones',
-                  'Panel para ver tus invitados y beneficios'
+                  '10% de la cuota de setup del colegio',
+                  '1 año gratis de servicio para UN hijo*',
+                  'Ventana de 30 días para la activación',
+                  'Sin límite de colegios que puedes referir',
+                  'Panel para dar seguimiento a tus referidos',
+                  'Notificaciones cuando el colegio se active',
+                  'Beneficio acumulable por cada colegio',
+                  'Proceso 100% transparente'
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
@@ -544,16 +549,19 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
+              <p className="text-white/60 text-xs mt-6">
+                *El año gratis aplica si tienes hijos inscritos en algún colegio con IA School activo.
+              </p>
             </div>
           </div>
 
           {/* CTA Afiliados */}
           <div className="mt-16 text-center">
             <div className="bg-gradient-to-r from-cyan-500 to-[#1B4079] rounded-3xl p-10">
-              <h3 className="text-3xl font-bold text-white mb-4">¿Tu colegio ya está en IA School?</h3>
+              <h3 className="text-3xl font-bold text-white mb-4">¿Conoces un colegio que quiera modernizarse?</h3>
               <p className="text-white/90 mb-8 max-w-2xl mx-auto">
-                Inicia sesión para obtener tu código de afiliado y comienza a invitar 
-                a otras familias. ¡Todos en la comunidad escolar ganan!
+                Inicia sesión para registrar tu referido o contáctanos para más información 
+                sobre el programa de afiliados.
               </p>
               <Link
                 href="/login"
