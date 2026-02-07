@@ -45,9 +45,9 @@ export function AnnouncementCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}
       onClick={onClick}
-      className={`group relative bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer border-l-4 ${
+      className={`group relative bg-white rounded-xl p-5 shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer border-l-4 border border-gray-100/50 ${
         isUrgent ? "border-l-red-500" : "border-l-[#1B4079]"
-      } ${!isRead ? "ring-2 ring-[#CBDF90] ring-offset-2" : ""}`}
+      } ${!isRead ? "ring-2 ring-[#CBDF90] ring-offset-2 bg-[#CBDF90]/5" : ""}`}
     >
       {/* Badges */}
       <div className="flex flex-wrap items-center gap-2 mb-3">
