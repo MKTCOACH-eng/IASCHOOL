@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { MessageSquare, Shield, BookOpen, CreditCard, PlayCircle, FileText, Calendar, Brain, ChevronRight, Bell, Users, XCircle, CheckCircle, ArrowRight, Instagram, Facebook, Linkedin, Twitter, Globe } from "lucide-react";
+import { MessageSquare, Shield, BookOpen, CreditCard, PlayCircle, FileText, Calendar, Brain, ChevronRight, Bell, Users, XCircle, CheckCircle, ArrowRight, Instagram, Facebook, Linkedin, Twitter, Globe, Star, Trophy, Heart, Store, Truck, BarChart3, Stethoscope, GraduationCap, Clock, Smartphone, Check } from "lucide-react";
 import LandingChatbot from "@/components/landing-chatbot";
 import { useLanguage } from "@/contexts/language-context";
 import { Language } from "@/lib/i18n/translations";
@@ -432,81 +432,197 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* Blog Section */}
+      {/* Módulos Avanzados Section */}
       <div className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1B4079]/10 rounded-full text-[#1B4079] text-sm font-medium mb-4">
-              <FileText className="w-4 h-4" />
-              {t.landing.blog.badge}
+              <Star className="w-4 h-4" />
+              Módulos Avanzados
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              {t.landing.blog.title}
+              Todo lo que tu escuela necesita
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              {t.landing.blog.subtitle}
+              Funcionalidades diseñadas para modernizar cada aspecto de la gestión escolar
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Video Card 1 */}
-            <div className="bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-all group">
-              <div className="relative aspect-video bg-[#1B4079]">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <PlayCircle className="w-10 h-10 text-white" />
-                  </div>
-                </div>
-                <div className="absolute top-3 left-3 px-2 py-1 bg-red-500 text-white text-xs font-medium rounded">{t.landing.blog.video}</div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Gamificación */}
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 hover:shadow-lg transition-all border border-purple-100">
+              <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-4">
+                <Trophy className="w-6 h-6 text-purple-600" />
               </div>
-              <div className="p-5">
-                <h3 className="font-bold text-gray-900 mb-2">{t.landing.blog.video1Title}</h3>
-                <p className="text-gray-600 text-sm">{t.landing.blog.video1Desc}</p>
-                <p className="text-[#1B4079] text-sm font-medium mt-3">{t.landing.blog.watchVideo} · 12 min</p>
-              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Gamificación</h3>
+              <p className="text-gray-600 text-sm">Puntos, insignias y rankings que motivan a los estudiantes a dar lo mejor de sí.</p>
             </div>
 
-            {/* Article Card 1 */}
-            <div className="bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-all group">
-              <div className="relative aspect-video bg-gradient-to-br from-[#4D7C8A] to-[#8FAD88]">
-                <div className="absolute inset-0 flex items-center justify-center p-6">
-                  <FileText className="w-16 h-16 text-white/80" />
-                </div>
-                <div className="absolute top-3 left-3 px-2 py-1 bg-[#1B4079] text-white text-xs font-medium rounded">{t.landing.blog.article}</div>
+            {/* Tips IA */}
+            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 hover:shadow-lg transition-all border border-blue-100">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+                <Heart className="w-6 h-6 text-blue-600" />
               </div>
-              <div className="p-5">
-                <h3 className="font-bold text-gray-900 mb-2">{t.landing.blog.article1Title}</h3>
-                <p className="text-gray-600 text-sm">{t.landing.blog.article1Desc}</p>
-                <p className="text-[#1B4079] text-sm font-medium mt-3">{t.landing.blog.readArticle} · 5 min</p>
-              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Tips Educativos IA</h3>
+              <p className="text-gray-600 text-sm">Consejos personalizados por edad generados con IA para padres y familias.</p>
             </div>
 
-            {/* Video Card 2 */}
-            <div className="bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-all group">
-              <div className="relative aspect-video bg-[#1B4079]">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <PlayCircle className="w-10 h-10 text-white" />
-                  </div>
+            {/* Tienda */}
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 hover:shadow-lg transition-all border border-green-100">
+              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-4">
+                <Store className="w-6 h-6 text-green-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Tienda Multi-vendor</h3>
+              <p className="text-gray-600 text-sm">Uniformes, libros y más. Con Stripe Connect para proveedores autorizados.</p>
+            </div>
+
+            {/* Enfermería */}
+            <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-6 hover:shadow-lg transition-all border border-red-100">
+              <div className="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center mb-4">
+                <Stethoscope className="w-6 h-6 text-red-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Enfermería Digital</h3>
+              <p className="text-gray-600 text-sm">Historial médico, alergias, visitas y alertas de salud de cada alumno.</p>
+            </div>
+
+            {/* Reportes */}
+            <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl p-6 hover:shadow-lg transition-all border border-amber-100">
+              <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mb-4">
+                <BarChart3 className="w-6 h-6 text-amber-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Reportes Inteligentes</h3>
+              <p className="text-gray-600 text-sm">Académicos, financieros, asistencia y más. Programados o bajo demanda.</p>
+            </div>
+
+            {/* Rendimiento */}
+            <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-2xl p-6 hover:shadow-lg transition-all border border-indigo-100">
+              <div className="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center mb-4">
+                <GraduationCap className="w-6 h-6 text-indigo-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Rendimiento Docente</h3>
+              <p className="text-gray-600 text-sm">Métricas, evaluaciones y feedback para el desarrollo profesional del maestro.</p>
+            </div>
+
+            {/* Recordatorios IA */}
+            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl p-6 hover:shadow-lg transition-all border border-teal-100">
+              <div className="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center mb-4">
+                <Clock className="w-6 h-6 text-teal-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Recordatorios IA</h3>
+              <p className="text-gray-600 text-sm">Notificaciones automáticas de pagos, tareas, citas y eventos importantes.</p>
+            </div>
+
+            {/* PWA */}
+            <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl p-6 hover:shadow-lg transition-all border border-slate-100">
+              <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-4">
+                <Smartphone className="w-6 h-6 text-slate-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">App Móvil (PWA)</h3>
+              <p className="text-gray-600 text-sm">Instálala en cualquier dispositivo. Funciona offline y recibe notificaciones push.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pricing Section */}
+      <div id="precios" className="py-20 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#CBDF90]/30 rounded-full text-[#1B4079] text-sm font-medium mb-4">
+              <CreditCard className="w-4 h-4" />
+              Precios Transparentes
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Planes que se adaptan a tu escuela
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Desde $149 MXN por alumno al mes. <strong>El colegio recauda y gana 50%.</strong> Sin sorpresas, sin costos ocultos.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Plan Básico */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:border-[#1B4079]/30 transition-all">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Básico</h3>
+                <div className="flex items-end justify-center gap-1">
+                  <span className="text-4xl font-bold text-[#1B4079]">$149</span>
+                  <span className="text-gray-500 mb-1">MXN/alumno/mes</span>
                 </div>
-                <div className="absolute top-3 left-3 px-2 py-1 bg-red-500 text-white text-xs font-medium rounded">{t.landing.blog.video}</div>
+                <p className="text-sm text-gray-500 mt-2">50% para tu colegio: $74.50/alumno</p>
               </div>
-              <div className="p-5">
-                <h3 className="font-bold text-gray-900 mb-2">{t.landing.blog.video2Title}</h3>
-                <p className="text-gray-600 text-sm">{t.landing.blog.video2Desc}</p>
-                <p className="text-[#1B4079] text-sm font-medium mt-3">{t.landing.blog.watchVideo} · 20 min</p>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Comunicación (mensajes, anuncios)</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Tareas y calificaciones</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Calendario de eventos</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Control de asistencia</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Pagos y cobranza básica</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Soporte por chat</span></li>
+              </ul>
+              <Link href="/login" className="block w-full py-3 text-center bg-gray-100 text-[#1B4079] font-semibold rounded-xl hover:bg-gray-200 transition-all">
+                Comenzar
+              </Link>
+            </div>
+
+            {/* Plan Estándar - Recomendado */}
+            <div className="bg-[#1B4079] rounded-2xl p-8 shadow-xl relative transform md:scale-105">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#CBDF90] text-[#1B4079] text-sm font-bold rounded-full">
+                Más Popular
               </div>
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-bold text-white mb-2">Estándar</h3>
+                <div className="flex items-end justify-center gap-1">
+                  <span className="text-4xl font-bold text-[#CBDF90]">$199</span>
+                  <span className="text-white/70 mb-1">MXN/alumno/mes</span>
+                </div>
+                <p className="text-sm text-white/60 mt-2">50% para tu colegio: $99.50/alumno</p>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Todo lo del plan Básico</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Enfermería y expediente médico</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Tienda escolar integrada</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Galería de fotos por evento</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Reportes avanzados</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Asistente IA para padres</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-[#CBDF90] flex-shrink-0 mt-0.5" /><span className="text-white/90 text-sm">Recordatorios automáticos</span></li>
+              </ul>
+              <Link href="/login" className="block w-full py-3 text-center bg-[#CBDF90] text-[#1B4079] font-bold rounded-xl hover:bg-white transition-all">
+                Elegir Estándar
+              </Link>
+            </div>
+
+            {/* Plan Premium */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:border-[#1B4079]/30 transition-all">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Premium</h3>
+                <div className="flex items-end justify-center gap-1">
+                  <span className="text-4xl font-bold text-[#1B4079]">$299</span>
+                  <span className="text-gray-500 mb-1">MXN/alumno/mes</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-2">50% para tu colegio: $149.50/alumno</p>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Todo lo del plan Estándar</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Gamificación con insignias</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Blog de tips educativos IA</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Multi-vendor con Stripe Connect</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Rendimiento de profesores</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">CRM y campañas de email</span></li>
+                <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" /><span className="text-gray-600 text-sm">Soporte prioritario 24/7</span></li>
+              </ul>
+              <Link href="/login" className="block w-full py-3 text-center bg-gray-100 text-[#1B4079] font-semibold rounded-xl hover:bg-gray-200 transition-all">
+                Elegir Premium
+              </Link>
             </div>
           </div>
 
-          <div className="text-center mt-10">
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 text-[#1B4079] font-semibold hover:gap-3 transition-all"
-            >
-              {t.landing.blog.viewAll}
-              <ChevronRight className="w-5 h-5" />
-            </a>
+          <div className="mt-12 text-center">
+            <p className="text-gray-600 mb-4">
+              <strong>Pago anual:</strong> 2 meses gratis (paga 10, usa 12)
+            </p>
+            <p className="text-sm text-gray-500">
+              Setup único desde $8,000 MXN según tamaño del colegio. Incluye capacitación, migración de datos y soporte de implementación.
+            </p>
           </div>
         </div>
       </div>

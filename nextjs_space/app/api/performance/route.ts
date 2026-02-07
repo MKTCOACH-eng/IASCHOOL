@@ -70,13 +70,12 @@ export async function GET(request: NextRequest) {
     });
 
     // Obtener profesores para comparativa (solo ADMIN)
-    let teachers: any[] = [];
+    let teachers: { id: string; name: string; email: string }[] = [];
     if (user.role === 'ADMIN') {
       teachers = await prisma.user.findMany({
         where: {
           schoolId: user.schoolId,
-          role: 'PROFESOR',
-          isActive: true
+          role: 'PROFESOR'
         },
         select: { id: true, name: true, email: true }
       });

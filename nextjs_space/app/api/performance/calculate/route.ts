@@ -50,13 +50,14 @@ export async function POST(request: NextRequest) {
           status: 'PUBLISHED'
         }
       });
-      const gradedTasks = await prisma.submission.count({
+      const gradedSubmissions = await prisma.submission.count({
         where: {
           task: { teacherId: teacher.id },
-          grade: { not: null },
-          createdAt: { gte: startDate, lte: endDate }
+          score: { not: null },
+          submittedAt: { gte: startDate, lte: endDate }
         }
       });
+      const gradedTasks = gradedSubmissions;
       const taskCompletion = tasks > 0 ? (gradedTasks / tasks) * 100 : 100;
 
       // 2. ATTENDANCE - % de registro de asistencia

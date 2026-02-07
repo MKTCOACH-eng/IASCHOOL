@@ -441,6 +441,13 @@ model Student {
   // Pedidos de proveedores
   vendorOrders      VendorOrder[] @relation("VendorOrdersForStudent")
   
+  // ============================================
+  // GAMIFICACIÓN
+  // ============================================
+  badges            StudentBadge[]           @relation("StudentBadges")
+  gamificationProfile StudentGamificationProfile? @relation("GamificationProfile")
+  pointsLogs        StudentPointsLog[]       @relation("PointsLogs")
+  
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -2889,12 +2896,121 @@ model SchoolSubscription {
   billingDay      Int                @default(1)  // Día del mes para cobrar
   paymentMethod   String?            // "school_collects", "platform_collects"
   
+  // ============================================
+  // BLINDAJE AFILIADOS - First Touch Attribution
+  // ============================================
+  // CRÍTICO: Solo se vincula el PRIMER link de afiliado usado para registrar
+  registeredViaAffiliateId  String?          // ID del AffiliateReferral que registró la escuela
+  registeredViaAffiliate    AffiliateReferral? @relation("SchoolRegisteredViaAffiliate", fields: [registeredViaAffiliateId], references: [id])
+  affiliateRegistrationDate DateTime?        // Fecha exacta del registro vía afiliado
+  affiliateBenefitsLocked   Boolean          @default(false) // Una vez true, no se puede cambiar el afiliado
+  
+  // ============================================
+  // CONTROL DE MOROSIDAD B2B (Colegio a IA School)
+  // ============================================
+  // Status de pago del colegio a IA School
+  b2bPaymentStatus     B2BPaymentStatus  @default(CURRENT)
+  b2bDelinquentSince   DateTime?         // Fecha desde cuando está moroso
+  b2bGracePeriodDays   Int               @default(15) // Días de gracia antes de suspensión
+  b2bSuspendedAt       DateTime?         // Fecha de suspensión por morosidad
+  b2bLastPaymentDate   DateTime?         // Último pago recibido
+  b2bNextDueDate       DateTime?         // Próxima fecha de pago
+  b2bCurrentBalance    Decimal           @db.Decimal(12, 2) @default(0) // Saldo pendiente
+  
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   
   parentSubscriptions ParentSubscription[]
+  b2bPayments         SchoolB2BPayment[] @relation("SubscriptionB2BPayments")
   
   @@index([status])
+  @@index([b2bPaymentStatus])
+  @@index([registeredViaAffiliateId])
+}
+
+// ==========================================
+// PAGOS B2B - Colegio a IA School
+// ==========================================
+
+enum B2BPaymentStatus {
+  CURRENT        // Al corriente
+  GRACE_PERIOD   // En período de gracia
+  OVERDUE        // Vencido (después de gracia)
+  SUSPENDED      // Suspendido por falta de pago
+  CANCELLED      // Cancelado definitivamente
+}
+
+enum B2BPaymentType {
+  SETUP_FEE           // Pago inicial de setup
+  MONTHLY_SHARE       // Participación mensual 50%
+  ADJUSTMENT          // Ajuste
+  PENALTY             // Penalización por morosidad
+  CREDIT              // Crédito/Devolución
+}
+
+// Registro de pagos del colegio a IA School
+model SchoolB2BPayment {
+  id                    String             @id @default(cuid())
+  
+  schoolSubscriptionId  String
+  schoolSubscription    SchoolSubscription @relation("SubscriptionB2BPayments", fields: [schoolSubscriptionId], references: [id])
+  
+  // Tipo de pago
+  paymentType           B2BPaymentType     @default(MONTHLY_SHARE)
+  
+  // Período que cubre
+  periodMonth           Int?               // 1-12
+  periodYear            Int?               // 2026, 2027, etc.
+  
+  // Montos
+  expectedAmount        Decimal            @db.Decimal(12, 2) // Lo que debía pagar
+  paidAmount            Decimal            @db.Decimal(12, 2) // Lo que pagó
+  penaltyAmount         Decimal            @db.Decimal(10, 2) @default(0) // Recargos
+  
+  // Detalles del cálculo
+  totalStudents         Int?               // Alumnos activos en el período
+  pricePerStudent       Decimal?           @db.Decimal(10, 2)
+  sharePercentage       Decimal?           @db.Decimal(5, 2) // 50%
+  
+  // Método de pago
+  paymentMethod         String?            // "bank_transfer", "stripe", "cash", "check"
+  referenceNumber       String?            // Número de referencia/transferencia
+  bankName              String?
+  
+  // Comprobante
+  receiptUrl            String?
+  receiptCloudPath      String?
+  
+  // Fechas
+  dueDate               DateTime
+  paidAt                DateTime?
+  verifiedAt            DateTime?          // Cuando se verificó el pago
+  verifiedById          String?            // Quien verificó
+  
+  // Notas
+  notes                 String?            @db.Text
+  internalNotes         String?            @db.Text
+  
+  status                B2BPaymentRecordStatus @default(PENDING)
+  
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  
+  @@unique([schoolSubscriptionId, periodMonth, periodYear, paymentType])
+  @@index([schoolSubscriptionId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([periodYear, periodMonth])
+}
+
+enum B2BPaymentRecordStatus {
+  PENDING       // Esperando pago
+  RECEIVED      // Recibido, pendiente verificación
+  VERIFIED      // Verificado y aplicado
+  PARTIAL       // Pago parcial
+  OVERDUE       // Vencido
+  DISPUTED      // En disputa
+  REFUNDED      // Devuelto
 }
 
 // Suscripción individual de cada padre
@@ -2987,10 +3103,24 @@ model AffiliateReferral {
   // Vigencia
   expiresAt       DateTime         // 30 días desde creación
   
+  // ============================================
+  // BLINDAJE: Primera atribución vinculante
+  // ============================================
+  // Términos específicos que el referente aceptó
+  termsVersion          String?     // Versión de T&C aceptados
+  termsAcceptedAt       DateTime?
+  
+  // IP y evidencia del registro
+  registrationIP        String?
+  registrationUserAgent String?     @db.Text
+  
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   
   signatures      AffiliatePetitionSignature[]
+  
+  // Relación inversa: escuelas que se registraron con ESTE link específico
+  schoolsRegistered SchoolSubscription[] @relation("SchoolRegisteredViaAffiliate")
   
   @@index([referrerId])
   @@index([schoolId])
@@ -3931,4 +4061,294 @@ model ReminderLog {
   @@index([userId])
   @@index([reminderType])
   @@index([sentAt])
+}
+
+
+// ==========================================
+// SISTEMA DE GAMIFICACIÓN PARA ESTUDIANTES
+// ==========================================
+
+enum BadgeCategory {
+  ACADEMIC       // Logros académicos
+  ATTENDANCE     // Asistencia
+  PARTICIPATION  // Participación en clase
+  BEHAVIOR       // Comportamiento
+  TEAMWORK       // Trabajo en equipo
+  CREATIVITY     // Creatividad
+  SPORTS         // Deportes
+  SPECIAL        // Eventos especiales
+}
+
+enum BadgeRarity {
+  COMMON         // Fácil de obtener
+  UNCOMMON       // Requiere esfuerzo
+  RARE           // Difícil de obtener
+  EPIC           // Muy difícil
+  LEGENDARY      // Excepcional
+}
+
+model GamificationBadge {
+  id              String          @id @default(cuid())
+  
+  name            String
+  description     String          @db.Text
+  iconUrl         String?         // URL del ícono/imagen
+  iconEmoji       String?         // Emoji alternativo
+  
+  category        BadgeCategory
+  rarity          BadgeRarity     @default(COMMON)
+  
+  // Puntos otorgados al obtener
+  pointsAwarded   Int             @default(10)
+  
+  // Requisitos para obtener (puede ser automático o manual)
+  isAutomatic     Boolean         @default(false)
+  criteria        Json?           // Criterios automáticos { type: "attendance", threshold: 30 }
+  
+  // Visibilidad
+  isActive        Boolean         @default(true)
+  isSecret        Boolean         @default(false) // Insignia oculta hasta obtenerla
+  
+  // Período de validez (para badges temporales)
+  availableFrom   DateTime?
+  availableUntil  DateTime?
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  studentBadges   StudentBadge[]
+  
+  @@index([category])
+  @@index([rarity])
+  @@index([isActive])
+}
+
+model StudentBadge {
+  id              String              @id @default(cuid())
+  
+  studentId       String
+  student         Student             @relation("StudentBadges", fields: [studentId], references: [id], onDelete: Cascade)
+  
+  badgeId         String
+  badge           GamificationBadge   @relation(fields: [badgeId], references: [id])
+  
+  // Quién otorgó la insignia
+  awardedById     String?             // null = sistema automático
+  
+  // Contexto
+  reason          String?             // Razón específica
+  referenceType   String?             // "task", "event", "attendance", etc.
+  referenceId     String?
+  
+  // Puntos en el momento de otorgamiento
+  pointsEarned    Int
+  
+  earnedAt        DateTime            @default(now())
+  
+  @@unique([studentId, badgeId])
+  @@index([studentId])
+  @@index([badgeId])
+  @@index([earnedAt])
+}
+
+// Puntos totales y nivel del estudiante
+model StudentGamificationProfile {
+  id              String       @id @default(cuid())
+  
+  studentId       String       @unique
+  student         Student      @relation("GamificationProfile", fields: [studentId], references: [id], onDelete: Cascade)
+  
+  // Puntos
+  totalPoints     Int          @default(0)
+  weeklyPoints    Int          @default(0)
+  monthlyPoints   Int          @default(0)
+  
+  // Nivel
+  currentLevel    Int          @default(1)
+  levelName       String       @default("Principiante")
+  experienceToNextLevel Int    @default(100)
+  
+  // Rachas
+  currentStreak   Int          @default(0)  // Días consecutivos de logros
+  longestStreak   Int          @default(0)
+  lastActivityDate DateTime?
+  
+  // Rankings (actualizados periódicamente)
+  schoolRank      Int?         // Posición en el colegio
+  groupRank       Int?         // Posición en su grupo
+  
+  // Logros especiales
+  totalBadges     Int          @default(0)
+  rareBadges      Int          @default(0)
+  epicBadges      Int          @default(0)
+  legendaryBadges Int          @default(0)
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  @@index([totalPoints])
+  @@index([schoolRank])
+}
+
+// Historial de puntos ganados
+model StudentPointsLog {
+  id              String       @id @default(cuid())
+  
+  studentId       String
+  student         Student      @relation("PointsLogs", fields: [studentId], references: [id], onDelete: Cascade)
+  
+  points          Int          // Puede ser positivo o negativo
+  reason          String
+  category        BadgeCategory?
+  
+  // Referencia
+  referenceType   String?      // "task", "badge", "attendance", etc.
+  referenceId     String?
+  
+  // Quién otorgó
+  awardedById     String?
+  
+  earnedAt        DateTime     @default(now())
+  
+  @@index([studentId])
+  @@index([earnedAt])
+  @@index([category])
+}
+
+// ==========================================
+// MÓDULO DE TIPS Y CONSEJOS EDUCATIVOS (IA)
+// ==========================================
+
+enum TipCategory {
+  PARENTING         // Crianza y educación
+  HOMEWORK_HELP     // Ayuda con tareas
+  HEALTH_WELLNESS   // Salud y bienestar
+  DIGITAL_SAFETY    // Seguridad digital
+  SOCIAL_SKILLS     // Habilidades sociales
+  EMOTIONAL_INTEL   // Inteligencia emocional
+  STUDY_HABITS      // Hábitos de estudio
+  NUTRITION         // Nutrición
+  ACTIVITIES        // Actividades familiares
+  SCHOOL_PREP       // Preparación escolar
+}
+
+enum TipAgeRange {
+  PRESCHOOL         // 3-5 años
+  EARLY_ELEMENTARY  // 6-8 años
+  LATE_ELEMENTARY   // 9-11 años
+  MIDDLE_SCHOOL     // 12-14 años
+  HIGH_SCHOOL       // 15-18 años
+  ALL_AGES          // Todas las edades
+}
+
+enum TipStatus {
+  DRAFT             // Generado por IA, pendiente revisión
+  PENDING_REVIEW    // En revisión
+  APPROVED          // Aprobado para publicación
+  PUBLISHED         // Publicado
+  ARCHIVED          // Archivado
+  REJECTED          // Rechazado
+}
+
+model EducationalTip {
+  id              String         @id @default(cuid())
+  
+  title           String
+  slug            String         @unique
+  content         String         @db.Text
+  summary         String?        @db.Text  // Resumen corto
+  
+  // Categorización
+  category        TipCategory
+  ageRange        TipAgeRange
+  tags            String[]       // Tags adicionales
+  
+  // Imagen destacada
+  featuredImageUrl String?
+  featuredImageAlt String?
+  
+  // Generación IA
+  isAiGenerated   Boolean        @default(true)
+  aiModel         String?        // Modelo usado
+  aiPrompt        String?        @db.Text  // Prompt original
+  
+  // Aprobación
+  status          TipStatus      @default(DRAFT)
+  reviewedById    String?
+  reviewedAt      DateTime?
+  reviewNotes     String?        @db.Text
+  rejectionReason String?
+  
+  // Publicación
+  publishedAt     DateTime?
+  scheduledFor    DateTime?      // Publicación programada
+  
+  // Engagement
+  viewCount       Int            @default(0)
+  likeCount       Int            @default(0)
+  shareCount      Int            @default(0)
+  
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  // Interacciones de usuarios
+  interactions    TipInteraction[]
+  
+  @@index([category])
+  @@index([ageRange])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([slug])
+}
+
+model TipInteraction {
+  id              String         @id @default(cuid())
+  
+  tipId           String
+  tip             EducationalTip @relation(fields: [tipId], references: [id], onDelete: Cascade)
+  
+  userId          String
+  
+  // Tipo de interacción
+  interactionType String         // "view", "like", "share", "save"
+  
+  createdAt       DateTime       @default(now())
+  
+  @@unique([tipId, userId, interactionType])
+  @@index([tipId])
+  @@index([userId])
+}
+
+// Configuración del generador de tips por escuela
+model TipGenerationConfig {
+  id              String         @id @default(cuid())
+  
+  schoolId        String?        // null = configuración global
+  
+  // Frecuencia de generación
+  isEnabled       Boolean        @default(true)
+  generationFrequency String     @default("weekly") // "daily", "weekly", "monthly"
+  tipsPerGeneration Int          @default(3)
+  
+  // Preferencias de categorías
+  preferredCategories TipCategory[]
+  excludedCategories  TipCategory[]
+  
+  // Flujo de aprobación
+  requiresApproval Boolean       @default(true)
+  approverRoleRequired String?   // "ADMIN", "DIRECCION", etc.
+  autoPublishAfterDays Int?      // Auto-publicar si no hay revisión
+  
+  // Notificaciones
+  notifyOnGeneration Boolean     @default(true)
+  notifyEmail        String?
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  @@unique([schoolId])
 }

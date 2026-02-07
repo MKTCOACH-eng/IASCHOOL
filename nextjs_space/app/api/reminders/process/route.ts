@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth-options';
 import { prisma } from '@/lib/db';
+import { Role, TaskStatus, AppointmentStatus, SurveyStatus } from '@prisma/client';
 
 interface SessionUser {
   id: string;
@@ -23,8 +24,12 @@ export async function POST(request: NextRequest) {
     }
 
     const schoolId = user.schoolId;
+    if (!schoolId) {
+      return NextResponse.json({ error: 'Sin colegio asignado' }, { status: 400 });
+    }
+
     const now = new Date();
-    const results: any[] = [];
+    const results: { type: string; user: string; message: string }[] = [];
 
     // Obtener configuraciones activas
     const configs = await prisma.reminderConfig.findMany({
@@ -35,36 +40,36 @@ export async function POST(request: NextRequest) {
     });
 
     for (const config of configs) {
-      let usersToNotify: any[] = [];
-      let referenceData: { type: string; id: string; message: string }[] = [];
+      const usersToNotify: { id: string; name: string; email: string }[] = [];
+      const referenceData: { type: string; id: string; message: string }[] = [];
 
       switch (config.reminderType) {
         case 'APPOINTMENT':
           // Citas próximas
           const upcomingAppointments = await prisma.appointment.findMany({
             where: {
-              schoolId,
-              dateTime: {
+              teacher: { schoolId },
+              scheduledDate: {
                 gte: now,
                 lte: new Date(now.getTime() + config.daysBeforeDue * 24 * 60 * 60 * 1000)
               },
-              status: 'CONFIRMED'
+              status: AppointmentStatus.CONFIRMED
             },
             include: {
-              requester: true,
-              teacher: true
+              parent: { select: { id: true, name: true, email: true } },
+              teacher: { select: { id: true, name: true, email: true } }
             }
           });
           
           upcomingAppointments.forEach(apt => {
-            const dateStr = new Date(apt.dateTime).toLocaleDateString('es-MX');
+            const dateStr = new Date(apt.scheduledDate).toLocaleDateString('es-MX');
             referenceData.push({
               type: 'appointment',
               id: apt.id,
-              message: `Tienes una cita programada el ${dateStr} - ${apt.reason}`
+              message: `Tienes una cita programada el ${dateStr} - ${apt.subject}`
             });
-            if (apt.requester) usersToNotify.push(apt.requester);
-            if (apt.teacher) usersToNotify.push(apt.teacher);
+            usersToNotify.push(apt.parent);
+            usersToNotify.push(apt.teacher);
           });
           break;
 
@@ -73,24 +78,27 @@ export async function POST(request: NextRequest) {
           const pendingTasks = await prisma.task.findMany({
             where: {
               group: { schoolId },
-              status: 'PUBLISHED',
+              status: TaskStatus.PUBLISHED,
               dueDate: { lte: now }
             },
             include: {
-              teacher: true,
-              _count: { select: { submissions: { where: { grade: null } } } }
+              teacher: { select: { id: true, name: true, email: true } },
+              submissions: {
+                where: { score: null },
+                select: { id: true }
+              }
             }
           });
 
           pendingTasks
-            .filter(t => t._count.submissions > 0)
+            .filter(t => t.submissions.length > 0)
             .forEach(task => {
               referenceData.push({
                 type: 'task',
                 id: task.id,
-                message: `Tienes ${task._count.submissions} tareas pendientes de calificar en "${task.title}"`
+                message: `Tienes ${task.submissions.length} entregas pendientes de calificar en "${task.title}"`
               });
-              if (task.teacher) usersToNotify.push(task.teacher);
+              usersToNotify.push(task.teacher);
             });
           break;
 
@@ -99,27 +107,31 @@ export async function POST(request: NextRequest) {
           const pendingCharges = await prisma.charge.findMany({
             where: {
               schoolId,
-              status: 'PENDING',
+              status: 'PENDIENTE',
               dueDate: {
                 lte: new Date(now.getTime() + config.daysBeforeDue * 24 * 60 * 60 * 1000)
               }
             },
             include: {
               student: {
-                include: { parents: true }
+                include: { 
+                  parents: { select: { id: true, name: true, email: true } } 
+                }
               }
             }
           });
 
           pendingCharges.forEach(charge => {
-            charge.student.parents.forEach(parent => {
-              referenceData.push({
-                type: 'payment',
-                id: charge.id,
-                message: `Pago pendiente: ${charge.concept} - $${charge.amount} vence el ${new Date(charge.dueDate!).toLocaleDateString('es-MX')}`
+            if (charge.student?.parents) {
+              charge.student.parents.forEach(parent => {
+                referenceData.push({
+                  type: 'payment',
+                  id: charge.id,
+                  message: `Pago pendiente: ${charge.concept} - $${charge.amount}${charge.dueDate ? ` vence el ${new Date(charge.dueDate).toLocaleDateString('es-MX')}` : ''}`
+                });
+                usersToNotify.push(parent);
               });
-              usersToNotify.push(parent);
-            });
+            }
           });
           break;
 
@@ -135,8 +147,14 @@ export async function POST(request: NextRequest) {
             }
           });
 
+          // Obtener todos los usuarios del colegio con los roles objetivo
+          const targetRoles = (config.targetRoles || ['PADRE', 'PROFESOR']) as Role[];
           const allUsers = await prisma.user.findMany({
-            where: { schoolId, isActive: true, role: { in: config.targetRoles as any[] } }
+            where: { 
+              schoolId, 
+              role: { in: targetRoles } 
+            },
+            select: { id: true, name: true, email: true }
           });
 
           upcomingEvents.forEach(event => {
@@ -147,7 +165,7 @@ export async function POST(request: NextRequest) {
             });
           });
           if (upcomingEvents.length > 0) {
-            usersToNotify = allUsers;
+            usersToNotify.push(...allUsers);
           }
           break;
 
@@ -156,31 +174,33 @@ export async function POST(request: NextRequest) {
           const activeSurveys = await prisma.survey.findMany({
             where: {
               schoolId,
-              status: 'PUBLISHED',
-              endDate: { gte: now }
+              status: SurveyStatus.ACTIVE,
+              endsAt: { gte: now }
             }
           });
 
           for (const survey of activeSurveys) {
+            // Obtener usuarios que aún no han respondido
+            const surveyTargetRoles = (survey.targetRoles || ['PADRE', 'PROFESOR']) as Role[];
             const targetUsers = await prisma.user.findMany({
               where: {
                 schoolId,
-                isActive: true,
-                role: { in: survey.targetAudience as any[] },
+                role: { in: surveyTargetRoles },
                 NOT: {
                   surveyResponses: { some: { surveyId: survey.id } }
                 }
-              }
+              },
+              select: { id: true, name: true, email: true }
             });
 
             targetUsers.forEach(u => {
               referenceData.push({
                 type: 'survey',
                 id: survey.id,
-                message: `Encuesta pendiente: "${survey.title}" - Vence el ${new Date(survey.endDate!).toLocaleDateString('es-MX')}`
+                message: `Encuesta pendiente: "${survey.title}"${survey.endsAt ? ` - Vence el ${new Date(survey.endsAt).toLocaleDateString('es-MX')}` : ''}`
               });
+              usersToNotify.push(u);
             });
-            usersToNotify = [...usersToNotify, ...targetUsers];
           }
           break;
       }
@@ -189,9 +209,10 @@ export async function POST(request: NextRequest) {
       const uniqueUsers = [...new Map(usersToNotify.map(u => [u.id, u])).values()];
 
       // Crear logs de reminders enviados
-      for (let i = 0; i < uniqueUsers.length && i < referenceData.length; i++) {
+      for (let i = 0; i < Math.min(uniqueUsers.length, referenceData.length); i++) {
         const userToNotify = uniqueUsers[i];
         const ref = referenceData[i] || referenceData[0];
+        if (!ref) continue;
 
         // Verificar si ya se envió este reminder recientemente
         const recentReminder = await prisma.reminderLog.findFirst({
@@ -208,7 +229,7 @@ export async function POST(request: NextRequest) {
         if (!recentReminder) {
           await prisma.reminderLog.create({
             data: {
-              schoolId: schoolId!,
+              schoolId,
               reminderType: config.reminderType,
               userId: userToNotify.id,
               referenceType: ref.type,

@@ -2,15 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth-options';
 import { prisma } from '@/lib/db';
+import OpenAI from 'openai';
 
 interface SessionUser {
   id: string;
-  name: string;
   role: string;
   schoolId?: string;
+  name?: string;
 }
 
-// Asistente personal para padres - requiere autenticación
+const client = new OpenAI({
+  apiKey: process.env.ABACUSAI_API_KEY,
+  baseURL: 'https://routellm.abacus.ai/v1'
+});
+
+// POST - Asistente personal para padres
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -19,23 +25,24 @@ export async function POST(request: NextRequest) {
     }
 
     const user = session.user as SessionUser;
-    const { message } = await request.json();
+    const body = await request.json();
+    const { message } = body;
 
     if (!message) {
       return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 });
     }
 
-    // Obtener contexto del usuario
-    let contextInfo = '';
-
-    // Información del colegio
+    // Construir contexto personalizado
+    let contextInfo = `Usuario: ${user.name || 'Usuario'} (${user.role})\n`;
+    
+    // Obtener información del colegio
     if (user.schoolId) {
       const school = await prisma.school.findUnique({
         where: { id: user.schoolId },
-        select: { name: true, phone: true, email: true, address: true }
+        select: { name: true, phone: true, email: true }
       });
       if (school) {
-        contextInfo += `\nCOLEGIO: ${school.name}\nTel: ${school.phone || 'No disponible'}\nEmail: ${school.email || 'No disponible'}\nDirección: ${school.address || 'No disponible'}\n`;
+        contextInfo += `Colegio: ${school.name}\nTel: ${school.phone || 'No disponible'}\nEmail: ${school.email || 'No disponible'}\n`;
       }
     }
 
@@ -50,7 +57,7 @@ export async function POST(request: NextRequest) {
             }
           },
           charges: {
-            where: { status: 'PENDING' },
+            where: { status: 'PENDIENTE' },
             take: 5
           }
         }
@@ -69,7 +76,7 @@ export async function POST(request: NextRequest) {
           contextInfo += '\n';
 
           // Pagos pendientes
-          if (child.charges.length > 0) {
+          if (child.charges && child.charges.length > 0) {
             contextInfo += `  Pagos pendientes: ${child.charges.length}\n`;
           }
         }
@@ -91,7 +98,7 @@ export async function POST(request: NextRequest) {
         if (pendingTasks.length > 0) {
           contextInfo += '\nTAREAS PENDIENTES:\n';
           pendingTasks.forEach(task => {
-            const dueDate = new Date(task.dueDate!).toLocaleDateString('es-MX');
+            const dueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString('es-MX') : 'Sin fecha';
             contextInfo += `- ${task.title} (${task.subject?.name || 'Sin materia'}) - Entrega: ${dueDate}\n`;
           });
         }
@@ -99,82 +106,56 @@ export async function POST(request: NextRequest) {
     }
 
     // Eventos próximos
-    const upcomingEvents = await prisma.event.findMany({
-      where: {
-        schoolId: user.schoolId,
-        startDate: { gte: new Date() }
-      },
-      orderBy: { startDate: 'asc' },
-      take: 5
-    });
-
-    if (upcomingEvents.length > 0) {
-      contextInfo += '\nEVENTOS PRÓXIMOS:\n';
-      upcomingEvents.forEach(event => {
-        const date = new Date(event.startDate).toLocaleDateString('es-MX', {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long'
-        });
-        contextInfo += `- ${event.title}: ${date}\n`;
+    if (user.schoolId) {
+      const upcomingEvents = await prisma.event.findMany({
+        where: {
+          schoolId: user.schoolId,
+          startDate: { gte: new Date() }
+        },
+        orderBy: { startDate: 'asc' },
+        take: 3
       });
+
+      if (upcomingEvents.length > 0) {
+        contextInfo += '\nEVENTOS PRÓXIMOS:\n';
+        upcomingEvents.forEach(event => {
+          const dateStr = new Date(event.startDate).toLocaleDateString('es-MX');
+          contextInfo += `- ${event.title} (${dateStr})\n`;
+        });
+      }
     }
 
-    // Construir prompt del sistema
-    const systemPrompt = `Eres un asistente personal para padres de familia del colegio. Tu nombre es "Asistente IA School".
+    const systemPrompt = `Eres un asistente personal amigable para padres de familia en una escuela. Tu nombre es "Asistente IA School".
 
-INFORMACIÓN DEL CONTEXTO:
+Tienes acceso a la siguiente información del usuario:
 ${contextInfo}
 
-INSTRUCCIONES:
-- Responde siempre en español, de forma amigable y clara
-- Usa la información del contexto para responder preguntas específicas
-- Si preguntan por días de asueto, revisa los eventos
-- Si preguntan por tareas, usa la lista de tareas pendientes
-- Si preguntan por pagos, menciona los cargos pendientes
-- Si no tienes la información exacta, sugiere contactar al colegio directamente
-- Puedes dar información general sobre el colegio usando los datos proporcionados`;
+Tu rol es:
+1. Responder preguntas sobre el colegio, horarios, tareas y eventos
+2. Ayudar con dudas sobre pagos y cargos pendientes
+3. Proporcionar información de contacto de maestros
+4. Recordar fechas importantes y plazos de entrega
+5. Ser amable, empático y profesional
 
-    // Llamar a la API de LLM
-    const apiKey = process.env.ABACUSAI_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json({ 
-        response: 'El servicio de asistente no está disponible temporalmente.' 
-      });
-    }
+Si no tienes la información solicitada, sugiere que el padre contacte directamente al colegio o al maestro correspondiente.
 
-    const response = await fetch('https://routellm.abacus.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'claude-3-5-sonnet',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: message }
-        ],
-        max_tokens: 1000,
-        temperature: 0.7
-      })
+Responde siempre en español de forma concisa y útil.`;
+
+    const response = await client.chat.completions.create({
+      model: 'claude-sonnet-4-20250514',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message }
+      ],
+      max_tokens: 1000,
+      temperature: 0.7
     });
 
-    if (!response.ok) {
-      console.error('LLM API error');
-      return NextResponse.json({ 
-        response: 'Estoy experimentando dificultades. Por favor inténtalo de nuevo.' 
-      });
-    }
+    const reply = response.choices[0]?.message?.content || 'Lo siento, no pude procesar tu solicitud. Inténtalo de nuevo.';
 
-    const data = await response.json();
-    const assistantMessage = data.choices?.[0]?.message?.content || 'No pude procesar tu solicitud.';
-
-    return NextResponse.json({ response: assistantMessage });
+    return NextResponse.json({ reply });
   } catch (error) {
-    console.error('Assistant error:', error);
-    return NextResponse.json({ 
-      response: 'Error en el servicio. Por favor inténtalo más tarde.' 
-    });
+    console.error('Error in assistant chatbot:', error);
+    return NextResponse.json({ error: 'Error al procesar mensaje' }, { status: 500 });
   }
 }
