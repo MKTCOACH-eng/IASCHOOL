@@ -12,12 +12,24 @@ export const metadata: Metadata = {
   title: "IAschool - Comunicación escolar simplificada",
   description: "Plataforma de comunicación para colegios - Vermont School",
   metadataBase: new URL(process.env.NEXTAUTH_URL || "http://localhost:3000"),
+  manifest: "/manifest.json",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
+    apple: "/iaschool-logo.png",
   },
   openGraph: {
     images: ["/og-image.png"],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "IA School",
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
   },
 };
 
@@ -29,6 +41,9 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
+        <meta name="theme-color" content="#1B4079" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <link rel="apple-touch-icon" href="/iaschool-logo.png" />
         <script src="https://apps.abacus.ai/chatllm/appllm-lib.js"></script>
       </head>
       <body className={`${inter.className} bg-white antialiased`} suppressHydrationWarning>

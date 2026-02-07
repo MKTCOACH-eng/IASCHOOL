@@ -1,0 +1,35 @@
+{
+  "name": "IA School",
+  "short_name": "IA School",
+  "description": "Plataforma escolar inteligente para la comunicación entre escuelas, padres y profesores",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1B4079",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/iaschool-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/iaschool-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "lang": "es-MX",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}

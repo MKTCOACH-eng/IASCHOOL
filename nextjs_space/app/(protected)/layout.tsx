@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
+import { OnboardingTour } from "@/components/onboarding-tour";
 
 export default async function ProtectedLayout({
   children,
@@ -36,6 +37,7 @@ export default async function ProtectedLayout({
           {children}
         </main>
         <Footer />
+        <OnboardingTour />
       </div>
     </Providers>
   );

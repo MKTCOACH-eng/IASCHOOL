@@ -118,6 +118,9 @@ model School {
   orders           Order[]
   photoAlbums      PhotoAlbum[]
   schedules        Schedule[]
+  surveys          Survey[]
+  enrollments      Enrollment[]
+  permitRequests   PermitRequest[]
 }
 
 model User {
@@ -131,6 +134,8 @@ model User {
   school             School?  @relation(fields: [schoolId], references: [id])
   mustChangePassword Boolean  @default(false)
   profileCompleted   Boolean  @default(false)
+  onboardingCompleted Boolean @default(false)
+  preferredLanguage  String   @default("es")
   createdAt          DateTime @default(now())
   announcements      Announcement[] @relation("CreatedBy")
   reads              AnnouncementRead[]
@@ -209,6 +214,18 @@ model User {
   expensesCreated      GroupExpense[] @relation("ExpenseCreator")
   groupAnnouncementsCreated GroupAnnouncement[] @relation("GroupAnnouncementCreator")
   groupAnnouncementReads GroupAnnouncementRead[]
+  
+  // Encuestas
+  surveysCreated       Survey[]     @relation("SurveyCreator")
+  surveyResponses      SurveyResponse[]
+  
+  // Inscripciones/Preinscripciones
+  enrollmentsCreated   Enrollment[] @relation("EnrollmentCreator")
+  enrollmentsReviewed  Enrollment[] @relation("EnrollmentReviewer")
+  
+  // Permisos/Justificantes
+  permitRequestsCreated   PermitRequest[] @relation("PermitCreator")
+  permitRequestsReviewed  PermitRequest[] @relation("PermitReviewer")
 }
 
 model Invitation {
@@ -288,6 +305,8 @@ model Student {
   speiReference SpeiReference?
   photoTags    PhotoTag[]
   fundContributions GroupFundContribution[]
+  permitRequests PermitRequest[]
+  enrollment   Enrollment? @relation("EnrollmentStudent")
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
 
@@ -1733,4 +1752,226 @@ model GroupAnnouncementRead {
   @@unique([announcementId, userId])
   @@index([announcementId])
   @@index([userId])
+}
+
+// ===============================
+// MÓDULO: Encuestas y NPS
+// ===============================
+
+enum SurveyType {
+  NPS           // Net Promoter Score (0-10)
+  SATISFACTION  // Satisfacción general (1-5 estrellas)
+  FEEDBACK      // Encuesta con preguntas abiertas
+  POLL          // Votación simple
+}
+
+enum SurveyStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+  ARCHIVED
+}
+
+model Survey {
+  id          String       @id @default(cuid())
+  schoolId    String
+  school      School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  createdById String
+  createdBy   User         @relation("SurveyCreator", fields: [createdById], references: [id])
+  
+  title       String
+  description String?      @db.Text
+  type        SurveyType   @default(SATISFACTION)
+  status      SurveyStatus @default(DRAFT)
+  
+  // Preguntas (JSON para flexibilidad)
+  questions   Json         // [{ id, text, type: "rating"|"text"|"choice", options?: string[] }]
+  
+  // Audiencia
+  targetRoles String[]     @default(["PADRE"]) // Roles que pueden responder
+  targetGroups String[]    @default([])        // IDs de grupos específicos (vacío = todos)
+  
+  // Fechas
+  startsAt    DateTime?
+  endsAt      DateTime?
+  
+  // Estadísticas cacheadas
+  responseCount Int        @default(0)
+  averageScore  Float?     // Para NPS/Satisfaction
+  
+  isAnonymous Boolean      @default(true)
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  responses   SurveyResponse[]
+  
+  @@index([schoolId])
+  @@index([status])
+  @@index([type])
+}
+
+model SurveyResponse {
+  id         String   @id @default(cuid())
+  surveyId   String
+  survey     Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  userId     String?  // Null si es anónimo
+  user       User?    @relation(fields: [userId], references: [id])
+  
+  // Respuestas (JSON)
+  answers    Json     // { questionId: answer }
+  
+  // Para NPS/Satisfaction
+  score      Int?     // 0-10 para NPS, 1-5 para satisfacción
+  
+  // Metadata
+  ipHash     String?  // Hash del IP para evitar duplicados anónimos
+  userAgent  String?
+  
+  createdAt  DateTime @default(now())
+  
+  @@unique([surveyId, userId])
+  @@index([surveyId])
+  @@index([score])
+}
+
+// ===============================
+// MÓDULO: Inscripciones Online
+// ===============================
+
+enum EnrollmentStatus {
+  PENDING       // Solicitud enviada
+  REVIEWING     // En revisión
+  DOCUMENTS     // Pendiente de documentos
+  INTERVIEW     // Pendiente de entrevista
+  ACCEPTED      // Aceptado
+  REJECTED      // Rechazado
+  WAITLIST      // Lista de espera
+  ENROLLED      // Inscrito (completado)
+  CANCELLED     // Cancelado por padre
+}
+
+model Enrollment {
+  id           String           @id @default(cuid())
+  schoolId     String
+  school       School           @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  
+  // Datos del solicitante (padre/tutor)
+  parentName   String
+  parentEmail  String
+  parentPhone  String
+  relationship String           // "madre", "padre", "tutor"
+  
+  // Datos del estudiante
+  studentName  String
+  studentBirthDate DateTime
+  studentGender String?         // "M", "F", "Otro"
+  currentSchool String?         // Escuela actual
+  currentGrade String?          // Grado actual
+  
+  // Grado solicitado
+  requestedGrade String         // "1ro Primaria", "Kinder 3", etc.
+  requestedYear  Int            // Ciclo escolar: 2026, 2027, etc.
+  
+  // Información adicional
+  siblings      String?         @db.Text // ¿Tiene hermanos en la escuela?
+  howDidYouHear String?         // ¿Cómo conoció la escuela?
+  specialNeeds  String?         @db.Text // Necesidades especiales
+  comments      String?         @db.Text
+  
+  // Documentos subidos
+  documents     Json?           // [{ name, url, type }]
+  
+  // Estado y seguimiento
+  status        EnrollmentStatus @default(PENDING)
+  priority      Int              @default(0) // Prioridad de lista de espera
+  
+  // Entrevista
+  interviewDate DateTime?
+  interviewNotes String?        @db.Text
+  
+  // Revisión
+  reviewedById  String?
+  reviewedBy    User?           @relation("EnrollmentReviewer", fields: [reviewedById], references: [id])
+  reviewedAt    DateTime?
+  rejectionReason String?       @db.Text
+  
+  // Admin que procesó
+  createdById   String?         // Si lo creó un admin
+  createdBy     User?           @relation("EnrollmentCreator", fields: [createdById], references: [id])
+  
+  // Vinculación con estudiante (cuando se inscribe)
+  enrolledStudentId String?     @unique
+  enrolledStudent   Student?    @relation("EnrollmentStudent", fields: [enrolledStudentId], references: [id])
+  
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  
+  @@index([schoolId])
+  @@index([status])
+  @@index([parentEmail])
+  @@index([requestedYear])
+}
+
+// ===============================
+// MÓDULO: Permisos y Justificantes
+// ===============================
+
+enum PermitType {
+  ABSENCE       // Justificante de ausencia
+  EARLY_EXIT    // Permiso de salida temprana
+  LATE_ARRIVAL  // Permiso de llegada tarde
+  MEDICAL       // Permiso médico
+  FIELD_TRIP    // Autorización para salida escolar
+  PHOTO_VIDEO   // Autorización foto/video
+  OTHER         // Otro
+}
+
+enum PermitStatus {
+  PENDING       // Pendiente de revisión
+  APPROVED      // Aprobado
+  REJECTED      // Rechazado
+  EXPIRED       // Expirado (no procesado a tiempo)
+}
+
+model PermitRequest {
+  id           String       @id @default(cuid())
+  schoolId     String
+  school       School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  studentId    String
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdById  String
+  createdBy    User         @relation("PermitCreator", fields: [createdById], references: [id])
+  
+  type         PermitType
+  status       PermitStatus @default(PENDING)
+  
+  // Detalles
+  title        String
+  reason       String       @db.Text
+  
+  // Fechas del permiso
+  startDate    DateTime     // Fecha de inicio del permiso
+  endDate      DateTime?    // Fecha fin (null si es solo un día)
+  startTime    String?      // Hora (para salida temprana/llegada tarde)
+  endTime      String?
+  
+  // Documentos de soporte
+  attachmentUrl  String?
+  attachmentName String?
+  
+  // Revisión
+  reviewedById String?
+  reviewedBy   User?        @relation("PermitReviewer", fields: [reviewedById], references: [id])
+  reviewedAt   DateTime?
+  reviewNotes  String?
+  
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  
+  @@index([schoolId])
+  @@index([studentId])
+  @@index([status])
+  @@index([type])
+  @@index([startDate])
 }
