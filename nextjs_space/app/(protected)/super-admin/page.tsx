@@ -16,7 +16,11 @@ import {
   ChevronRight,
   BookOpen,
   FileText,
-  Loader2
+  Loader2,
+  Calculator,
+  HandshakeIcon,
+  UserPlus,
+  Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -210,10 +214,22 @@ export default function SuperAdminDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
+            <Link href="/super-admin/quotes">
+              <Button variant="outline" className="w-full justify-start gap-3 text-[#1B4079] border-[#1B4079] hover:bg-[#1B4079] hover:text-white">
+                <Calculator className="h-4 w-4" />
+                Cotizaciones
+              </Button>
+            </Link>
             <Link href="/super-admin/schools">
               <Button variant="outline" className="w-full justify-start gap-3">
                 <Building2 className="h-4 w-4" />
                 Gestionar Escuelas
+              </Button>
+            </Link>
+            <Link href="/super-admin/agreements">
+              <Button variant="outline" className="w-full justify-start gap-3">
+                <HandshakeIcon className="h-4 w-4" />
+                Acuerdos con Colegios
               </Button>
             </Link>
             <Link href="/super-admin/config">

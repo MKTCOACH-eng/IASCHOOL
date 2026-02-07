@@ -44,6 +44,23 @@ async function main() {
   await prisma.systemAuditLog.deleteMany();
   await prisma.schoolSettings.deleteMany();
   await prisma.systemConfig.deleteMany();
+  
+  // Limpiar modelos de negocio
+  await prisma.quoteNegotiation.deleteMany();
+  await prisma.quote.deleteMany();
+  await prisma.affiliatePetitionSignature.deleteMany();
+  await prisma.affiliateReferral.deleteMany();
+  await prisma.userTermsAcceptance.deleteMany();
+  await prisma.termsAndConditions.deleteMany();
+  await prisma.parentSubscription.deleteMany();
+  await prisma.schoolSubscription.deleteMany();
+  await prisma.schoolAgreement.deleteMany();
+  await prisma.subscriptionPlan.deleteMany();
+  await prisma.setupFeeTier.deleteMany();
+  await prisma.stripeConnectAccount.deleteMany();
+  await prisma.cafeteriaMenuItem.deleteMany();
+  await prisma.cafeteriaMenu.deleteMany();
+  
   await prisma.user.deleteMany();
   await prisma.invitation.deleteMany();
   await prisma.school.deleteMany();
@@ -1731,6 +1748,289 @@ async function main() {
   }
 
   console.log("Created authorized pickups and vehicles");
+
+  // ==========================================
+  // CREAR PLANES DE SUSCRIPCIÓN
+  // ==========================================
+  console.log("Creating subscription plans...");
+
+  await prisma.subscriptionPlan.createMany({
+    data: [
+      {
+        name: "Básico",
+        type: "BASIC",
+        pricePerStudent: 149,
+        iaSchoolShare: 50,
+        schoolShare: 50,
+        description: "Plan básico con funcionalidades esenciales para comunicación y seguimiento académico.",
+        features: JSON.stringify([
+          "Anuncios y comunicados",
+          "Calendario de eventos",
+          "Directorio de contactos",
+          "Tareas y asignaciones",
+          "Calificaciones y boletas",
+          "Progreso académico",
+          "Notificaciones push",
+          "PWA instalable",
+          "Multi-idioma (ES/EN)",
+          "Mensajería básica (texto)",
+          "Importación masiva CSV/Excel",
+          "Invitaciones y onboarding"
+        ]),
+        annualDiscountMonths: 2,
+      },
+      {
+        name: "Estándar",
+        type: "STANDARD",
+        pricePerStudent: 199,
+        iaSchoolShare: 50,
+        schoolShare: 50,
+        description: "Plan completo con todas las herramientas de gestión escolar.",
+        features: JSON.stringify([
+          "Todo lo del plan Básico +",
+          "Chat completo (archivos, reacciones, pins)",
+          "Encuestas y votaciones en grupos",
+          "Asistencia y horarios",
+          "Documentos académicos",
+          "Enfermería digital",
+          "Autorizados para recoger",
+          "Permisos y justificantes",
+          "Disciplina",
+          "Cargos y pagos básicos",
+          "Galería de fotos",
+          "Tienda escolar básica",
+          "Vocal de grupo (colectas)",
+          "Documentos firmables"
+        ]),
+        annualDiscountMonths: 2,
+      },
+      {
+        name: "Premium",
+        type: "PREMIUM",
+        pricePerStudent: 299,
+        iaSchoolShare: 50,
+        schoolShare: 50,
+        description: "Plan empresarial con todas las funcionalidades avanzadas e IA.",
+        features: JSON.stringify([
+          "Todo lo del plan Estándar +",
+          "Videollamadas (citas con video)",
+          "Chatbot IA asistente",
+          "Análisis de sentimiento IA",
+          "Dashboard ejecutivo",
+          "Reportes semanales automáticos",
+          "Auditoría de logs",
+          "Subroles de administrador",
+          "CRM escolar (campañas, segmentos)",
+          "Módulo psicoemocional",
+          "Encuestas de clima",
+          "Pagos online (Stripe)",
+          "Becas y descuentos",
+          "Recibos PDF",
+          "Reportes financieros",
+          "Tienda con envíos (Envia.com)",
+          "Comedor (menú + pagos)"
+        ]),
+        annualDiscountMonths: 2,
+      },
+    ],
+  });
+
+  console.log("Created subscription plans");
+
+  // ==========================================
+  // CREAR TARIFAS DE SETUP
+  // ==========================================
+  console.log("Creating setup fee tiers...");
+
+  await prisma.setupFeeTier.createMany({
+    data: [
+      { name: "Micro", minStudents: 1, maxStudents: 100, setupFee: 8000 },
+      { name: "Pequeño", minStudents: 101, maxStudents: 300, setupFee: 15000 },
+      { name: "Mediano", minStudents: 301, maxStudents: 600, setupFee: 25000 },
+      { name: "Grande", minStudents: 601, maxStudents: 1000, setupFee: 40000 },
+      { name: "Enterprise", minStudents: 1001, maxStudents: null, setupFee: 60000 },
+    ],
+  });
+
+  console.log("Created setup fee tiers");
+
+  // ==========================================
+  // CREAR TÉRMINOS Y CONDICIONES
+  // ==========================================
+  console.log("Creating terms and conditions...");
+
+  await prisma.termsAndConditions.createMany({
+    data: [
+      {
+        type: "GENERAL",
+        version: "1.0",
+        title: "Términos y Condiciones Generales",
+        summary: "Términos generales de uso de la plataforma IA School.",
+        content: `
+# TÉRMINOS Y CONDICIONES GENERALES DE IA SCHOOL
+
+## 1. ACEPTACIÓN DE LOS TÉRMINOS
+Al acceder y utilizar la plataforma IA School, usted acepta estos términos y condiciones en su totalidad.
+
+## 2. DESCRIPCIÓN DEL SERVICIO
+IA School es una plataforma de gestión educativa que facilita la comunicación entre instituciones educativas, docentes, padres de familia y alumnos.
+
+## 3. REGISTRO Y CUENTA
+- Debe proporcionar información veraz y actualizada
+- Es responsable de mantener la confidencialidad de sus credenciales
+- Debe notificar inmediatamente cualquier uso no autorizado
+
+## 4. USO ACEPTABLE
+Se prohíbe:
+- Usar el servicio para actividades ilegales
+- Compartir contenido inapropiado o difamatorio
+- Intentar acceder a cuentas de otros usuarios
+- Interferir con el funcionamiento de la plataforma
+
+## 5. PRIVACIDAD
+El tratamiento de datos personales se rige por nuestra Política de Privacidad.
+
+## 6. PROPIEDAD INTELECTUAL
+Todo el contenido de la plataforma es propiedad de IA School o sus licenciantes.
+
+## 7. LIMITACIÓN DE RESPONSABILIDAD
+IA School no será responsable por daños indirectos, incidentales o consecuentes.
+
+## 8. MODIFICACIONES
+Nos reservamos el derecho de modificar estos términos con previo aviso.
+
+## 9. LEY APLICABLE
+Estos términos se rigen por las leyes de México.
+
+Última actualización: ${new Date().toLocaleDateString('es-MX')}
+        `,
+        isMandatory: true,
+      },
+      {
+        type: "PRIVACY_POLICY",
+        version: "1.0",
+        title: "Política de Privacidad",
+        summary: "Cómo recopilamos, usamos y protegemos sus datos personales.",
+        content: `
+# POLÍTICA DE PRIVACIDAD DE IA SCHOOL
+
+## 1. DATOS QUE RECOPILAMOS
+- Información de registro (nombre, email, teléfono)
+- Datos de estudiantes y relaciones familiares
+- Información académica y de asistencia
+- Comunicaciones dentro de la plataforma
+
+## 2. USO DE LA INFORMACIÓN
+Utilizamos sus datos para:
+- Proveer los servicios de la plataforma
+- Comunicaciones relacionadas con el servicio
+- Mejora continua de nuestros servicios
+- Cumplimiento de obligaciones legales
+
+## 3. PROTECCIÓN DE DATOS
+Implementamos medidas de seguridad técnicas y organizativas para proteger sus datos.
+
+## 4. DERECHOS ARCO
+Usted tiene derecho a Acceder, Rectificar, Cancelar y Oponerse al tratamiento de sus datos.
+
+## 5. TRANSFERENCIA DE DATOS
+No vendemos ni compartimos sus datos con terceros sin su consentimiento.
+
+## 6. CONTACTO
+Para ejercer sus derechos: privacidad@iaschool.edu
+
+Última actualización: ${new Date().toLocaleDateString('es-MX')}
+        `,
+        isMandatory: true,
+      },
+      {
+        type: "ECOMMERCE",
+        version: "1.0",
+        title: "Términos de Tienda Escolar - Deslinde de Responsabilidad",
+        summary: "IA School actúa únicamente como intermediario tecnológico en transacciones de la tienda escolar.",
+        content: `
+# TÉRMINOS Y CONDICIONES DE TIENDA ESCOLAR
+
+## DESLINDE DE RESPONSABILIDAD - IA SCHOOL
+
+### 1. NATURALEZA DEL SERVICIO
+IA School proporciona ÚNICAMENTE la plataforma tecnológica que permite a las instituciones educativas ofrecer productos a sus comunidades. IA School NO es vendedor, distribuidor ni intermediario comercial de ningún producto.
+
+### 2. RESPONSABILIDAD DE LA INSTITUCIÓN EDUCATIVA
+La institución educativa (colegio) es el ÚNICO responsable de:
+- Calidad y estado de los productos ofrecidos
+- Precios, promociones y descuentos
+- Inventario y disponibilidad
+- Entrega de productos
+- Políticas de devolución y garantías
+- Atención al cliente
+- Facturación y obligaciones fiscales
+
+### 3. LIMITACIÓN DE RESPONSABILIDAD DE IA SCHOOL
+IA School NO se hace responsable por:
+- Calidad, seguridad o legalidad de los productos
+- Veracidad de las descripciones de productos
+- Cumplimiento de entregas
+- Disputas entre compradores y vendedores
+- Daños derivados del uso de productos adquiridos
+
+### 4. PROCESAMIENTO DE PAGOS
+Los pagos son procesados a través de proveedores de servicios de pago seguros. IA School no almacena datos de tarjetas de crédito.
+
+### 5. POLÍTICA DE DEVOLUCIONES
+Cada institución educativa define su propia política de devoluciones. Consulte directamente con su colegio.
+
+### 6. RECLAMACIONES
+Para cualquier reclamación relacionada con productos, contacte directamente a la institución educativa vendedora.
+
+Última actualización: ${new Date().toLocaleDateString('es-MX')}
+        `,
+        isMandatory: true,
+      },
+      {
+        type: "AFFILIATE",
+        version: "1.0",
+        title: "Términos del Programa de Afiliados",
+        summary: "Condiciones para participar en el programa de referidos de IA School.",
+        content: `
+# TÉRMINOS DEL PROGRAMA DE AFILIADOS IA SCHOOL
+
+## 1. DESCRIPCIÓN DEL PROGRAMA
+El programa de afiliados permite a padres de familia existentes recomendar IA School a su colegio y obtener beneficios cuando el colegio se registra.
+
+## 2. REQUISITOS DE PARTICIPACIÓN
+- Ser padre/madre de familia registrado en un colegio
+- Aceptar estos términos
+- Proporcionar información veraz
+
+## 3. BENEFICIOS PARA EL REFERENTE
+- 10% del Setup Fee del colegio
+- 1 año de membresía gratis (aplica para 1 hijo únicamente)
+- Vigencia de 30 días para que el colegio se registre
+
+## 4. BENEFICIOS PARA FIRMANTES
+- $200 MXN de descuento en primer pago
+- Aplica solo si el colegio contrata la plataforma
+
+## 5. CONDICIONES
+- El link debe ser usado por el colegio para su registro
+- Los beneficios se activan únicamente cuando el colegio completa su registro y pago
+- No se permiten prácticas fraudulentas o spam
+
+## 6. CANCELACIÓN
+IA School se reserva el derecho de cancelar participaciones por incumplimiento.
+
+## 7. PAGO DE COMISIONES
+Las comisiones se pagarán dentro de los 30 días siguientes a la activación del colegio.
+
+Última actualización: ${new Date().toLocaleDateString('es-MX')}
+        `,
+        isMandatory: true,
+      },
+    ],
+  });
+
+  console.log("Created terms and conditions");
 
   console.log("\n==============================");
   console.log("CREDENCIALES DE PRUEBA:");

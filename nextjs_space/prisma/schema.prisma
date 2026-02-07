@@ -145,6 +145,19 @@ model School {
   
   // Módulo Psicoemocional
   psychologicalRecords PsychologicalRecord[] @relation("SchoolPsychological")
+  
+  // Términos y Condiciones
+  terms            TermsAndConditions[] @relation("SchoolTerms")
+  
+  // Suscripción
+  subscription     SchoolSubscription?  @relation("SchoolSubscription")
+  agreement        SchoolAgreement?     @relation("SchoolAgreement")
+  
+  // Programa de Afiliados
+  affiliateReferrals AffiliateReferral[] @relation("SchoolAffiliates")
+  
+  // Comedor
+  cafeteriaMenus   CafeteriaMenu[]      @relation("SchoolCafeteria")
 }
 
 model User {
@@ -265,6 +278,20 @@ model User {
   
   // Becas creadas (admin con subrol CAJA o DIRECCION)
   scholarshipsCreated     Scholarship[] @relation("ScholarshipCreator")
+  
+  // Términos y Condiciones
+  termsAcceptances        UserTermsAcceptance[] @relation("UserTermsAcceptances")
+  
+  // Membresías (para padres)
+  parentSubscriptions     ParentSubscription[] @relation("ParentSubscriptions")
+  
+  // Programa de Afiliados
+  affiliateReferrals      AffiliateReferral[] @relation("AffiliateReferrals")
+  affiliateSignatures     AffiliatePetitionSignature[] @relation("AffiliateSignatures")
+  
+  // Cotizaciones (super admin)
+  quotesCreated           Quote[] @relation("QuotesCreated")
+  negotiationsCreated     QuoteNegotiation[] @relation("NegotiationsCreated")
 }
 
 model Invitation {
@@ -361,6 +388,9 @@ model Student {
   
   // Personas y vehículos autorizados para recoger
   authorizedPickups AuthorizedPickup[] @relation("StudentAuthorizedPickups")
+  
+  // Suscripción del padre para este estudiante
+  subscription      ParentSubscription? @relation("StudentSubscription")
   
   createdAt    DateTime @default(now())
   isActive     Boolean  @default(true)
@@ -2656,4 +2686,501 @@ model AuthorizedVehicle {
   
   @@index([authorizedPickupId])
   @@index([licensePlate])
+}
+// ==========================================
+// TÉRMINOS Y CONDICIONES
+// ==========================================
+
+enum TermsType {
+  GENERAL              // T&C generales de la plataforma
+  PRIVACY_POLICY       // Política de privacidad
+  ECOMMERCE            // T&C de tienda (deslinde IA School)
+  PAYMENTS             // T&C de pagos
+  AFFILIATE            // T&C programa de afiliados
+  SCHOOL_SPECIFIC      // T&C específicos del colegio
+}
+
+model TermsAndConditions {
+  id           String       @id @default(cuid())
+  type         TermsType
+  version      String       // e.g., "1.0", "2.0"
+  title        String
+  content      String       @db.Text
+  summary      String?      @db.Text  // Resumen corto
+  
+  // Puede ser específico de un colegio o global (schoolId = null)
+  schoolId     String?
+  school       School?      @relation("SchoolTerms", fields: [schoolId], references: [id])
+  
+  isActive     Boolean      @default(true)
+  isMandatory  Boolean      @default(true)
+  
+  effectiveFrom DateTime    @default(now())
+  effectiveUntil DateTime?
+  
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  
+  acceptances  UserTermsAcceptance[]
+  
+  @@unique([type, version, schoolId])
+  @@index([type])
+  @@index([schoolId])
+  @@index([isActive])
+}
+
+model UserTermsAcceptance {
+  id           String              @id @default(cuid())
+  userId       String
+  user         User                @relation("UserTermsAcceptances", fields: [userId], references: [id])
+  
+  termsId      String
+  terms        TermsAndConditions  @relation(fields: [termsId], references: [id])
+  
+  acceptedAt   DateTime            @default(now())
+  ipAddress    String?
+  userAgent    String?
+  
+  // Para contexto de dónde se aceptó
+  context      String?             // "registration", "login", "checkout", "affiliate"
+  
+  @@unique([userId, termsId])
+  @@index([userId])
+  @@index([termsId])
+}
+
+// ==========================================
+// SISTEMA DE MEMBRESÍAS Y PLANES
+// ==========================================
+
+enum PlanType {
+  BASIC      // $149/alumno/mes
+  STANDARD   // $199/alumno/mes
+  PREMIUM    // $299/alumno/mes
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  SUSPENDED
+  CANCELLED
+  TRIAL
+  PENDING_PAYMENT
+}
+
+model SubscriptionPlan {
+  id                String      @id @default(cuid())
+  name              String      // "Básico", "Estándar", "Premium"
+  type              PlanType    @unique
+  pricePerStudent   Decimal     @db.Decimal(10, 2)  // Precio por alumno/mes
+  iaSchoolShare     Decimal     @db.Decimal(5, 2)   // Porcentaje IA School (50)
+  schoolShare       Decimal     @db.Decimal(5, 2)   // Porcentaje Colegio (50)
+  
+  description       String?     @db.Text
+  features          Json        // Lista de features incluidas
+  
+  // Descuentos
+  annualDiscountMonths Int      @default(2)  // Meses gratis por pago anual
+  
+  isActive          Boolean     @default(true)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  
+  schoolSubscriptions SchoolSubscription[]
+  parentSubscriptions ParentSubscription[]
+  quotes              Quote[] @relation("QuotePlan")
+}
+
+// Setup fees por tamaño de colegio
+model SetupFeeTier {
+  id              String   @id @default(cuid())
+  name            String   // "Micro", "Pequeño", "Mediano", "Grande", "Enterprise"
+  minStudents     Int
+  maxStudents     Int?     // null = sin límite
+  setupFee        Decimal  @db.Decimal(10, 2)
+  
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([minStudents])
+}
+
+// Suscripción del colegio
+model SchoolSubscription {
+  id              String             @id @default(cuid())
+  schoolId        String             @unique
+  school          School             @relation("SchoolSubscription", fields: [schoolId], references: [id])
+  
+  planId          String
+  plan            SubscriptionPlan   @relation(fields: [planId], references: [id])
+  
+  status          SubscriptionStatus @default(PENDING_PAYMENT)
+  
+  // Configuración de precios (puede variar del plan base por acuerdos)
+  customPricePerStudent Decimal?     @db.Decimal(10, 2)
+  customIaSchoolShare   Decimal?     @db.Decimal(5, 2)
+  customSchoolShare     Decimal?     @db.Decimal(5, 2)
+  
+  // Setup
+  setupFeePaid    Boolean            @default(false)
+  setupFeeAmount  Decimal?           @db.Decimal(10, 2)
+  setupFeePaidAt  DateTime?
+  
+  // Fechas
+  startDate       DateTime           @default(now())
+  endDate         DateTime?
+  trialEndsAt     DateTime?
+  
+  // Stripe Connect
+  stripeAccountId String?            // Cuenta Stripe del colegio
+  stripeAccountStatus String?        // "pending", "active", "restricted"
+  
+  // Billing
+  billingDay      Int                @default(1)  // Día del mes para cobrar
+  paymentMethod   String?            // "school_collects", "platform_collects"
+  
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  
+  parentSubscriptions ParentSubscription[]
+  
+  @@index([status])
+}
+
+// Suscripción individual de cada padre
+model ParentSubscription {
+  id                    String             @id @default(cuid())
+  userId                String
+  user                  User               @relation("ParentSubscriptions", fields: [userId], references: [id])
+  
+  studentId             String             @unique
+  student               Student            @relation("StudentSubscription", fields: [studentId], references: [id])
+  
+  schoolSubscriptionId  String
+  schoolSubscription    SchoolSubscription @relation(fields: [schoolSubscriptionId], references: [id])
+  
+  planId                String
+  plan                  SubscriptionPlan   @relation(fields: [planId], references: [id])
+  
+  status                SubscriptionStatus @default(ACTIVE)
+  
+  // Descuentos aplicados
+  discountAmount        Decimal?           @db.Decimal(10, 2)
+  discountReason        String?            // "affiliate_signer", "annual_payment", etc.
+  
+  // Control de morosidad
+  isDelinquent          Boolean            @default(false)
+  delinquentSince       DateTime?
+  restrictedAccess      Boolean            @default(false)  // Solo lectura, chat apagado
+  
+  // Afiliado que refirió (si aplica)
+  referredByAffiliateId String?
+  
+  // Fechas
+  startDate             DateTime           @default(now())
+  endDate               DateTime?
+  
+  // Pagos
+  isAnnual              Boolean            @default(false)
+  lastPaymentDate       DateTime?
+  nextPaymentDate       DateTime?
+  
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  
+  @@unique([userId, studentId])
+  @@index([userId])
+  @@index([studentId])
+  @@index([status])
+  @@index([isDelinquent])
+}
+
+// ==========================================
+// PROGRAMA DE AFILIADOS
+// ==========================================
+
+enum AffiliateStatus {
+  PENDING           // Esperando que el colegio se registre
+  SCHOOL_REGISTERED // Colegio registrado, pendiente activación
+  ACTIVE            // Activo - beneficios aplicados
+  EXPIRED           // Expiró el tiempo (30 días)
+  CANCELLED         // Cancelado
+}
+
+model AffiliateReferral {
+  id              String          @id @default(cuid())
+  
+  // Mamá/Padre referente (debe pertenecer al colegio)
+  referrerId      String
+  referrer        User            @relation("AffiliateReferrals", fields: [referrerId], references: [id])
+  
+  // Código único de referido
+  referralCode    String          @unique
+  referralLink    String?
+  
+  // Colegio objetivo (el colegio al que pertenece el referente)
+  schoolId        String
+  school          School          @relation("SchoolAffiliates", fields: [schoolId], references: [id])
+  
+  status          AffiliateStatus @default(PENDING)
+  
+  // Beneficios del referente
+  setupFeeEarned        Decimal?    @db.Decimal(10, 2)  // 10% del setup
+  freeSubscriptionMonths Int        @default(12)        // 1 año gratis
+  freeForStudentId      String?     // Solo para 1 hijo
+  
+  // Seguimiento
+  totalSignatures   Int           @default(0)
+  schoolRegisteredAt DateTime?
+  benefitsActivatedAt DateTime?
+  
+  // Vigencia
+  expiresAt       DateTime         // 30 días desde creación
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  signatures      AffiliatePetitionSignature[]
+  
+  @@index([referrerId])
+  @@index([schoolId])
+  @@index([referralCode])
+  @@index([status])
+}
+
+// Firmas de otras mamás/padres en la petición
+model AffiliatePetitionSignature {
+  id              String             @id @default(cuid())
+  referralId      String
+  referral        AffiliateReferral  @relation(fields: [referralId], references: [id], onDelete: Cascade)
+  
+  // Firmante (debe ser padre del mismo colegio)
+  signerId        String
+  signer          User               @relation("AffiliateSignatures", fields: [signerId], references: [id])
+  
+  // Descuento ganado
+  discountAmount  Decimal            @db.Decimal(10, 2) @default(200)  // $200 MXN
+  discountApplied Boolean            @default(false)
+  discountAppliedAt DateTime?
+  
+  // Aceptación de términos
+  termsAccepted   Boolean            @default(false)
+  termsAcceptedAt DateTime?
+  
+  signedAt        DateTime           @default(now())
+  
+  @@unique([referralId, signerId])
+  @@index([referralId])
+  @@index([signerId])
+}
+
+// ==========================================
+// SISTEMA DE COTIZACIONES Y NEGOCIACIONES
+// ==========================================
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  VIEWED
+  NEGOTIATING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+model Quote {
+  id              String       @id @default(cuid())
+  quoteNumber     String       @unique  // COT-2026-0001
+  
+  // Información del colegio prospecto
+  schoolName      String
+  contactName     String
+  contactEmail    String
+  contactPhone    String?
+  address         String?
+  
+  // Detalles
+  estimatedStudents Int
+  selectedPlanId    String?
+  selectedPlan      SubscriptionPlan? @relation("QuotePlan", fields: [selectedPlanId], references: [id])
+  
+  // Cálculos
+  setupFee        Decimal      @db.Decimal(10, 2)
+  monthlyTotal    Decimal      @db.Decimal(10, 2)
+  annualTotal     Decimal      @db.Decimal(10, 2)
+  iaSchoolMonthly Decimal      @db.Decimal(10, 2)
+  schoolMonthly   Decimal      @db.Decimal(10, 2)
+  
+  // Descuentos negociados
+  setupFeeDiscount    Decimal?  @db.Decimal(10, 2)
+  customPricePerStudent Decimal? @db.Decimal(10, 2)
+  
+  status          QuoteStatus  @default(DRAFT)
+  
+  // Seguimiento
+  sentAt          DateTime?
+  viewedAt        DateTime?
+  respondedAt     DateTime?
+  expiresAt       DateTime?
+  
+  // Notas de negociación
+  notes           String?      @db.Text
+  internalNotes   String?      @db.Text
+  
+  // Si se convirtió en colegio
+  convertedToSchoolId String?
+  
+  createdById     String
+  createdBy       User         @relation("QuotesCreated", fields: [createdById], references: [id])
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  negotiations    QuoteNegotiation[]
+  
+  @@index([status])
+  @@index([schoolName])
+  @@index([createdById])
+}
+
+model QuoteNegotiation {
+  id          String   @id @default(cuid())
+  quoteId     String
+  quote       Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  
+  // Registro de la negociación
+  action      String   // "created", "sent", "viewed", "counter_offer", "accepted", "rejected"
+  notes       String?  @db.Text
+  
+  // Cambios propuestos
+  proposedChanges Json?
+  
+  createdById String
+  createdBy   User     @relation("NegotiationsCreated", fields: [createdById], references: [id])
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([quoteId])
+}
+
+// Acuerdos finales con colegios
+model SchoolAgreement {
+  id              String   @id @default(cuid())
+  schoolId        String   @unique
+  school          School   @relation("SchoolAgreement", fields: [schoolId], references: [id])
+  
+  // Términos acordados
+  planType        PlanType
+  pricePerStudent Decimal  @db.Decimal(10, 2)
+  iaSchoolShare   Decimal  @db.Decimal(5, 2)
+  schoolShare     Decimal  @db.Decimal(5, 2)
+  
+  setupFee        Decimal  @db.Decimal(10, 2)
+  setupFeeStatus  String   @default("pending")  // "pending", "paid", "waived"
+  
+  // E-commerce
+  ecommerceServiceFee     Decimal? @db.Decimal(5, 2)  // % cargo servicio (100% colegio)
+  ecommerceServiceFeeFixed Decimal? @db.Decimal(10, 2) // O monto fijo
+  
+  // Condiciones especiales
+  specialTerms    String?  @db.Text
+  
+  // Documentos
+  contractUrl     String?
+  signedAt        DateTime?
+  
+  // Vigencia
+  startDate       DateTime @default(now())
+  endDate         DateTime?
+  autoRenew       Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([planType])
+}
+
+// ==========================================
+// MÓDULO DE COMEDOR
+// ==========================================
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  SNACK
+}
+
+model CafeteriaMenu {
+  id          String    @id @default(cuid())
+  schoolId    String
+  school      School    @relation("SchoolCafeteria", fields: [schoolId], references: [id])
+  
+  weekStartDate DateTime  // Lunes de la semana
+  
+  isPublished Boolean   @default(false)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  items       CafeteriaMenuItem[]
+  
+  @@unique([schoolId, weekStartDate])
+  @@index([schoolId])
+  @@index([weekStartDate])
+}
+
+model CafeteriaMenuItem {
+  id          String     @id @default(cuid())
+  menuId      String
+  menu        CafeteriaMenu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  
+  dayOfWeek   Int        // 1-5 (Lunes-Viernes)
+  mealType    MealType
+  
+  name        String
+  description String?
+  imageUrl    String?
+  
+  price       Decimal?   @db.Decimal(10, 2)  // null = no disponible para compra
+  isAvailable Boolean    @default(true)
+  
+  // Información nutricional
+  calories    Int?
+  allergens   String?    // "gluten, lactosa, nueces"
+  
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  @@index([menuId])
+  @@index([dayOfWeek])
+}
+
+// Configuración de Stripe para diferentes entidades
+model StripeConnectAccount {
+  id              String   @id @default(cuid())
+  
+  // Puede ser colegio, vocal, o comedor
+  entityType      String   // "school", "vocal", "cafeteria"
+  entityId        String   // schoolId, vocalId, etc.
+  
+  // Stripe
+  stripeAccountId String   @unique
+  accountStatus   String   @default("pending")  // "pending", "active", "restricted"
+  chargesEnabled  Boolean  @default(false)
+  payoutsEnabled  Boolean  @default(false)
+  
+  // Datos bancarios básicos (para referencia)
+  bankLast4       String?
+  bankName        String?
+  
+  // Onboarding
+  onboardingComplete Boolean @default(false)
+  onboardingUrl     String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@unique([entityType, entityId])
+  @@index([entityType])
+  @@index([stripeAccountId])
 }
