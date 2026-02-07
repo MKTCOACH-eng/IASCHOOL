@@ -560,16 +560,19 @@ export default function LandingPage() {
             <div className="bg-gradient-to-r from-cyan-500 to-[#1B4079] rounded-3xl p-10">
               <h3 className="text-3xl font-bold text-white mb-4">¿Conoces un colegio que quiera modernizarse?</h3>
               <p className="text-white/90 mb-8 max-w-2xl mx-auto">
-                Inicia sesión para registrar tu referido o contáctanos para más información 
-                sobre el programa de afiliados.
+                Regístrate como afiliado, obtén tu link único y compártelo con colegios. 
+                Cuando activen, recibirás tus beneficios.
               </p>
               <Link
-                href="/login"
+                href="/affiliate/register"
                 className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-white text-[#1B4079] font-bold rounded-full hover:bg-gray-100 transition-all shadow-xl text-lg"
               >
-                Iniciar Sesión
+                Registrarme como Afiliado
                 <ArrowRight className="w-5 h-5" />
               </Link>
+              <p className="text-white/60 text-sm mt-4">
+                ¿Ya tienes cuenta? <Link href="/affiliate/login" className="text-white underline hover:no-underline">Inicia sesión</Link>
+              </p>
             </div>
           </div>
 

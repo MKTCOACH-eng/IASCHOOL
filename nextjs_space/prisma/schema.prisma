@@ -3198,6 +3198,117 @@ model AffiliatePetitionSignature {
 }
 
 // ==========================================
+// PROGRAMA DE AFILIADOS PÚBLICOS (Refieren COLEGIOS)
+// ==========================================
+
+enum PublicAffiliateStatus {
+  ACTIVE            // Link activo, esperando referidos
+  SCHOOL_REGISTERED // Un colegio se registró con su link
+  BENEFITS_APPLIED  // Beneficios otorgados (10% setup + 1 año gratis)
+  SUSPENDED         // Suspendido temporalmente
+  INACTIVE          // Inactivo
+}
+
+// Afiliados públicos que refieren colegios
+// Cualquier persona puede registrarse (no necesita ser usuario del sistema)
+model PublicAffiliate {
+  id              String                @id @default(cuid())
+  
+  // Datos del afiliado
+  name            String
+  email           String                @unique
+  phone           String?
+  hashedPassword  String                // Para login al dashboard
+  
+  // Código único de afiliado
+  affiliateCode   String                @unique
+  
+  // ¿Tiene hijos en algún colegio con IA School?
+  hasChildrenInSchool Boolean           @default(false)
+  linkedUserId    String?               // Si tiene, link a su User
+  linkedStudentId String?               // Estudiante que recibirá el año gratis
+  
+  status          PublicAffiliateStatus @default(ACTIVE)
+  
+  // Estadísticas
+  totalReferrals    Int                 @default(0)  // Colegios referidos
+  successfulReferrals Int               @default(0)  // Colegios que activaron
+  totalEarnings     Decimal             @db.Decimal(12, 2) @default(0) // Total ganado (10% setups)
+  pendingEarnings   Decimal             @db.Decimal(12, 2) @default(0) // Pendiente de pago
+  
+  // Términos
+  termsAccepted     Boolean             @default(false)
+  termsAcceptedAt   DateTime?
+  
+  // Verificación
+  emailVerified     Boolean             @default(false)
+  emailVerifiedAt   DateTime?
+  verificationToken String?
+  
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  // Leads de colegios referidos
+  schoolLeads     PublicAffiliateSchoolLead[]
+  
+  @@index([affiliateCode])
+  @@index([email])
+  @@index([status])
+}
+
+// Leads de colegios referidos por afiliados públicos
+model PublicAffiliateSchoolLead {
+  id              String                @id @default(cuid())
+  
+  affiliateId     String
+  affiliate       PublicAffiliate       @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  
+  // Datos del colegio referido
+  schoolName      String
+  contactName     String
+  contactEmail    String
+  contactPhone    String?
+  city            String?
+  estimatedStudents Int?
+  notes           String?               @db.Text
+  
+  // Status del lead
+  status          LeadStatus            @default(PENDING)
+  
+  // Si se convirtió en colegio activo
+  convertedSchoolId String?
+  setupFeeAmount    Decimal?            @db.Decimal(10, 2)
+  commissionAmount  Decimal?            @db.Decimal(10, 2) // 10% del setup
+  commissionPaid    Boolean             @default(false)
+  commissionPaidAt  DateTime?
+  
+  // Tracking
+  registeredAt    DateTime?             // Cuando el colegio se registró
+  activatedAt     DateTime?             // Cuando el colegio activó (30 días)
+  expiresAt       DateTime              // 30 días para activar desde registro
+  
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  @@index([affiliateId])
+  @@index([status])
+  @@index([contactEmail])
+}
+
+enum LeadStatus {
+  PENDING         // Lead registrado, colegio no contactado
+  CONTACTED       // Colegio contactado
+  INTERESTED      // Colegio interesado
+  DEMO_SCHEDULED  // Demo programada
+  REGISTERED      // Colegio registrado en IA School
+  ACTIVATED       // Colegio activó (comisión generada)
+  EXPIRED         // Expiró el tiempo de activación (30 días)
+  REJECTED        // Colegio rechazó
+  DUPLICATE       // Lead duplicado
+}
+
+
+// ==========================================
 // SISTEMA DE COTIZACIONES Y NEGOCIACIONES
 // ==========================================
 
