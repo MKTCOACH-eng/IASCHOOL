@@ -338,6 +338,15 @@ model User {
   
   // Reminders
   remindersReceived       ReminderLog[]     @relation("RemindersReceived")
+  
+  // WebAuthn / Passkeys
+  passkeys                UserPasskey[]     @relation("UserPasskeys")
+  
+  // Estado de cuenta
+  isActive                Boolean           @default(true)
+  lastLoginAt             DateTime?
+  failedLoginAttempts     Int               @default(0)
+  lockedUntil             DateTime?
 }
 
 model Invitation {
@@ -4351,4 +4360,84 @@ model TipGenerationConfig {
   updatedAt       DateTime       @updatedAt
   
   @@unique([schoolId])
+}
+
+
+// =====================================================
+// WEBAUTHN / PASSKEYS - Autenticación Biométrica
+// =====================================================
+
+model UserPasskey {
+  id              String   @id @default(cuid())
+  
+  userId          String
+  user            User     @relation("UserPasskeys", fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Credential data
+  credentialId    String   @unique  // Base64URL encoded credential ID
+  publicKey       String   @db.Text // Base64URL encoded public key or attestation
+  counter         Int      @default(0)
+  
+  // Device info
+  deviceName      String   @default("Unknown Device")
+  deviceType      String?  // "mobile", "desktop", "tablet"
+  browser         String?
+  os              String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  lastUsedAt      DateTime @default(now())
+  
+  @@index([userId])
+  @@index([credentialId])
+}
+
+model WebAuthnChallenge {
+  id              String   @id @default(cuid())
+  
+  challenge       Bytes    // Random challenge bytes
+  userId          String   // User this challenge is for (or "anonymous")
+  type            String   // "registration" or "authentication"
+  
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+  
+  @@index([userId, type])
+  @@index([expiresAt])
+}
+
+// =====================================================
+// AUDIT LOG - Registro de Actividades Sensibles
+// =====================================================
+
+model SecurityAuditLog {
+  id              String   @id @default(cuid())
+  
+  userId          String?
+  schoolId        String?
+  
+  // Action details
+  action          String   // "LOGIN", "LOGOUT", "VIEW_MEDICAL", "MODIFY_PAYMENT", etc.
+  resource        String   // Resource type: "USER", "PAYMENT", "MEDICAL_RECORD", etc.
+  resourceId      String?  // ID of affected resource
+  
+  // Request details
+  ipAddress       String?
+  userAgent       String?
+  endpoint        String?  // API endpoint
+  method          String?  // HTTP method
+  
+  // Result
+  success         Boolean  @default(true)
+  errorMessage    String?
+  
+  // Additional context (JSON)
+  metadata        Json?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([userId])
+  @@index([schoolId])
+  @@index([action])
+  @@index([createdAt])
 }
