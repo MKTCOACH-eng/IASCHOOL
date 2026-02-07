@@ -157,13 +157,28 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section - Monocromático Azul */}
-      <section className="relative min-h-screen flex items-center bg-gradient-to-br from-[#1B4079] via-[#1B4079] to-[#0f2847]">
+      {/* Hero Section - Con Video de Fondo */}
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Video de fondo */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            poster="https://cdn.abacus.ai/images/0a1556f4-8831-404e-ae29-cb9ebcbe0e4f.png"
+          >
+            <source src="https://cdn.abacus.ai/videos/87ac6081-4945-48d6-b1d7-89fe77b0d7ad.mp4" type="video/mp4" />
+          </video>
+          {/* Overlay oscuro para legibilidad */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B4079]/95 via-[#1B4079]/85 to-[#1B4079]/70" />
+        </div>
+
         {/* Patrón decorativo */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden z-[1]">
           <div className="absolute top-20 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-white/5 to-transparent rounded-full" />
           
           {/* Grid pattern */}
           <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -194,7 +209,7 @@ export default function LandingPage() {
                   </span>
                 </h1>
                 
-                <p className="text-xl text-white/80 mb-10 leading-relaxed max-w-xl">
+                <p className="text-xl text-white/90 mb-10 leading-relaxed max-w-xl">
                   {t.home.hero.subtitle}
                 </p>
 
@@ -219,7 +234,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Trust indicators */}
-                <div className="flex items-center gap-8 text-white/60 text-sm">
+                <div className="flex items-center gap-8 text-white/80 text-sm">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-green-400" />
                     <span>{t.home.hero.trustFast}</span>
@@ -232,43 +247,45 @@ export default function LandingPage() {
               </motion.div>
             </div>
 
-            {/* Visual - Logo grande + Stats */}
+            {/* Visual - Imagen + Stats */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative"
             >
-              <div className="relative bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
-                {/* Logo central */}
-                <div className="flex justify-center mb-8">
-                  <div className="relative w-48 h-48">
-                    <Image
-                      src="/iaschool-logo-new.png"
-                      alt="IA School"
-                      fill
-                      className="object-contain drop-shadow-2xl"
-                    />
-                  </div>
+              <div className="relative bg-white/10 backdrop-blur-md rounded-3xl overflow-hidden border border-white/20">
+                {/* Imagen principal */}
+                <div className="relative aspect-video">
+                  <Image
+                    src="https://cdn.abacus.ai/images/427c1b82-c580-47fc-80bd-4a39097e6365.png"
+                    alt="IA School Dashboard"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1B4079]/80 to-transparent" />
                 </div>
 
-                {/* Stats grid */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/10 rounded-2xl p-4 text-center">
-                    <div className="text-3xl font-bold text-white">85%</div>
-                    <div className="text-white/60 text-sm">{t.home.hero.statsAdmin}</div>
-                  </div>
-                  <div className="bg-white/10 rounded-2xl p-4 text-center">
-                    <div className="text-3xl font-bold text-white">24/7</div>
-                    <div className="text-white/60 text-sm">{t.home.hero.statsAvailable}</div>
-                  </div>
-                  <div className="bg-white/10 rounded-2xl p-4 text-center">
-                    <div className="text-3xl font-bold text-white">6</div>
-                    <div className="text-white/60 text-sm">{t.home.hero.statsLanguages}</div>
-                  </div>
-                  <div className="bg-white/10 rounded-2xl p-4 text-center">
-                    <div className="text-3xl font-bold text-white">+20</div>
-                    <div className="text-white/60 text-sm">{t.home.hero.statsModules}</div>
+                {/* Stats grid overlay */}
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <div className="grid grid-cols-4 gap-3">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+                      <div className="text-2xl font-bold text-white">85%</div>
+                      <div className="text-white/70 text-xs">{t.home.hero.statsAdmin}</div>
+                    </div>
+                    <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+                      <div className="text-2xl font-bold text-white">24/7</div>
+                      <div className="text-white/70 text-xs">{t.home.hero.statsAvailable}</div>
+                    </div>
+                    <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+                      <div className="text-2xl font-bold text-white">6</div>
+                      <div className="text-white/70 text-xs">{t.home.hero.statsLanguages}</div>
+                    </div>
+                    <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+                      <div className="text-2xl font-bold text-white">+20</div>
+                      <div className="text-white/70 text-xs">{t.home.hero.statsModules}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -282,7 +299,7 @@ export default function LandingPage() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-10">
           <div className="w-8 h-12 rounded-full border-2 border-white/30 flex items-start justify-center p-2">
             <div className="w-1.5 h-3 bg-white/60 rounded-full animate-pulse" />
           </div>
@@ -339,16 +356,74 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Video explicativo para colegios */}
+          {/* Visual para colegios - Profesores */}
           <div className="mb-20">
-            <div className="relative bg-gradient-to-br from-[#1B4079] to-[#0f2847] rounded-3xl overflow-hidden shadow-2xl">
-              <div className="aspect-video relative flex flex-col items-center justify-center text-white p-8">
-                <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 hover:bg-white/30 transition-all cursor-pointer group border-4 border-white/30">
-                  <Play className="w-12 h-12 text-white ml-1 group-hover:scale-110 transition-transform" fill="white" />
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+              {/* Imagen de profesora */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                <div className="relative aspect-video">
+                  <Image
+                    src="https://cdn.abacus.ai/images/e2c188e2-232c-4886-b89f-6271ed54d66d.png"
+                    alt="Profesora usando IA School"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-                <h3 className="text-3xl font-bold mb-3 text-white">{t.home.schools.videoTitle}</h3>
-                <p className="text-white/80 text-center max-w-lg text-lg">{t.home.schools.videoSubtitle}</p>
-                <p className="text-white/50 text-sm mt-4">{t.home.schools.videoSoon}</p>
+              </div>
+              {/* Contenido */}
+              <div className="lg:pl-8">
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">{t.home.schools.videoTitle}</h3>
+                <p className="text-gray-600 text-lg mb-6">{t.home.schools.videoSubtitle}</p>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-700">Control total de asistencia, calificaciones y comunicación en un solo lugar</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-700">Pizarra digital integrada con registro académico automatizado</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-700">Reportes inteligentes generados por IA para cada estudiante</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Visual para familias */}
+          <div className="mb-20">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+              {/* Contenido */}
+              <div className="lg:pr-8 order-2 lg:order-1">
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">Para las Familias</h3>
+                <p className="text-gray-600 text-lg mb-6">Los padres siempre conectados con la educación de sus hijos</p>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-700">Notificaciones en tiempo real de tareas, calificaciones y avisos</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-700">Chat directo con profesores y administración escolar</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-700">Pagos de colegiaturas y control de gastos desde la app</p>
+                  </div>
+                </div>
+              </div>
+              {/* Imagen de familia */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl order-1 lg:order-2">
+                <div className="relative aspect-video">
+                  <Image
+                    src="https://cdn.abacus.ai/images/7d6234c5-6667-407b-b59d-fe8fe2bad088.png"
+                    alt="Familia usando IA School App"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -425,16 +500,46 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Video explicativo para afiliados */}
+          {/* Visual para afiliados */}
           <div className="mb-20">
-            <div className="relative bg-gradient-to-br from-[#1B4079] to-[#0f2847] rounded-3xl overflow-hidden shadow-2xl">
-              <div className="aspect-video relative flex flex-col items-center justify-center text-white p-8">
-                <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 hover:bg-white/30 transition-all cursor-pointer group border-4 border-white/30">
-                  <Play className="w-12 h-12 text-white ml-1 group-hover:scale-110 transition-transform" fill="white" />
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+              {/* Imagen de afiliados */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                <div className="relative aspect-video">
+                  <Image
+                    src="https://cdn.abacus.ai/images/b84e6d63-c939-4b0d-be3e-885cbb67fd90.png"
+                    alt="Programa de Afiliados IA School"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-                <h3 className="text-3xl font-bold mb-3 text-white">{t.home.affiliates.videoTitle}</h3>
-                <p className="text-white/80 text-center max-w-lg text-lg">{t.home.affiliates.videoSubtitle}</p>
-                <p className="text-white/50 text-sm mt-4">{t.home.affiliates.videoSoon}</p>
+              </div>
+              {/* Contenido */}
+              <div className="lg:pl-8">
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">{t.home.affiliates.videoTitle}</h3>
+                <p className="text-gray-600 text-lg mb-6">{t.home.affiliates.videoSubtitle}</p>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <Gift className="w-6 h-6 text-[#1B4079] flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-700"><strong>10% de comisión</strong> sobre la cuota de setup del colegio referido</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Star className="w-6 h-6 text-[#1B4079] flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-700"><strong>1 año gratis</strong> si eres padre del colegio que refieres</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <TrendingUp className="w-6 h-6 text-[#1B4079] flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-700">Sin límite de referidos - <strong>ganancias ilimitadas</strong></p>
+                  </div>
+                </div>
+                <Link
+                  href="/affiliate/register"
+                  className="inline-flex items-center gap-2 mt-8 px-8 py-4 bg-[#1B4079] text-white font-bold rounded-full hover:bg-[#15325f] transition-all shadow-lg hover:shadow-xl"
+                >
+                  <Gift className="w-5 h-5" />
+                  Únete al Programa
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
               </div>
             </div>
           </div>
