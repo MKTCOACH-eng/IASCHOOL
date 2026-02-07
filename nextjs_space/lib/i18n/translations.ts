@@ -27,7 +27,7 @@ const esTranslations = {
     calendar: 'Calendario', tasks: 'Tareas', payments: 'Pagos', documents: 'Documentos',
     chatbot: 'Asistente IA', directory: 'Directorio', appointments: 'Citas', attendance: 'Asistencia',
     academic: 'Académico', polls: 'Encuestas', invitations: 'Invitaciones', crm: 'CRM',
-    store: 'Tienda', gallery: 'Galería',
+    store: 'Tienda', gallery: 'Galería', schedules: 'Horarios', teams: 'Equipos',
     superAdmin: 'Super Admin', logout: 'Cerrar Sesión', login: 'Iniciar Sesión'
   },
   landing: {
@@ -288,7 +288,7 @@ const enTranslations = {
     calendar: 'Calendar', tasks: 'Tasks', payments: 'Payments', documents: 'Documents',
     chatbot: 'AI Assistant', directory: 'Directory', appointments: 'Appointments', attendance: 'Attendance',
     academic: 'Academic', polls: 'Polls', invitations: 'Invitations', crm: 'CRM',
-    store: 'Store', gallery: 'Gallery',
+    store: 'Store', gallery: 'Gallery', schedules: 'Schedule', teams: 'Teams',
     superAdmin: 'Super Admin', logout: 'Logout', login: 'Login'
   },
   landing: {
@@ -549,7 +549,7 @@ const ptTranslations = {
     calendar: 'Calendário', tasks: 'Tarefas', payments: 'Pagamentos', documents: 'Documentos',
     chatbot: 'Assistente IA', directory: 'Diretório', appointments: 'Consultas', attendance: 'Frequência',
     academic: 'Acadêmico', polls: 'Enquetes', invitations: 'Convites', crm: 'CRM',
-    store: 'Loja', gallery: 'Galeria',
+    store: 'Loja', gallery: 'Galeria', schedules: 'Horários', teams: 'Equipes',
     superAdmin: 'Super Admin', logout: 'Sair', login: 'Entrar'
   },
   landing: {
@@ -705,7 +705,7 @@ const deTranslations = {
     calendar: 'Kalender', tasks: 'Aufgaben', payments: 'Zahlungen', documents: 'Dokumente',
     chatbot: 'KI-Assistent', directory: 'Verzeichnis', appointments: 'Termine', attendance: 'Anwesenheit',
     academic: 'Akademisch', polls: 'Umfragen', invitations: 'Einladungen', crm: 'CRM',
-    store: 'Shop', gallery: 'Galerie',
+    store: 'Shop', gallery: 'Galerie', schedules: 'Stundenplan', teams: 'Teams',
     superAdmin: 'Super Admin', logout: 'Abmelden', login: 'Anmelden'
   },
   landing: {
@@ -861,7 +861,7 @@ const frTranslations = {
     calendar: 'Calendrier', tasks: 'Tâches', payments: 'Paiements', documents: 'Documents',
     chatbot: 'Assistant IA', directory: 'Annuaire', appointments: 'Rendez-vous', attendance: 'Présence',
     academic: 'Académique', polls: 'Sondages', invitations: 'Invitations', crm: 'CRM',
-    store: 'Boutique', gallery: 'Galerie',
+    store: 'Boutique', gallery: 'Galerie', schedules: 'Emploi du temps', teams: 'Équipes',
     superAdmin: 'Super Admin', logout: 'Déconnexion', login: 'Connexion'
   },
   landing: {
@@ -1017,7 +1017,7 @@ const jaTranslations = {
     calendar: 'カレンダー', tasks: '課題', payments: '支払い', documents: '書類',
     chatbot: 'AIアシスタント', directory: 'ディレクトリ', appointments: '予約', attendance: '出席',
     academic: '学業', polls: 'アンケート', invitations: '招待', crm: 'CRM',
-    store: 'ストア', gallery: 'ギャラリー',
+    store: 'ストア', gallery: 'ギャラリー', schedules: '時間割', teams: 'チーム',
     superAdmin: 'スーパー管理者', logout: 'ログアウト', login: 'ログイン'
   },
   landing: {

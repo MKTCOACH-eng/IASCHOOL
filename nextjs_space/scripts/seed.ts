@@ -23,6 +23,7 @@ async function main() {
   await prisma.submission.deleteMany();
   await prisma.taskAttachment.deleteMany();
   await prisma.task.deleteMany();
+  await prisma.schedule.deleteMany();
   await prisma.subject.deleteMany();
   await prisma.messageReaction.deleteMany();
   await prisma.message.deleteMany();

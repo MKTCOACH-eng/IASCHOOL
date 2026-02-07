@@ -117,6 +117,7 @@ model School {
   storeProducts    StoreProduct[]
   orders           Order[]
   photoAlbums      PhotoAlbum[]
+  schedules        Schedule[]
 }
 
 model User {
@@ -197,6 +198,9 @@ model User {
   cartItems            CartItem[]
   orders               Order[]
   albumsCreated        PhotoAlbum[]
+  
+  // Horarios (profesores)
+  schedules            Schedule[]   @relation("TeacherSchedules")
 }
 
 model Invitation {
@@ -236,6 +240,7 @@ model Group {
   polls        Poll[]
   documents    Document[]
   photoAlbums  PhotoAlbum[]
+  schedules    Schedule[]
   createdAt    DateTime  @default(now())
   isActive     Boolean   @default(true)
 
@@ -441,11 +446,36 @@ model Subject {
   schoolId    String
   school      School   @relation(fields: [schoolId], references: [id])
   tasks       Task[]
+  schedules   Schedule[]
   createdAt   DateTime @default(now())
   isActive    Boolean  @default(true)
 
   @@unique([name, schoolId])
   @@index([schoolId])
+}
+
+// Horarios de clases
+model Schedule {
+  id          String   @id @default(cuid())
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+  groupId     String
+  group       Group    @relation(fields: [groupId], references: [id])
+  teacherId   String
+  teacher     User     @relation("TeacherSchedules", fields: [teacherId], references: [id])
+  dayOfWeek   Int      // 1=Lunes, 2=Martes, ..., 5=Viernes
+  startTime   String   // "08:00"
+  endTime     String   // "08:50"
+  classroom   String?  // "Salón 101"
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@index([groupId])
+  @@index([teacherId])
+  @@index([schoolId])
+  @@index([dayOfWeek])
 }
 
 // Tareas

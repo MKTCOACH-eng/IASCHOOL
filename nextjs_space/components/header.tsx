@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen, Mail, Globe, ShoppingBag, Image as ImageIcon } from "lucide-react";
+import { LogOut, Bell, Home, Plus, Menu, X, UserPlus, MessageSquare, ClipboardList, Calendar, CalendarCheck, Wallet, BarChart3, Users, Vote, FileSignature, Bot, Building2, Settings, Activity, BookOpen, Mail, Globe, ShoppingBag, Image as ImageIcon, Clock, UsersRound } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertsCounter } from "@/components/academic-alerts";
@@ -62,8 +62,10 @@ export function Header({ user }: HeaderProps) {
       return [
         { href: "/dashboard", label: t.nav.home, icon: Home },
         { href: "/tasks", label: t.nav.tasks, icon: ClipboardList },
+        { href: "/schedules", label: t.nav.schedules || "Horarios", icon: Clock },
         { href: "/calendar", label: t.nav.calendar, icon: Calendar },
         { href: "/messages", label: t.nav.messages, icon: MessageSquare },
+        { href: "/messages/teams", label: t.nav.teams || "Equipos", icon: UsersRound },
         { href: "/attendance", label: t.nav.attendance, icon: Users },
         { href: "/documents", label: t.nav.documents, icon: FileSignature },
         { href: "/announcements", label: t.nav.announcements, icon: Bell },
@@ -74,6 +76,7 @@ export function Header({ user }: HeaderProps) {
       { href: "/dashboard", label: t.nav.home, icon: Home },
       { href: "/messages", label: t.nav.messages, icon: MessageSquare },
       { href: "/tasks", label: t.nav.tasks, icon: ClipboardList },
+      { href: "/schedules", label: t.nav.schedules || "Horarios", icon: Clock },
       { href: "/academic", label: t.nav.academic, icon: BarChart3 },
       { href: "/calendar", label: t.nav.calendar, icon: Calendar },
       { href: "/payments", label: t.nav.payments, icon: Wallet },
